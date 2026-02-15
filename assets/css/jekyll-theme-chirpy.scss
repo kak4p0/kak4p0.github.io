@@ -1,2 +1,43 @@
+---
+---
+
 @import "jekyll-theme-chirpy";
-@import "custom";
+
+/* 아래부터 네 커스텀(민트/라임 + 가독성) */
+:root {
+  --k-mint: #72f0e6;
+  --k-lime: #b6ff63;
+  --k-kakapo: #8ddf3c;
+}
+
+#main-wrapper .content,
+#post-wrapper .content { max-width: 920px; }
+
+.post-content {
+  font-size: 17px;
+  line-height: 1.82;
+}
+
+a { color: var(--k-mint) !important; }
+a:hover { color: var(--k-lime) !important; }
+
+.post-preview {
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.05);
+}
+
+.post-meta .categories a { color: rgba(182,255,99,0.95) !important; }
+
+:not(pre) > code {
+  background: rgba(114,240,230,0.08);
+  border: 1px solid rgba(114,240,230,0.14);
+  border-radius: 8px;
+  padding: 0.1em 0.35em;
+}
+
+pre {
+  border-radius: 16px;
+  border: 1px solid rgba(141,223,60,0.14) !important;
+}
+body { outline: 6px solid red !important; }
