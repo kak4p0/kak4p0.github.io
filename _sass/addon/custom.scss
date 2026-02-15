@@ -1,0 +1,91 @@
+/* kak4p0 - Mint/Lime readable tweaks (Chirpy override)
+   - subtle uniqueness
+   - writeup readability (width/line-height/code)
+*/
+
+/* (선택) 한글 가독성 폰트 */
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css");
+
+:root {
+  --k-mint: #72f0e6;
+  --k-lime: #b6ff63;
+  --k-kakapo: #8ddf3c;
+
+  --k-border: rgba(255, 255, 255, 0.10);
+  --k-card: rgba(255, 255, 255, 0.05);
+
+  --k-font: "Pretendard", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  --k-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+/* 전반 폰트 */
+html, body { font-family: var(--k-font) !important; }
+
+/* 글 가독성: 폭/행간/문단 간격 */
+#main-wrapper .content,
+#post-wrapper .content { max-width: 920px; }
+
+.post-content {
+  font-size: 17px;
+  line-height: 1.82;
+}
+.post-content p { margin: 0 0 1.05em; }
+
+/* 링크: 민트 기본 + 라임 호버 */
+a {
+  color: var(--k-mint) !important;
+  text-decoration-color: rgba(114, 240, 230, 0.35);
+  text-underline-offset: 3px;
+}
+a:hover {
+  color: var(--k-lime) !important;
+  text-decoration-color: rgba(182, 255, 99, 0.55);
+}
+
+/* 카드(홈 글 목록/패널) 살짝 다르게 */
+.post-preview {
+  background: var(--k-card);
+  border: 1px solid var(--k-border);
+  border-radius: 18px;
+}
+#panel-wrapper .panel {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 18px;
+}
+
+/* 태그 칩: 라임/민트 톤으로 */
+.tag, .post-tag, .tag-entry {
+  border-radius: 999px !important;
+  border: 1px solid rgba(255,255,255,0.14) !important;
+  background: rgba(255,255,255,0.03) !important;
+}
+.tag:hover, .post-tag:hover, .tag-entry:hover {
+  border-color: rgba(114,240,230,0.24) !important;
+  background: rgba(114,240,230,0.06) !important;
+}
+
+/* 카테고리 라벨 포인트 */
+.post-meta .categories a { color: rgba(182,255,99,0.95) !important; }
+
+/* 코드 블록/인라인 코드 가독성 */
+code, pre { font-family: var(--k-mono) !important; }
+
+:not(pre) > code {
+  background: rgba(114, 240, 230, 0.08);
+  border: 1px solid rgba(114, 240, 230, 0.14);
+  border-radius: 8px;
+  padding: 0.1em 0.35em;
+}
+
+pre {
+  border: 1px solid rgba(141, 223, 60, 0.14) !important;
+  border-radius: 16px;
+}
+pre code {
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+/* (선택) 너무 똑같아 보이는 Trending Tags 패널 숨기기 */
+/* #panel-wrapper .panel:has(.trending-tags) { display: none !important; } */
