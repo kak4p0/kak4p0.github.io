@@ -3,116 +3,193 @@
 @use "main";
 
 /* =========================
-   Kak4p0 Mint/Lime Skin
-   - readability-first
-   - makes Chirpy look noticeably different
+   Kak4p0 Mint/Lime Skin (Clean + Readable)
+   - less blur, more contrast
+   - keeps Chirpy layout stable
    ========================= */
 
 :root {
-  --k-mint: #2dd4bf; /* mint */
-  --k-lime: #a3e635; /* lime */
-  --k-ink:  #0b0f12; /* deep bg */
-  --k-ink2: #0f141a; /* secondary bg */
-  --k-card: rgba(255, 255, 255, 0.035);
-  --k-border: rgba(163, 230, 53, 0.14);
-  --k-border2: rgba(45, 212, 191, 0.16);
+  /* Brand */
+  --k-mint: #2dd4bf;
+  --k-lime: #a3e635;
+
+  /* Surface */
+  --k-bg-0: #0b0f12;
+  --k-bg-1: #0f141a;
+  --k-surface: rgba(255, 255, 255, 0.040);
+  --k-surface-2: rgba(255, 255, 255, 0.055);
+
+  /* Borders / shadow */
+  --k-border: rgba(255, 255, 255, 0.08);
+  --k-border-mint: rgba(45, 212, 191, 0.22);
+  --k-border-lime: rgba(163, 230, 53, 0.18);
+  --k-shadow: 0 18px 40px rgba(0,0,0,0.38);
+
+  /* Text */
+  --k-text: rgba(255,255,255,0.92);
+  --k-text-dim: rgba(255,255,255,0.70);
 }
 
-/* 1) 전체 배경을 "은은한 그라데이션"으로: 분위기 자체가 달라짐 */
+/* Global background (subtle, not foggy) */
 body {
+  color: var(--k-text);
   background:
-    radial-gradient(900px 650px at 18% -10%, rgba(45, 212, 191, 0.12), transparent 60%),
-    radial-gradient(900px 650px at 85%  10%, rgba(163, 230, 53, 0.10), transparent 60%),
-    linear-gradient(180deg, var(--k-ink), var(--k-ink2));
+    radial-gradient(900px 650px at 18% -10%, rgba(45, 212, 191, 0.10), transparent 60%),
+    radial-gradient(900px 650px at 85%  10%, rgba(163, 230, 53, 0.08), transparent 60%),
+    linear-gradient(180deg, var(--k-bg-0), var(--k-bg-1));
 }
 
-/* 2) 폰트 톤(가독성): 라이트업용으로 글씨 약간 키우고 줄간격 확보 */
+/* Readability for writeups */
 .post-content {
   line-height: 1.78;
   letter-spacing: 0.1px;
+  font-size: 1.02rem;
+  color: var(--k-text);
 }
 
-/* 3) 링크/강조색: 민트 → hover 라임 */
+.post-content p,
+.post-content li {
+  color: var(--k-text);
+}
+
+/* Links (mint -> lime) */
 a,
 .post-content a {
   color: var(--k-mint);
   text-decoration-thickness: 1px;
   text-underline-offset: 3px;
 }
-
 a:hover,
 .post-content a:hover {
   color: var(--k-lime);
 }
 
-/* 4) 카드/리스트 박스(카테고리/태그/포스트 리스트)가 "각진 Chirpy 느낌"이라 비슷해 보임
-      => 라운드 + 얇은 테두리 + 블러로 분위기 교체 */
-.card,
-.card-wrapper,
-.list-group,
-.content,
-#topbar-wrapper,
-#panel-wrapper .panel {
-  border-radius: 18px !important;
+/* Headings: small accent bar (makes it look different without being loud) */
+.post-content h2,
+.post-content h3 {
+  position: relative;
+  padding-left: 0.55rem;
+}
+.post-content h2::before,
+.post-content h3::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.28em;
+  width: 3px;
+  height: 0.9em;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--k-mint), var(--k-lime));
+  opacity: 0.85;
 }
 
+/* Cards / panels: keep crisp (NO heavy blur) */
 .card,
 .card-wrapper,
 #panel-wrapper .panel,
 #core-wrapper .post,
-#core-wrapper .page,
-#core-wrapper .home {
-  background: var(--k-card) !important;
+#core-wrapper .page {
+  background: var(--k-surface) !important;
   border: 1px solid var(--k-border) !important;
-  backdrop-filter: blur(6px);
+  border-radius: 16px !important;
+  box-shadow: var(--k-shadow);
 }
 
-/* 5) 사이드바: "그라데이션 + 활성 표시(바/글로우)"로 확 차별 */
+/* Make list boxes cleaner */
+.list-group-item {
+  background: transparent !important;
+  border-color: rgba(255,255,255,0.06) !important;
+}
+
+/* Sidebar: distinct gradient + accent */
 #sidebar {
   background:
-    radial-gradient(900px 650px at 30% 0%, rgba(45, 212, 191, 0.10), transparent 55%),
-    radial-gradient(900px 650px at 70% 15%, rgba(163, 230, 53, 0.08), transparent 55%),
-    linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.35));
-  border-right: 1px solid rgba(255,255,255,0.06);
+    radial-gradient(700px 520px at 30% 0%, rgba(45, 212, 191, 0.10), transparent 55%),
+    radial-gradient(700px 520px at 70% 15%, rgba(163, 230, 53, 0.08), transparent 55%),
+    linear-gradient(180deg, rgba(0,0,0,0.18), rgba(0,0,0,0.42));
+  border-right: 1px solid rgba(255,255,255,0.07);
 }
 
+/* Sidebar active: left glow bar */
 #sidebar .nav-link.active {
-  background: rgba(45, 212, 191, 0.14) !important;
-  border: 1px solid rgba(163, 230, 53, 0.18) !important;
-  box-shadow:
-    0 0 0 1px rgba(45, 212, 191, 0.12) inset,
-    0 12px 28px rgba(0, 0, 0, 0.35);
+  background: rgba(45, 212, 191, 0.10) !important;
+  border: 1px solid rgba(45, 212, 191, 0.18) !important;
+  position: relative;
+}
+#sidebar .nav-link.active::before {
+  content: "";
+  position: absolute;
+  left: 0.45rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 60%;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--k-mint), var(--k-lime));
+  box-shadow: 0 0 14px rgba(45,212,191,0.35);
 }
 
-/* 6) 태그 칩(Trending Tags 포함): 모양/테두리만 바꿔도 다른 테마처럼 보임 */
+/* Topbar search accent (subtle) */
+#topbar-wrapper .input-group-text,
+#topbar-wrapper input {
+  border-color: rgba(255,255,255,0.10) !important;
+}
+#topbar-wrapper input:focus {
+  border-color: var(--k-border-mint) !important;
+  box-shadow: 0 0 0 3px rgba(45,212,191,0.10) !important;
+}
+
+/* Tags (chips): cleaner, less neon */
 .tag,
 .post-tag,
 #panel-wrapper .post-tag {
   border-radius: 999px !important;
   border: 1px solid rgba(45, 212, 191, 0.22) !important;
-  background: rgba(45, 212, 191, 0.08) !important;
+  background: rgba(45, 212, 191, 0.06) !important;
+  color: var(--k-text) !important;
 }
-
 .tag:hover,
 .post-tag:hover {
-  border-color: rgba(163, 230, 53, 0.32) !important;
-  background: rgba(163, 230, 53, 0.10) !important;
+  border-color: rgba(163, 230, 53, 0.28) !important;
+  background: rgba(163, 230, 53, 0.08) !important;
 }
 
-/* 7) 코드블록: 라이트업에서 제일 중요한 부분이라 "대비 + 테두리" 확실히 */
+/* Code blocks: high-contrast for writeups */
 pre,
 .highlight,
 div.highlighter-rouge {
-  background: rgba(0, 0, 0, 0.32) !important;
+  background: rgba(0, 0, 0, 0.34) !important;
   border: 1px solid rgba(45, 212, 191, 0.18) !important;
   border-radius: 14px !important;
 }
-
 code {
   font-family: ui-monospace, "JetBrains Mono", "Cascadia Mono", "D2Coding", SFMono-Regular, Menlo, Consolas, monospace;
 }
 
-/* 8) 제목 계열에 라임 포인트(과하면 촌스러움 → '아주 약하게') */
-h1, h2, h3 {
-  text-shadow: 0 0 18px rgba(163, 230, 53, 0.06);
+/* Blockquote: mint marker */
+blockquote {
+  border-left: 3px solid rgba(45, 212, 191, 0.55) !important;
+  background: rgba(45, 212, 191, 0.05) !important;
+  border-radius: 12px;
+}
+
+/* =========================
+   Layout FIX: Right panel forced back to right on desktop
+   (if it dropped to bottom due to custom CSS or build mismatch)
+   ========================= */
+@media (min-width: 992px) {
+  /* Chirpy core row usually flex-based; enforce no wrap so panel stays right */
+  #core-wrapper > .row {
+    flex-wrap: nowrap !important;
+  }
+
+  /* In case widths collapsed, enforce reasonable column widths */
+  #post-wrapper {
+    flex: 0 0 72% !important;
+    max-width: 72% !important;
+  }
+  #panel-wrapper {
+    flex: 0 0 28% !important;
+    max-width: 28% !important;
+  }
 }
