@@ -2,57 +2,41 @@
 ---
 @use "main";
 
-/* =========================
+/* =========================================
    Kak4p0 Mint/Lime Skin (Clean + Readable)
-   - less blur, more contrast
-   - keeps Chirpy layout stable
-   ========================= */
+   - blur 최소화(= 덜 흐릿)
+   - 라이트업 가독성 강화
+   - 데스크톱에서 오른쪽 패널(Recently/Tags) 2컬럼 유지
+   ========================================= */
 
 :root {
-  /* Brand */
   --k-mint: #2dd4bf;
   --k-lime: #a3e635;
 
-  /* Surface */
-  --k-bg-0: #0b0f12;
-  --k-bg-1: #0f141a;
-  --k-surface: rgba(255, 255, 255, 0.040);
-  --k-surface-2: rgba(255, 255, 255, 0.055);
+  --k-bg0: #0b0f12;
+  --k-bg1: #0f141a;
 
-  /* Borders / shadow */
-  --k-border: rgba(255, 255, 255, 0.08);
-  --k-border-mint: rgba(45, 212, 191, 0.22);
-  --k-border-lime: rgba(163, 230, 53, 0.18);
-  --k-shadow: 0 18px 40px rgba(0,0,0,0.38);
+  /* “유리 느낌” 대신 “단단한 다크 카드” */
+  --k-surface: rgba(17, 22, 28, 0.88);
+  --k-surface2: rgba(17, 22, 28, 0.72);
 
-  /* Text */
-  --k-text: rgba(255,255,255,0.92);
-  --k-text-dim: rgba(255,255,255,0.70);
+  --k-border: rgba(163, 230, 53, 0.14);
+  --k-border2: rgba(45, 212, 191, 0.18);
+
+  --k-text: rgba(231, 239, 247, 0.92);
+  --k-text-dim: rgba(231, 239, 247, 0.72);
 }
 
-/* Global background (subtle, not foggy) */
+/* 0) 전체 배경: 은은하지만 과하지 않게(흐림 X) */
 body {
-  color: var(--k-text);
   background:
-    radial-gradient(900px 650px at 18% -10%, rgba(45, 212, 191, 0.10), transparent 60%),
-    radial-gradient(900px 650px at 85%  10%, rgba(163, 230, 53, 0.08), transparent 60%),
-    linear-gradient(180deg, var(--k-bg-0), var(--k-bg-1));
-}
-
-/* Readability for writeups */
-.post-content {
-  line-height: 1.78;
-  letter-spacing: 0.1px;
-  font-size: 1.02rem;
+    radial-gradient(850px 520px at 16% -12%, rgba(45, 212, 191, 0.12), transparent 62%),
+    radial-gradient(850px 520px at 88%  10%, rgba(163, 230, 53, 0.10), transparent 62%),
+    linear-gradient(180deg, var(--k-bg0), var(--k-bg1));
   color: var(--k-text);
 }
 
-.post-content p,
-.post-content li {
-  color: var(--k-text);
-}
-
-/* Links (mint -> lime) */
+/* 1) 링크: 민트 기본 + 라임 hover */
 a,
 .post-content a {
   color: var(--k-mint);
@@ -64,132 +48,114 @@ a:hover,
   color: var(--k-lime);
 }
 
-/* Headings: small accent bar (makes it look different without being loud) */
-.post-content h2,
-.post-content h3 {
-  position: relative;
-  padding-left: 0.55rem;
-}
-.post-content h2::before,
-.post-content h3::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0.28em;
-  width: 3px;
-  height: 0.9em;
-  border-radius: 999px;
-  background: linear-gradient(180deg, var(--k-mint), var(--k-lime));
-  opacity: 0.85;
+/* 2) 라이트업 가독성 (본문만 살짝) */
+.post-content {
+  line-height: 1.78;
+  letter-spacing: 0.1px;
+  font-size: 1.02rem;
 }
 
-/* Cards / panels: keep crisp (NO heavy blur) */
+/* 3) 사이드바: 확실히 다른 룩(하지만 과하지 않게) */
+#sidebar {
+  background:
+    radial-gradient(760px 520px at 30% 0%, rgba(45, 212, 191, 0.10), transparent 60%),
+    radial-gradient(760px 520px at 75% 12%, rgba(163, 230, 53, 0.08), transparent 60%),
+    linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.38));
+  border-right: 1px solid rgba(255,255,255,0.06);
+}
+
+#sidebar .nav-link.active {
+  background: rgba(45, 212, 191, 0.12) !important;
+  border: 1px solid rgba(163, 230, 53, 0.16) !important;
+  box-shadow: 0 0 0 1px rgba(45, 212, 191, 0.10) inset;
+}
+
+/* 4) “카드/패널/리스트” 공통: blur 제거 + 단단한 표면 */
 .card,
 .card-wrapper,
 #panel-wrapper .panel,
 #core-wrapper .post,
-#core-wrapper .page {
+#core-wrapper .page,
+#core-wrapper .home,
+#core-wrapper .archive {
   background: var(--k-surface) !important;
   border: 1px solid var(--k-border) !important;
   border-radius: 16px !important;
-  box-shadow: var(--k-shadow);
 }
 
-/* Make list boxes cleaner */
-.list-group-item {
-  background: transparent !important;
-  border-color: rgba(255,255,255,0.06) !important;
+/* 리스트/테이블처럼 얇게 깔리는 영역은 한 톤 더 낮게 */
+.list-group,
+.list-group-item,
+#topbar-wrapper {
+  background: var(--k-surface2) !important;
+  border: 1px solid rgba(255,255,255,0.06) !important;
+  border-radius: 16px !important;
 }
 
-/* Sidebar: distinct gradient + accent */
-#sidebar {
-  background:
-    radial-gradient(700px 520px at 30% 0%, rgba(45, 212, 191, 0.10), transparent 55%),
-    radial-gradient(700px 520px at 70% 15%, rgba(163, 230, 53, 0.08), transparent 55%),
-    linear-gradient(180deg, rgba(0,0,0,0.18), rgba(0,0,0,0.42));
-  border-right: 1px solid rgba(255,255,255,0.07);
-}
-
-/* Sidebar active: left glow bar */
-#sidebar .nav-link.active {
-  background: rgba(45, 212, 191, 0.10) !important;
-  border: 1px solid rgba(45, 212, 191, 0.18) !important;
-  position: relative;
-}
-#sidebar .nav-link.active::before {
-  content: "";
-  position: absolute;
-  left: 0.45rem;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 3px;
-  height: 60%;
-  border-radius: 999px;
-  background: linear-gradient(180deg, var(--k-mint), var(--k-lime));
-  box-shadow: 0 0 14px rgba(45,212,191,0.35);
-}
-
-/* Topbar search accent (subtle) */
-#topbar-wrapper .input-group-text,
-#topbar-wrapper input {
-  border-color: rgba(255,255,255,0.10) !important;
-}
-#topbar-wrapper input:focus {
-  border-color: var(--k-border-mint) !important;
-  box-shadow: 0 0 0 3px rgba(45,212,191,0.10) !important;
-}
-
-/* Tags (chips): cleaner, less neon */
+/* 5) 태그 칩: pill + 민트 테두리, hover 라임 */
 .tag,
 .post-tag,
 #panel-wrapper .post-tag {
   border-radius: 999px !important;
   border: 1px solid rgba(45, 212, 191, 0.22) !important;
-  background: rgba(45, 212, 191, 0.06) !important;
+  background: rgba(45, 212, 191, 0.08) !important;
   color: var(--k-text) !important;
 }
 .tag:hover,
 .post-tag:hover {
-  border-color: rgba(163, 230, 53, 0.28) !important;
-  background: rgba(163, 230, 53, 0.08) !important;
+  border-color: rgba(163, 230, 53, 0.32) !important;
+  background: rgba(163, 230, 53, 0.10) !important;
 }
 
-/* Code blocks: high-contrast for writeups */
+/* 6) 코드블록: 라이트업 핵심 → 대비/테두리 확실하게 */
 pre,
 .highlight,
 div.highlighter-rouge {
-  background: rgba(0, 0, 0, 0.34) !important;
+  background: rgba(0, 0, 0, 0.40) !important;
   border: 1px solid rgba(45, 212, 191, 0.18) !important;
   border-radius: 14px !important;
 }
 code {
-  font-family: ui-monospace, "JetBrains Mono", "Cascadia Mono", "D2Coding", SFMono-Regular, Menlo, Consolas, monospace;
+  font-family: ui-monospace, "JetBrains Mono", "Cascadia Mono", "D2Coding",
+               SFMono-Regular, Menlo, Consolas, monospace;
 }
 
-/* Blockquote: mint marker */
+/* 7) 인용/주의 박스 느낌(라이트업에서 보기 좋게) */
 blockquote {
-  border-left: 3px solid rgba(45, 212, 191, 0.55) !important;
-  background: rgba(45, 212, 191, 0.05) !important;
+  border-left: 4px solid rgba(45, 212, 191, 0.55);
+  background: rgba(45, 212, 191, 0.06);
+  color: var(--k-text);
   border-radius: 12px;
 }
 
-/* =========================
-   Layout FIX: Right panel forced back to right on desktop
-   (if it dropped to bottom due to custom CSS or build mismatch)
-   ========================= */
-@media (min-width: 992px) {
-  /* Chirpy core row usually flex-based; enforce no wrap so panel stays right */
-  #core-wrapper > .row {
-    flex-wrap: nowrap !important;
-  }
+/* 8) 제목: 살짝만 포인트 */
+h1, h2, h3 {
+  text-shadow: 0 0 14px rgba(163, 230, 53, 0.05);
+}
 
-  /* In case widths collapsed, enforce reasonable column widths */
-  #post-wrapper {
-    flex: 0 0 72% !important;
-    max-width: 72% !important;
+/* 9) ✅ 레이아웃 안전장치: 데스크톱에서 오른쪽 패널이 아래로 떨어지는 현상 방지
+      - Chirpy가 반응형으로 패널을 아래로 보내는 경우가 있는데,
+        커스텀 CSS/폰트/여백 영향으로 “데스크톱 조건”이 깨져도 강제로 2컬럼 유지 */
+@media (min-width: 1200px) {
+  #main-wrapper {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: flex-start !important;
+  }
+  #core-wrapper {
+    flex: 1 1 0% !important;
+    min-width: 0 !important;
   }
   #panel-wrapper {
-    flex: 0 0 28% !important;
-    max-width: 28% !important;
+    flex: 0 0 22rem !important;
+    width: 22rem !important;
+    max-width: 22rem !important;
   }
+}
+
+/* 10) 글 메타(날짜/카테고리) 가독성 */
+.post-meta,
+.post-meta a,
+.post-tail-wrapper {
+  color: var(--k-text-dim) !important;
 }
