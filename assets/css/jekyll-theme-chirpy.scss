@@ -76,3 +76,48 @@ code {
 h1, h2, h3 {
   text-shadow: 0 0 18px rgba(45, 226, 200, 0.06);
 }
+
+/* ===== make surfaces feel different (cards, panels, search) ===== */
+
+html[data-mode='dark'] {
+  --card-bg: rgba(255, 255, 255, 0.035);
+  --card-border: rgba(45, 226, 200, 0.10);
+  --card-border-strong: rgba(167, 209, 31, 0.16);
+}
+
+/* 본문 카드/박스 느낌 (Chirpy 공통 컨테이너들에 광범위 적용) */
+html[data-mode='dark'] .card,
+html[data-mode='dark'] .post-preview,
+html[data-mode='dark'] .content .wrapper,
+html[data-mode='dark'] .categories,
+html[data-mode='dark'] .tags,
+html[data-mode='dark'] .archive {
+  background: var(--card-bg) !important;
+  border: 1px solid var(--card-border) !important;
+  border-radius: 14px;
+}
+
+/* hover 때만 살짝 라임 */
+html[data-mode='dark'] .card:hover,
+html[data-mode='dark'] .post-preview:hover {
+  border-color: var(--card-border-strong) !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+
+/* 검색창 포인트 */
+html[data-mode='dark'] input[type="search"],
+html[data-mode='dark'] .search-wrapper input {
+  border-color: rgba(45, 226, 200, 0.18) !important;
+}
+html[data-mode='dark'] input[type="search"]:focus,
+html[data-mode='dark'] .search-wrapper input:focus {
+  border-color: rgba(200, 255, 77, 0.30) !important;
+  box-shadow: 0 0 0 3px rgba(200, 255, 77, 0.08);
+}
+
+/* 테이블/구분선도 톤 맞추기 */
+html[data-mode='dark'] hr,
+html[data-mode='dark'] .table,
+html[data-mode='dark'] table {
+  border-color: rgba(45, 226, 200, 0.10) !important;
+}
