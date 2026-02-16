@@ -9,7 +9,7 @@ comments: false
 
 | Name | Category | Difficulty | Keywords |
 |---|:---:|:---:|:---:|
-| [gap] | web | ★★☆ | Lodash, Template Option Injection |
+| gap | web | ★★☆ | Lodash, Template Option Injection |
 
 ## TL;DR
 
