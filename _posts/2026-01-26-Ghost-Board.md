@@ -1,5 +1,5 @@
 ---
-title: "0xL4ugh CTF 2026 | [Web] Ghost Board"
+title: "[Web] Ghost Board"
 date: 2026-01-26 01:00:00 +0900
 categories: [0xL4ugh CTF 2026]
 tags: [Web]
