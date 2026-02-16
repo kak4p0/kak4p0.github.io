@@ -7,6 +7,10 @@ toc: true
 comments: false
 ---
 
+| Name | Category | Difficulty | Keywords |
+|---|:---:|:---:|:---:|
+| [gap] | web | ★★☆ | Lodash, Template Option Injection |
+
 ## TL;DR
 
 Ghost Board는 아래 취약점이 **체인**으로 이어져 플래그 파일(`/flag-*.txt`)을 읽을 수 있다.
