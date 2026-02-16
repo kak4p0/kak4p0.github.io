@@ -7,6 +7,9 @@ toc: true
 comments: false
 ---
 
+Writing about the "narnes-and-bobles" of LA CTF 2026.
+<!--more-->
+
 # narnes-and-bobles
 
 > “I heard Amazon killed a certain book store so I'm gonna make my own book store and kill Amazon.  
