@@ -326,3 +326,32 @@ footer p + p::before,
 #sidebar .sidebar-bottom a{
   margin: 0 !important;
 }
+
+/* Topbar: breadcrumb left, search right */
+@media (min-width: 992px){
+  #topbar-wrapper #topbar{
+    display: flex !important;
+    align-items: center !important;
+    gap: .75rem !important;
+  }
+
+  /* 왼쪽(브레드크럼) 영역은 늘어나게 */
+  #topbar-wrapper #topbar nav[aria-label="Breadcrumb"],
+  #topbar-wrapper #topbar #breadcrumb,
+  #topbar-wrapper #topbar .breadcrumb,
+  #topbar-wrapper #topbar .topbar-title{
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+  }
+
+  /* 검색은 오른쪽 끝 */
+  #topbar-wrapper #topbar #search-wrapper,
+  #topbar-wrapper #topbar .search-wrapper{
+    margin-left: auto !important;
+  }
+
+  /* 검색바 크기(원하면 숫자만 조절) */
+  #topbar-wrapper #topbar #search-input{
+    width: min(420px, 34vw) !important;
+  }
+}
