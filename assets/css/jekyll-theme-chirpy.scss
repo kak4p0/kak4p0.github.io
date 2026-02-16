@@ -309,3 +309,20 @@ footer p + p::before,
   padding: 0 .35rem;
   opacity: .8;
 }
+
+/* Sidebar bottom icons: horizontal single row */
+#sidebar .sidebar-bottom{
+  margin-top: auto !important;
+  padding: 1.1rem 0 1.4rem !important;
+
+  display: flex !important;
+  flex-direction: row !important;  /* <-- row */
+  gap: .6rem !important;
+  justify-content: center !important;
+  align-items: center !important;
+  flex-wrap: nowrap !important;     /* 한 줄 고정 */
+}
+
+#sidebar .sidebar-bottom a{
+  margin: 0 !important;
+}
