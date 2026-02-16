@@ -753,3 +753,45 @@ footer p + p::before {
   padding: 0 .35rem;
   opacity: .8;
 }
+
+/* Footer: 배경/네모 제거 + 본문 폭 가운데 정렬 */
+footer,
+#footer {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: 0 !important;
+
+  display: flex;
+  justify-content: center !important;
+  align-items: center;
+  text-align: center;
+
+  padding: 1rem 0 1.25rem;
+}
+
+/* footer 내부가 "컨테이너"로 잡혀도 가운데로 */
+footer .container,
+#footer .container {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: 0 !important;
+
+  display: flex;
+  justify-content: center !important;
+  align-items: center;
+}
+
+/* 두 줄로 깨지는 문구 -> 한 줄 + 구분점 */
+footer p,
+#footer p {
+  margin: 0 !important;
+  display: inline !important;
+  white-space: nowrap;
+}
+
+footer p + p::before,
+#footer p + p::before {
+  content: " · ";
+  padding: 0 .35rem;
+  opacity: .8;
+}
