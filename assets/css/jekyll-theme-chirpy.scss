@@ -251,29 +251,84 @@ code{
 }
 
 /* =========================
-   Sticky right panel (Contents follows while scrolling)
-   - Makes the entire right panel stay visible like reference blogs.
-   - Panel becomes its own scroll area if content exceeds viewport.
+   Sticky TOC only (Contents only follows while scrolling)
+   - Keeps current-section highlight behavior (handled by Chirpy/tocbot JS)
+   - Panel stays in normal flow; only TOC becomes sticky
    ========================= */
 @media (min-width: 992px){
   /* Sticky can be disabled by overflow on ancestors; keep them visible */
   #main,
   #main-wrapper,
-  #core-wrapper{
+  #core-wrapper,
+  #panel-wrapper{
     overflow: visible !important;
   }
 
+  /* Ensure panel itself is NOT sticky */
   #panel-wrapper{
+    position: static !important;
+    top: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  /* Make only the TOC sticky */
+  #toc-wrapper,
+  #panel-wrapper .toc-wrapper,
+  #panel-wrapper .panel.toc-wrapper{
     position: sticky !important;
     top: 5.2rem; /* below topbar */
     align-self: flex-start !important;
+    z-index: 2;
+  }
+
+  /* If TOC is long, scroll inside it */
+  #toc-wrapper{
     max-height: calc(100vh - 6.2rem);
     overflow-y: auto;
   }
+}
 
-  /* Avoid nested scroll if panel itself scrolls */
-  #toc-wrapper{
-    max-height: none !important;
-    overflow: visible !important;
+
+
+/* =========================
+   List pages (categories/tags/archives) look "too narrow"
+   Cause: panel column isn't being pushed to the far right on some layouts,
+          and core keeps a constrained max-width.
+   Fix: (1) push panel to the right, (2) let core expand, (3) widen #main container too.
+   ========================= */
+
+/* Wider container: Chirpy often uses #main as Bootstrap .container */
+@media (min-width: 1400px){
+  #main{
+    max-width: 1480px !important; /* tweak 1440~1600 */
+  }
+}
+
+/* Align panel to the far right and let core breathe */
+@media (min-width: 992px){
+  /* Top-level row variants */
+  #main > .row,
+  #main-wrapper > .row,
+  #main-wrapper > .container > .row,
+  #main-wrapper .row.flex-grow-1{
+    flex-wrap: nowrap !important;
+  }
+
+  /* Core should occupy remaining width */
+  #core-wrapper{
+    flex: 1 1 0% !important;
+    max-width: none !important;
+    width: auto !important;
+    min-width: 0 !important;
+  }
+
+  /* Panel always pinned to the far right (prevents "center-floating" look) */
+  #panel-wrapper{
+    margin-left: auto !important;
+    flex: 0 0 320px !important;
+    width: 320px !important;
+    max-width: 320px !important;
+    min-width: 320px !important;
   }
 }
