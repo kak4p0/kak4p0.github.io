@@ -432,9 +432,9 @@ footer p + p::before,
     overflow: auto;
   }
 
-  /* Optional: hide the toc border cover ghost layer if it blocks clicks */
+  /* Hide the 'toc-border-cover' bar (it can look like a gray block between panels) */
   aside#panel-wrapper .toc-border-cover {
-    pointer-events: none;
+    display: none !important;
   }
 }
 
