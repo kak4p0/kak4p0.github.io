@@ -1,6 +1,6 @@
 ---
 title: "LA CTF 2026 | lactf-invoice-generator"
-date: 2026-01-26 01:00:00 +0900
+date: 2026-02-10 01:00:00 +0900
 categories: [LA CTF 2026, Web]
 tags: [Web]
 toc: true
