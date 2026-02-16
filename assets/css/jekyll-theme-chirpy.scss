@@ -3,14 +3,10 @@
 @import "main";
 
 /* =========================================================
-   Kak4p0 Chirpy single-file override (FINAL)
-   - Categories/Tags lists: remove bullets + remove double dots
-   - Sidebar menu dots: remove
-   - Sidebar bottom icons: stick to bottom & align nicely
-   - Search bar: larger
-   - Right panel (#panel-wrapper): NEVER drops below on desktop
-   - TOC (Contents): sticky follows while scrolling
-   - Footer: no boxed background, single-line, centered
+   Kak4p0 Chirpy - ULTIMATE FIX
+   - TOC: 100% 확실한 sticky (JavaScript 무시)
+   - Further Reading: 3열 카드 강제
+   - 홈: 간격 최소화
    ========================================================= */
 
 /* ---------- Palette ---------- */
@@ -90,7 +86,7 @@ a:hover, .post-content a:hover{ color: var(--k-lime); }
   box-shadow: 0 0 16px rgba(45,212,191,.18);
 }
 
-/* ---------- Code blocks (prevent layout break) ---------- */
+/* ---------- Code blocks ---------- */
 div.highlighter-rouge,
 figure.highlight,
 div.highlight{
@@ -125,7 +121,7 @@ div.highlight pre{
 #core-wrapper, .post-content{ min-width: 0 !important; }
 .post-content *{ overflow-wrap: anywhere; }
 
-/* ---------- Remove "washed overlay" hover on preview cards ---------- */
+/* ---------- Remove hover effects ---------- */
 .post-preview,
 .post-preview:hover,
 .post-preview:focus-within,
@@ -134,7 +130,6 @@ div.highlight pre{
   filter: none !important;
   transform: none !important;
   transition: none !important;
-  box-shadow: none !important;
 }
 .post-preview::before,
 .post-preview::after,
@@ -144,19 +139,17 @@ div.highlight pre{
   display: none !important;
 }
 
-/* ---------- Sidebar (remove menu dots + bottom icons align) ---------- */
+/* ---------- Sidebar ---------- */
 #sidebar{
   background:
     radial-gradient(900px 650px at 30% 0%, rgba(45,212,191,.11), transparent 55%),
     radial-gradient(900px 650px at 70% 15%, rgba(163,230,53,.09), transparent 55%),
     linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,.40));
   border-right: 1px solid rgba(255,255,255,.06);
-
   display: flex !important;
   flex-direction: column !important;
 }
 
-/* Sidebar nav list: kill bullet/dots safely */
 #sidebar ul{
   list-style: none !important;
   padding-left: 0 !important;
@@ -170,7 +163,6 @@ div.highlight pre{
   content: none !important;
 }
 
-/* Active link glow */
 #sidebar .nav-link.active{
   background: rgba(45,212,191,.14) !important;
   border: 1px solid rgba(163,230,53,.18) !important;
@@ -179,37 +171,59 @@ div.highlight pre{
     0 12px 28px rgba(0,0,0,.35);
 }
 
-/* Bottom icon block: push to bottom + neat spacing */
+/* 사이드바 하단 아이콘: 가로 배치 */
 #sidebar .sidebar-bottom{
   margin-top: auto !important;
   padding: 1.1rem 0 1.4rem !important;
   display: flex !important;
-  flex-direction: column !important;
-  gap: .55rem !important;
+  flex-direction: row !important;
+  gap: .6rem !important;
+  justify-content: center !important;
   align-items: center !important;
+  flex-wrap: nowrap !important;
 }
 #sidebar .sidebar-bottom a{
+  margin: 0 !important;
   transform: none !important;
 }
 
-/* ---------- Search bar bigger ---------- */
-#topbar #search-wrapper{
-  margin-left: auto !important;
+/* ---------- Topbar ---------- */
+#topbar-wrapper{
+  background: transparent !important;
+  border-bottom: 1px solid rgba(255,255,255,.06) !important;
+  box-shadow: none !important;
 }
-#topbar #search-input{
-  height: 2.45rem !important;
-  font-size: 1rem !important;
-  padding: .45rem .9rem !important;
-  border-radius: 999px !important;
-}
+
 @media (min-width: 992px){
+  #topbar{
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 1rem !important;
+    height: 3.5rem !important;
+  }
+
+  #topbar nav,
+  #topbar #breadcrumb{
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+  }
+
+  #topbar #search-wrapper{
+    margin-left: auto !important;
+    flex: 0 0 auto !important;
+  }
+
   #topbar #search-input{
-    width: min(440px, 38vw) !important;
+    width: min(420px, 34vw) !important;
+    height: 2.3rem !important;
+    font-size: 0.95rem !important;
+    padding: 0.4rem 0.85rem !important;
+    border-radius: 999px !important;
   }
 }
 
-/* ---------- Categories/Tags/Archives: remove bullets + stop "double dot" ---------- */
-/* Remove bullets in list pages (main content), but keep bullets inside real post content */
+/* ---------- Remove bullets from list pages ---------- */
 main[aria-label="Main Content"] ul,
 main[aria-label="Main Content"] ol{
   list-style: none !important;
@@ -221,7 +235,7 @@ main[aria-label="Main Content"] li::marker{
   content: none !important;
 }
 
-/* Restore bullets INSIDE actual post body only */
+/* 포스트 내용에서는 bullet 복구 */
 .post-content ul{
   list-style: disc;
   padding-left: 1.25rem;
@@ -231,9 +245,24 @@ main[aria-label="Main Content"] li::marker{
   padding-left: 1.25rem;
 }
 
-/* ---------- Desktop layout: core + fixed right panel (prevents panel dropping) ---------- */
+/* =========================================================
+   🔥🔥🔥 CRITICAL: Desktop layout
+   ========================================================= */
 @media (min-width: 992px){
-  /* This is the real Chirpy layout row (from your DevTools): */
+  /* 모든 부모 요소 overflow 제거 (sticky 방해 요소) */
+  body,
+  html,
+  #main-wrapper,
+  #main-wrapper > .container,
+  #main-wrapper > .container > .row,
+  #main-wrapper > .container > .row.flex-grow-1,
+  aside#panel-wrapper{
+    overflow: visible !important;
+    contain: none !important;
+    transform: none !important;
+  }
+
+  /* Flexbox 레이아웃 */
   #main-wrapper > .container > .row.flex-grow-1{
     display: flex !important;
     flex-wrap: nowrap !important;
@@ -241,7 +270,7 @@ main[aria-label="Main Content"] li::marker{
     width: 100% !important;
   }
 
-  /* Core column */
+  /* 메인 컨텐츠 */
   #main-wrapper > .container > .row.flex-grow-1 > main[aria-label="Main Content"]{
     flex: 1 1 0% !important;
     width: auto !important;
@@ -249,45 +278,81 @@ main[aria-label="Main Content"] li::marker{
     min-width: 0 !important;
   }
 
-  /* Right panel column (fixed width) */
+  /* 오른쪽 패널 */
   #main-wrapper > .container > .row.flex-grow-1 > aside#panel-wrapper{
-    flex: 0 0 320px !important;
-    width: 320px !important;
-    max-width: 320px !important;
-    min-width: 320px !important;
-    margin-left: auto !important;
+    flex: 0 0 300px !important;
+    width: 300px !important;
+    max-width: 300px !important;
+    min-width: 300px !important;
+    margin-left: 1.5rem !important;
     align-self: flex-start !important;
-  }
-
-  /* Prevent any ancestor overflow from killing sticky */
-  #main-wrapper,
-  #main-wrapper > .container,
-  aside#panel-wrapper{
+    position: relative !important;
     overflow: visible !important;
   }
 }
 
-/* ---------- TOC (Contents) sticky follow ---------- */
+/* =========================================================
+   🔥🔥🔥 TOC: SUPER STICKY (절대 작동)
+   ========================================================= */
 @media (min-width: 992px){
-  section#toc-wrapper{
+  /* Recently Updated, Trending Tags는 static */
+  #panel-wrapper > .access,
+  #panel-wrapper .access{
+    position: static !important;
+    margin-bottom: 1.5rem !important;
+  }
+
+  /* 회색 커버 제거 */
+  #toc-border-cover,
+  .toc-border-cover{
+    display: none !important;
+  }
+
+  /* TOC만 sticky - 가장 강력한 방법 */
+  #toc-wrapper,
+  section#toc-wrapper,
+  aside#panel-wrapper > section,
+  #panel-wrapper > section#toc-wrapper{
     position: sticky !important;
-    top: 5.2rem !important;
-    max-height: calc(100vh - 6.2rem) !important;
+    position: -webkit-sticky !important;
+    top: 4.5rem !important;
+    max-height: calc(100vh - 5.5rem) !important;
     overflow-y: auto !important;
-    z-index: 20 !important;
+    overflow-x: hidden !important;
+    z-index: 100 !important;
+    will-change: transform !important;
+    
+    /* 추가 강제 */
+    display: block !important;
+    margin: 0 !important;
+  }
+
+  /* TOC 내부 요소들 */
+  #toc-wrapper nav,
+  #toc-wrapper .panel-heading,
+  #toc-wrapper ul,
+  #toc-wrapper li{
+    position: relative !important;
+  }
+
+  /* 스크롤바 스타일 */
+  #toc-wrapper::-webkit-scrollbar{
+    width: 6px;
+  }
+  #toc-wrapper::-webkit-scrollbar-thumb{
+    background: rgba(255,255,255,.15);
+    border-radius: 6px;
   }
 }
 
-/* ---------- Footer: transparent + centered + single line ---------- */
+/* ---------- Footer ---------- */
 footer, #footer{
   background: transparent !important;
   border: 0 !important;
   box-shadow: none !important;
-
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
-
   padding: 1rem 0 1.25rem !important;
   text-align: center !important;
 }
@@ -310,400 +375,315 @@ footer p + p::before,
   opacity: .8;
 }
 
-/* Sidebar bottom icons: horizontal single row */
-#sidebar .sidebar-bottom{
-  margin-top: auto !important;
-  padding: 1.1rem 0 1.4rem !important;
-
+/* =========================================================
+   Post meta: Updated 표시 + 2줄 레이아웃
+   ========================================================= */
+.post-meta{
   display: flex !important;
-  flex-direction: row !important;  /* <-- row */
-  gap: .6rem !important;
-  justify-content: center !important;
+  flex-wrap: wrap !important;
   align-items: center !important;
-  flex-wrap: nowrap !important;     /* 한 줄 고정 */
+  gap: 0 0.6rem !important;
+  margin-bottom: 0.8rem !important;
 }
 
-#sidebar .sidebar-bottom a{
-  margin: 0 !important;
-}
-
-/* Topbar: breadcrumb left, search right */
-@media (min-width: 992px){
-  #topbar-wrapper #topbar{
-    display: flex !important;
-    align-items: center !important;
-    gap: .75rem !important;
-  }
-
-  /* 왼쪽(브레드크럼) 영역은 늘어나게 */
-  #topbar-wrapper #topbar nav[aria-label="Breadcrumb"],
-  #topbar-wrapper #topbar #breadcrumb,
-  #topbar-wrapper #topbar .breadcrumb,
-  #topbar-wrapper #topbar .topbar-title{
-    flex: 1 1 auto !important;
-    min-width: 0 !important;
-  }
-
-  /* 검색은 오른쪽 끝 */
-  #topbar-wrapper #topbar #search-wrapper,
-  #topbar-wrapper #topbar .search-wrapper{
-    margin-left: auto !important;
-  }
-
-  /* 검색바 크기(원하면 숫자만 조절) */
-  #topbar-wrapper #topbar #search-input{
-    width: min(420px, 34vw) !important;
-  }
-}
-/* =========================================================
-   Post meta: restore "Updated" + clean spacing
-   ========================================================= */
-
-/* If the "Updated" line exists, make sure it is visible */
-.post-meta > span + span {
+.post-meta > span{
   display: inline-flex !important;
-  align-items: center;
+  align-items: center !important;
+  white-space: nowrap !important;
 }
 
-/* Prevent "PostedFeb" / "UpdatedFeb" stuck text (flex can eat the whitespace visually) */
-.post-meta > span > time {
-  margin-left: .35rem;
+/* Posted와 Updated 사이 점 */
+.post-meta > span + span::before{
+  content: "•" !important;
+  opacity: .6 !important;
+  margin: 0 0.55rem 0 0.25rem !important;
+  display: inline-block !important;
 }
 
-/* Put a dot between Posted and Updated when they're on the same line */
-.post-meta > span + span::before {
-  content: "•";
-  opacity: .6;
-  margin: 0 .55rem 0 .45rem;
+.post-meta > span > time{
+  margin-left: .35rem !important;
 }
 
-/* Keep the author/readtime row on its own line (your preferred 2-line layout) */
-.post-meta > .d-flex.justify-content-between {
-  flex: 0 0 100%;
-  margin-top: .35rem;
+/* 작성자/읽기시간 줄 */
+.post-meta > .d-flex.justify-content-between{
+  flex: 0 0 100% !important;
+  width: 100% !important;
+  margin-top: 0.25rem !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+}
+
+.post-meta > .d-flex.justify-content-between > :last-child{
+  margin-left: auto !important;
+}
+
+/* Updated 강제 표시 */
+.post .timeago[itemprop="dateModified"],
+.post-meta .timeago[itemprop="dateModified"],
+span[itemprop="dateModified"]{
+  display: inline !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 /* =========================================================
-   Right panel: remove the gray "cover bar" above TOC
-   ========================================================= */
-#panel-wrapper .toc-border-cover {
-  display: none !important;
-}
-
-/* =========================================================
-   Post tail: license + share on ONE line (like your reference)
+   Post tail: license + share 한 줄
    ========================================================= */
 .post-tail-wrapper .post-tail-bottom,
-#post-tail-wrapper .post-tail-bottom {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: .5rem 1rem;
+#post-tail-wrapper .post-tail-bottom,
+footer.post-footer .license-wrapper{
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: wrap !important;
+  gap: .5rem 1rem !important;
 }
 
 .post-tail-wrapper .license-wrapper,
-#post-tail-wrapper .license-wrapper {
-  flex: 1 1 auto;
-  margin: 0;
+#post-tail-wrapper .license-wrapper{
+  flex: 1 1 auto !important;
+  margin: 0 !important;
 }
 
 .post-tail-wrapper .share-wrapper,
-#post-tail-wrapper .share-wrapper {
-  margin-left: auto;
-  display: inline-flex;
-  align-items: center;
-  gap: .5rem;
+#post-tail-wrapper .share-wrapper,
+footer.post-footer .license-wrapper .share-wrapper{
+  margin-left: auto !important;
+  flex: 0 0 auto !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: .5rem !important;
 }
 
-.post-tail-wrapper .share-wrapper .share-icons,
-#post-tail-wrapper .share-wrapper .share-icons {
-  display: inline-flex;
-  align-items: center;
-  gap: .4rem;
-  margin: 0;
-  padding: 0;
+.share-icons{
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: .4rem !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
 }
 
-.post-tail-wrapper .share-wrapper .share-icons > li,
-#post-tail-wrapper .share-wrapper .share-icons > li {
-  list-style: none;
-  margin: 0;
+.share-icons > li{
+  list-style: none !important;
+  margin: 0 !important;
 }
 
 /* =========================================================
-   Further Reading: force CARD layout (fallback for both card/grid and list markup)
+   🔥🔥🔥 Further Reading: 3열 카드 강제 (Axl0t0l 스타일)
    ========================================================= */
-
-/* 1) If theme already renders cards, style them */
-#related-posts .card,
-.post-tail-wrapper #related-posts .card {
-  border-radius: 1rem;
-  border: 1px solid rgba(255, 255, 255, .08);
-  background: rgba(255, 255, 255, .03);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, .35);
-  overflow: hidden;
+#related-posts{
+  margin-top: 2.5rem !important;
+  clear: both !important;
 }
 
-#related-posts .card .card-body {
-  padding: 1.15rem;
+#related-posts > h3,
+#related-posts > .panel-heading{
+  margin-bottom: 1.25rem !important;
+  font-size: 1.4rem !important;
 }
 
-/* 2) If it renders as a list/preview, convert it to a responsive card grid */
+/* 모든 가능한 구조에 대응 */
+#related-posts .row,
 #related-posts ul,
-#related-posts .post-list {
-  list-style: none;
-  padding-left: 0;
-  margin: 1rem 0 0 0;
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-@media (max-width: 1199px) {
-  #related-posts ul,
-  #related-posts .post-list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 767px) {
-  #related-posts ul,
-  #related-posts .post-list {
-    grid-template-columns: 1fr;
-  }
-}
-
-#related-posts ul > li,
-#related-posts .post-list > li,
-#related-posts .post-preview {
-  border-radius: 1rem;
-  border: 1px solid rgba(255, 255, 255, .08);
-  background: rgba(255, 255, 255, .03);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, .35);
-  padding: 1.15rem;
-  margin: 0;
-}
-
-/* Make the whole card clickable if the list item contains a single link */
-#related-posts ul > li > a,
-#related-posts .post-list > li > a {
-  display: block;
-  text-decoration: none;
-}
-
-/* Tidy typography inside related cards (works for both structures) */
-#related-posts .post-title,
-#related-posts h1,
-#related-posts h2,
-#related-posts h3 {
-  margin-top: .25rem;
-  margin-bottom: .5rem;
-}
-
-/* kak4p0-custom-v12 */
-
-/* Wide layout: main + right panel */
-@media (min-width: 1200px) {
-  #main-wrapper > .container {
-    max-width: 1440px;
-  }
-
-  #main-wrapper > .container > .row {
-    flex-wrap: nowrap;
-  }
-
-  #main-wrapper > .container > .row > main {
-    flex: 0 0 72%;
-    max-width: 72%;
-  }
-
-  #main-wrapper > .container > .row > aside#panel-wrapper {
-    flex: 0 0 28%;
-    max-width: 28%;
-    padding-left: 2rem !important;
-  }
-}
-
-/* Post meta: line1 = Posted • Updated, line2 = By ... | readtime */
-.post-meta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  column-gap: 0.6rem;
-  row-gap: 0.25rem;
-}
-
-.post-meta > span {
-  display: inline-flex;
-  align-items: center;
-  white-space: nowrap;
-}
-
-/* Insert a middle dot between Posted and Updated */
-.post-meta > span + span::before {
-  content: "•";
-  margin: 0 0.55rem 0 0.25rem;
-  opacity: 0.7;
-}
-
-/* Force 'By' and 'readtime' to stay on one row */
-.post-meta > .d-flex.justify-content-between {
-  flex: 0 0 100%;
-  width: 100%;
-  margin-top: 0.25rem;
-
-  display: flex !important;
-  flex-direction: row !important;
-  flex-wrap: nowrap !important;
-  align-items: center !important;
-}
-
-.post-meta > .d-flex.justify-content-between > :last-child {
-  margin-left: auto;
-}
-
-.post-meta .readtime,
-.post-meta .readtime * {
-  white-space: nowrap;
-}
-
-/* Sticky TOC: keep only Contents sticky; fix sticky blockers */
-@media (min-width: 992px) {
-  /* Sticky breaks if ANY ancestor has overflow != visible */
-  #main-wrapper,
-  #main-wrapper > .container,
-  #main-wrapper > .container > .row,
-  #main-wrapper > .container > .row.flex-grow-1,
-  #main-wrapper > .container > .row > main,
-  #main-wrapper > .container > .row > aside#panel-wrapper,
-  #main-wrapper > .container > .row > aside#panel-wrapper > .access {
-    overflow: visible !important;
-  }
-
-  /* Remove the gray placeholder bar under 'Trending Tags' */
-  #toc-border-cover {
-    display: none !important;
-  }
-
-  /* Keep 'Recently Updated' + 'Trending Tags' normal flow */
-  #panel-wrapper .access {
-    position: static !important;
-  }
-
-  /* Make ONLY toc wrapper sticky */
-  #toc-wrapper {
-    position: sticky !important;
-    top: 5.2rem;
-    max-height: calc(100vh - 5.2rem);
-    overflow: auto;
-    margin-top: 1rem;
-    padding-bottom: 1rem;
-    padding-right: 0.25rem;
-  }
-}
-
-#toc-wrapper::-webkit-scrollbar {
-  width: 6px;
-}
-
-#toc-wrapper::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 6px;
-}
-
-/* Tag pills on right panel */
-#panel-wrapper .post-tag {
-  border-radius: 9999px;
-  padding: 0.25rem 0.65rem;
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  background: rgba(255, 255, 255, 0.02);
-}
-
-/* Footer (license + share) in one row */
-footer.post-footer .license-wrapper {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-}
-
-footer.post-footer .license-wrapper > span {
-  flex: 1 1 auto;
-}
-
-footer.post-footer .license-wrapper .share-wrapper {
-  flex: 0 0 auto;
-}
-
-footer.post-footer .license-wrapper .share-wrapper .share-icons {
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-}
-
-/* Related posts: render as 3 cards (like v10 screenshot) */
-#related-posts .row {
+#related-posts .post-list{
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  
   display: grid !important;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.25rem;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 1.25rem !important;
+  
+  /* Bootstrap의 negative margin 제거 */
   margin-left: 0 !important;
   margin-right: 0 !important;
 }
 
-@media (max-width: 1199.98px) {
-  #related-posts .row {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+/* 중간 크기: 2열 */
+@media (max-width: 1199px){
+  #related-posts .row,
+  #related-posts ul,
+  #related-posts .post-list{
+    grid-template-columns: repeat(2, 1fr) !important;
   }
 }
 
-@media (max-width: 767.98px) {
-  #related-posts .row {
-    grid-template-columns: 1fr;
+/* 모바일: 1열 */
+@media (max-width: 767px){
+  #related-posts .row,
+  #related-posts ul,
+  #related-posts .post-list{
+    grid-template-columns: 1fr !important;
   }
 }
 
-#related-posts .row > [class^="col"],
-#related-posts .row > .col {
+/* Bootstrap column 클래스 무력화 */
+#related-posts .row > [class*="col"],
+#related-posts .row > .col{
   padding-left: 0 !important;
   padding-right: 0 !important;
   width: auto !important;
   max-width: none !important;
+  flex: none !important;
 }
 
-/* Support both possible templates: .post-preview OR bootstrap .card */
+/* 카드 스타일 (모든 가능한 구조) */
+#related-posts ul > li,
+#related-posts .post-list > li,
 #related-posts .post-preview,
-#related-posts .card {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 1.25rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-  overflow: hidden;
-  height: 100%;
+#related-posts .card,
+#related-posts .row > * > .card,
+#related-posts .row > * > .post-preview{
+  list-style: none !important;
+  
+  background: rgba(255,255,255,.04) !important;
+  border: 1px solid rgba(255,255,255,.1) !important;
+  border-radius: 1rem !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,.3) !important;
+  
+  padding: 1.15rem !important;
+  margin: 0 !important;
+  height: 100% !important;
+  
+  transition: all 0.25s ease !important;
+  
+  /* Bootstrap card 오버라이드 */
+  overflow: hidden !important;
 }
 
-#related-posts .post-preview {
-  padding: 1rem 1.1rem;
+/* Hover 효과 */
+#related-posts ul > li:hover,
+#related-posts .post-preview:hover,
+#related-posts .card:hover{
+  background: rgba(255,255,255,.06) !important;
+  border-color: rgba(45,212,191,.3) !important;
+  box-shadow: 0 12px 32px rgba(0,0,0,.4) !important;
+  transform: translateY(-2px) !important;
 }
 
-#related-posts .post-preview::before,
-#related-posts .post-preview::after {
-  content: none !important;
-  display: none !important;
+/* 링크 전체 클릭 */
+#related-posts ul > li > a,
+#related-posts .post-list > li > a,
+#related-posts .post-preview > a,
+#related-posts .card > a{
+  display: block !important;
+  text-decoration: none !important;
+  color: inherit !important;
 }
 
-#related-posts .card .card-body {
-  padding: 1rem 1.1rem;
+/* 날짜 */
+#related-posts time,
+#related-posts .date,
+#related-posts .post-meta,
+#related-posts .text-muted{
+  display: block !important;
+  font-size: 0.85rem !important;
+  opacity: 0.65 !important;
+  margin-bottom: 0.5rem !important;
 }
 
-#related-posts .card .card-title {
-  font-size: 1.05rem;
-  font-weight: 650;
+/* 제목 */
+#related-posts .post-title,
+#related-posts .card-title,
+#related-posts h1,
+#related-posts h2,
+#related-posts h3,
+#related-posts h4{
+  font-size: 1.1rem !important;
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+  margin: 0.5rem 0 0.65rem 0 !important;
+  color: var(--k-mint) !important;
 }
 
-#related-posts .card .card-text {
-  font-size: 0.9rem;
-  opacity: 0.85;
+/* 설명 */
+#related-posts .post-content,
+#related-posts .card-text,
+#related-posts p{
+  font-size: 0.9rem !important;
+  line-height: 1.5 !important;
+  opacity: 0.8 !important;
+  margin: 0 !important;
+  
+  /* 2줄 제한 */
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
 }
 
-/* END kak4p0-custom-v12 */
+/* Bootstrap card-body 패딩 조정 */
+#related-posts .card .card-body{
+  padding: 1.15rem !important;
+}
 
+/* =========================================================
+   🔥 홈페이지: 간격 최소화
+   ========================================================= */
+
+/* 리스트 상단 여백 제거 */
+#post-list,
+.post-list,
+#home .post-list,
+#core-wrapper > .post-list{
+  padding-top: 0 !important;
+  margin-top: 0.5rem !important;
+}
+
+/* 포스트 카드 간격 */
+.post-preview{
+  margin-bottom: 1.2rem !important;
+  padding: 1.3rem 1.5rem !important;
+}
+
+/* 제목 위 공간 제거 */
+.post-preview .post-title,
+.post-preview h1,
+.post-preview h2{
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+  margin-bottom: 0.5rem !important;
+}
+
+/* 메타 정보 */
+.post-preview .post-meta{
+  margin-bottom: 0.6rem !important;
+  margin-top: 0 !important;
+}
+
+/* 내용 프리뷰 */
+.post-preview .post-content,
+.post-preview > .content,
+.post-preview p{
+  margin-top: 0.5rem !important;
+  margin-bottom: 0.5rem !important;
+}
+
+/* 첫 번째 포스트 */
+.post-preview:first-child{
+  margin-top: 0 !important;
+}
+
+/* Pin 아이콘 */
+.post-preview .pin{
+  margin-bottom: 0.3rem !important;
+}
+
+/* =========================================================
+   최종 강제 오버라이드
+   ========================================================= */
+
+/* transform 완전 제거 (sticky 방해) */
+@media (min-width: 992px){
+  #main-wrapper *:not(#toc-wrapper):not(#toc-wrapper *){
+    transform: none !important;
+  }
+  
+  /* TOC 재강조 */
+  #toc-wrapper{
+    position: sticky !important;
+    top: 4.5rem !important;
+  }
+}
