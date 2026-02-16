@@ -3,27 +3,25 @@
 @import "main";
 
 /* =========================================================
-   Kak4p0 Kakapo Mint/Lime Skin (Chirpy)
-   Goals:
-   - cleaner + less blurry (no heavy backdrop-filter)
-   - stronger identity (kakapo mint/lime)
-   - fix: right panel dropping to bottom on long posts
+   Kak4p0 (Chirpy) - single-file overrides
+   - Sidebar 메뉴 왼쪽 '점' 제거
+   - Categories/Tags 리스트의 '점(불릿)' 제거
+   - Sidebar 하단에 소셜(메일/깃허브 등) 고정
+   - Topbar Search bar 더 크게
+   - (옵션) footer 한 줄 + 네모 배경 제거
    ========================================================= */
 
-/* ---------- Palette ---------- */
+/* ---------- Palette (optional identity) ---------- */
 :root{
-  --k-mint: #2dd4bf;          /* mint */
-  --k-lime: #a3e635;          /* lime */
-  --k-ink:  #0a0f12;          /* deep bg */
-  --k-ink2: #0d1417;          /* secondary bg */
+  --k-mint: #2dd4bf;
+  --k-lime: #a3e635;
+  --k-ink:  #0a0f12;
+  --k-ink2: #0d1417;
   --k-surface: rgba(255,255,255,.035);
-  --k-surface2: rgba(255,255,255,.05);
   --k-border: rgba(255,255,255,.08);
-  --k-mint-border: rgba(45,212,191,.22);
-  --k-lime-border: rgba(163,230,53,.22);
 }
 
-/* ---------- Background (distinct, but calm) ---------- */
+/* ---------- Background ---------- */
 body{
   background:
     radial-gradient(900px 650px at 14% -10%, rgba(45,212,191,.12), transparent 60%),
@@ -31,50 +29,10 @@ body{
     linear-gradient(180deg, var(--k-ink), var(--k-ink2));
 }
 
-/* subtle “noise” layer: adds uniqueness without blur */
-body::before{
-  content:"";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background:
-    repeating-linear-gradient(0deg, rgba(255,255,255,.02), rgba(255,255,255,.02) 1px, transparent 1px, transparent 6px),
-    repeating-linear-gradient(90deg, rgba(0,0,0,.03), rgba(0,0,0,.03) 1px, transparent 1px, transparent 8px);
-  opacity: .25;
-  mix-blend-mode: overlay;
-}
-
-/* ---------- Readability ---------- */
-.post-content{
-  line-height: 1.78;
-  letter-spacing: .1px;
-}
-.post-content p{ margin-bottom: 1.05rem; }
-
-/* Headings: kakapo accent bar */
-.post-content h2,
-.post-content h3{
-  position: relative;
-  padding-left: .75rem;
-}
-.post-content h2::before,
-.post-content h3::before{
-  content:"";
-  position:absolute;
-  left:0;
-  top:.35em;
-  width:.32rem;
-  height: 1.1em;
-  border-radius: 999px;
-  background: linear-gradient(180deg, rgba(45,212,191,.9), rgba(163,230,53,.9));
-  box-shadow: 0 0 16px rgba(45,212,191,.18);
-}
-
-/* Links: mint -> lime hover */
+/* ---------- Link accent ---------- */
 a,
 .post-content a{
   color: var(--k-mint);
-  text-decoration-thickness: 1px;
   text-underline-offset: 3px;
 }
 a:hover,
@@ -82,31 +40,51 @@ a:hover,
   color: var(--k-lime);
 }
 
-/* Selection */
-::selection{ background: rgba(163,230,53,.22); }
+/* =========================================================
+   1) Sidebar: 메뉴 왼쪽 '점(불릿/마커)' 제거 + 소셜을 하단 고정
+   ========================================================= */
 
-/* ---------- Cards / Panels (less “fog”, more crisp) ---------- */
-.card,
-.card-wrapper,
-#panel-wrapper .panel,
-#core-wrapper .post,
-#core-wrapper .page,
-#core-wrapper .home{
-  background: var(--k-surface) !important;
-  border: 1px solid var(--k-border) !important;
-  border-radius: 18px !important;
-  box-shadow: 0 10px 30px rgba(0,0,0,.25);
+/* Sidebar를 column flex로 만들어서 하단 영역을 바닥으로 밀어줌 */
+#sidebar{
+  display: flex !important;
+  flex-direction: column !important;
 }
 
-/* Topbar: crisp line + slight tint */
-#topbar-wrapper{
-  background: rgba(0,0,0,.18) !important;
-  border-bottom: 1px solid rgba(255,255,255,.06);
+/* Chirpy 구조: header.profile-wrapper + nav + div.sidebar-bottom */
+#sidebar > nav{
+  flex: 1 1 auto !important;
 }
-#topbar-wrapper a{ color: rgba(255,255,255,.78); }
-#topbar-wrapper a:hover{ color: var(--k-lime); }
 
-/* Sidebar: gradient + active glow */
+/* 소셜 아이콘(메일/깃허브 등) 하단 고정 */
+#sidebar .sidebar-bottom{
+  margin-top: auto !important;
+  padding-bottom: 1.25rem;
+}
+
+/* 메뉴/리스트 전부 불릿 제거 (네가 말한 왼쪽 점의 거의 99% 원인) */
+#sidebar ul,
+#sidebar ol{
+  list-style: none !important;
+  padding-left: 0 !important;
+  margin: 0 !important;
+}
+
+#sidebar li{
+  list-style: none !important;
+}
+
+/* 마커(dot) 자체 제거 */
+#sidebar li::marker{
+  content: "" !important;
+}
+
+/* 일부 버전에서 pseudo로 점 찍는 경우까지 제거 */
+#sidebar .nav-item::before,
+#sidebar .nav-link::before{
+  content: none !important;
+}
+
+/* (옵션) sidebar 배경 톤 */
 #sidebar{
   background:
     radial-gradient(900px 650px at 30% 0%, rgba(45,212,191,.11), transparent 55%),
@@ -114,683 +92,83 @@ a:hover,
     linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,.40));
   border-right: 1px solid rgba(255,255,255,.06);
 }
-#sidebar .nav-link.active{
-  background: rgba(45,212,191,.14) !important;
-  border: 1px solid rgba(163,230,53,.18) !important;
-  box-shadow:
-    0 0 0 1px rgba(45,212,191,.10) inset,
-    0 12px 28px rgba(0,0,0,.35);
-}
-
-/* ---------- Tags / Chips ---------- */
-.tag,
-.post-tag,
-#panel-wrapper .post-tag{
-  border-radius: 999px !important;
-  border: 1px solid rgba(45,212,191,.24) !important;
-  background: rgba(45,212,191,.08) !important;
-}
-.tag:hover,
-.post-tag:hover{
-  border-color: rgba(163,230,53,.34) !important;
-  background: rgba(163,230,53,.10) !important;
-}
-
-/* ---------- Code blocks (key for writeups) ---------- */
-pre,
-.highlight,
-div.highlighter-rouge{
-  background: rgba(0,0,0,.34) !important;
-  border: 1px solid rgba(45,212,191,.18) !important;
-  border-radius: 16px !important;
-  box-shadow: 0 10px 26px rgba(0,0,0,.28);
-  overflow-x: auto !important;      /* IMPORTANT: prevent layout stretching */
-  max-width: 100% !important;       /* IMPORTANT: prevent right panel drop */
-}
-code{
-  font-family: ui-monospace, "JetBrains Mono", "Cascadia Mono", "D2Coding", SFMono-Regular, Menlo, Consolas, monospace;
-}
-
-/* Long text / tables should not blow up width */
-#core-wrapper,
-.post-content{
-  min-width: 0;                     /* IMPORTANT for flex layouts */
-}
-.post-content *{
-  overflow-wrap: anywhere;
-}
-.post-content table{
-  display: block;
-  overflow-x: auto;
-  max-width: 100%;
-}
-.post-content img,
-.post-content video,
-.post-content svg{
-  max-width: 100%;
-  height: auto;
-}
-
-/* ---------- Right panel stability (desktop) ----------
-   If a long code/table forces the main column to exceed width,
-   Bootstrap's row may wrap -> panel drops to bottom.
-   Fix: force nowrap + min-width:0 (core can shrink) + fixed panel width.
-   Also covers Chirpy layouts where #main-wrapper itself is .row. */
-@media (min-width: 992px){
-  /* Case A: #main-wrapper itself behaves like a Bootstrap row */
-  #main-wrapper{
-    display: flex !important;
-    flex-wrap: nowrap !important;
-    align-items: flex-start;
-  }
-
-  /* Case B: #main-wrapper contains the row */
-  #main-wrapper > .row,
-  #main-wrapper > .container > .row,
-  #main-wrapper .row.flex-grow-1{
-    display: flex !important;
-    flex-wrap: nowrap !important;
-    align-items: flex-start;
-  }
-
-  /* Critical: allow flex items to shrink even when content is long */
-  #core-wrapper,
-  #panel-wrapper,
-  #main-wrapper > .row > *,
-  #main-wrapper > .container > .row > *,
-  #main-wrapper .row.flex-grow-1 > *{
-    min-width: 0 !important;
-  }
-
-  /* Core takes remaining space (0-basis prevents min-content expansion) */
-  #core-wrapper{
-    flex: 1 1 0% !important;
-    width: auto !important;
-    min-width: 0 !important;
-  }
-
-  /* Panel fixed width so it never drops below */
-  #panel-wrapper{
-    flex: 0 0 320px !important;
-    width: 320px !important;
-    max-width: 320px !important;
-    min-width: 320px !important;
-    align-self: flex-start !important;
-    margin-top: 0 !important;
-  }
-
-  /* Rouge line-number tables can still inflate min-content width */
-  #core-wrapper .rouge-table{
-    display: block;
-    overflow-x: auto;
-    max-width: 100%;
-  }
-}
-
-
-
-/* =========================
-   Wider layout on big screens (less "narrow" look)
-   - Chirpy uses Bootstrap containers with max-width ~1320px on 2k monitors.
-   - Increase main content max-width so core+panel can breathe.
-   ========================= */
-@media (min-width: 1400px){
-  /* If #main-wrapper is used as the main container */
-  #main-wrapper{
-    width: 100%;
-    max-width: 1480px; /* tweak: 1440~1600 */
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  /* If a Bootstrap .container wraps the row */
-  #main-wrapper > .container,
-  #main-wrapper .container{
-    max-width: 1480px;
-  }
-}
-
-/* =========================
-   Sticky TOC only (Contents only follows while scrolling)
-   - Keeps current-section highlight behavior (handled by Chirpy/tocbot JS)
-   - Panel stays in normal flow; only TOC becomes sticky
-   ========================= */
-@media (min-width: 992px){
-  /* Sticky can be disabled by overflow on ancestors; keep them visible */
-  #main,
-  #main-wrapper,
-  #core-wrapper,
-  #panel-wrapper{
-    overflow: visible !important;
-  }
-
-  /* Ensure panel itself is NOT sticky */
-  #panel-wrapper{
-    position: static !important;
-    top: auto !important;
-    max-height: none !important;
-    overflow: visible !important;
-  }
-
-  /* Make only the TOC sticky */
-  #toc-wrapper,
-  #panel-wrapper .toc-wrapper,
-  #panel-wrapper .panel.toc-wrapper{
-    position: sticky !important;
-    top: 5.2rem; /* below topbar */
-    align-self: flex-start !important;
-    z-index: 2;
-  }
-
-  /* If TOC is long, scroll inside it */
-  #toc-wrapper{
-    max-height: calc(100vh - 6.2rem);
-    overflow-y: auto;
-  }
-}
-
-
-
-/* =========================
-   List pages (categories/tags/archives) look "too narrow"
-   Cause: panel column isn't being pushed to the far right on some layouts,
-          and core keeps a constrained max-width.
-   Fix: (1) push panel to the right, (2) let core expand, (3) widen #main container too.
-   ========================= */
-
-/* Wider container: Chirpy often uses #main as Bootstrap .container */
-@media (min-width: 1400px){
-  #main{
-    max-width: 1480px !important; /* tweak 1440~1600 */
-  }
-}
-
-/* Align panel to the far right and let core breathe */
-@media (min-width: 992px){
-  /* Top-level row variants */
-  #main > .row,
-  #main-wrapper > .row,
-  #main-wrapper > .container > .row,
-  #main-wrapper .row.flex-grow-1{
-    flex-wrap: nowrap !important;
-  }
-
-  /* Core should occupy remaining width */
-  #core-wrapper{
-    flex: 1 1 0% !important;
-    max-width: none !important;
-    width: auto !important;
-    min-width: 0 !important;
-  }
-
-  /* Panel always pinned to the far right (prevents "center-floating" look) */
-  #panel-wrapper{
-    margin-left: auto !important;
-    flex: 0 0 320px !important;
-    width: 320px !important;
-    max-width: 320px !important;
-    min-width: 320px !important;
-  }
-}
-
-
-/* =========================
-   Categories / Tags / Archives: core column is not #core-wrapper (Chirpy uses <main aria-label="Main Content">)
-   Force the main row to behave as "fluid core + fixed panel" on ALL pages.
-   ========================= */
-@media (min-width: 992px){
-  /* Chirpy main layout row */
-  #main > .row.flex-grow-1{
-    flex-wrap: nowrap !important;
-  }
-
-  /* Core column (used on list pages) */
-  #main > .row.flex-grow-1 > main[aria-label="Main Content"]{
-    flex: 1 1 0% !important;
-    width: auto !important;
-    max-width: none !important;
-    min-width: 0 !important;
-  }
-
-  /* Panel pinned to the far right */
-  #main > .row.flex-grow-1 > #panel-wrapper{
-    margin-left: auto !important;
-    flex: 0 0 320px !important;
-    width: 320px !important;
-    max-width: 320px !important;
-    min-width: 320px !important;
-  }
-}
-
-/* =========================
-   Move Search to top-right (Topbar)
-   - Keep breadcrumbs on the left
-   - Push search wrapper to the far right
-   ========================= */
-@media (min-width: 992px){
-  #topbar{
-    display: flex !important;
-    align-items: center;
-    gap: .75rem;
-  }
-
-  /* Breadcrumb/Title side expands */
-  #topbar #breadcrumb,
-  #topbar nav[aria-label="Breadcrumb"],
-  #topbar .breadcrumb,
-  #topbar .topbar-title{
-    flex: 1 1 auto;
-    min-width: 0;
-  }
-
-  /* Search side sticks to the right */
-  #topbar #search-wrapper,
-  #topbar .search-wrapper,
-  #topbar #search-trigger,
-  #topbar #search{
-    margin-left: auto !important;
-  }
-
-  /* Make the visible input a bit more "top-right" sized */
-  #topbar #search-input{
-    width: min(340px, 32vw);
-  }
-}
-
-
-/* =========================
-   FINAL OVERRIDES (v6)
-   1) Make ALL pages (home/posts/categories/tags/archives/about) use the same wider container.
-      - Your earlier rule only kicked in at >=1400px; with sidebar/topbar, the effective width can be <1400.
-   2) Make TOC actually stick: stick the *TOC panel* (parent), not the inner #toc-wrapper,
-      because sticky is constrained by parent height.
-   ========================= */
-
-/* 1) Wider container on desktop (applies earlier: wins) */
-@media (min-width: 1200px){
-  #main{
-    width: 100% !important;
-    max-width: 1480px !important; /* tweak 1440~1600 */
-  }
-
-  #main-wrapper{
-    width: 100% !important;
-  }
-
-  #main-wrapper > .container,
-  #main-wrapper .container{
-    max-width: 1480px !important;
-  }
-
-  /* Main layout row should stretch full width */
-  #main > .row.flex-grow-1{
-    width: 100% !important;
-    justify-content: space-between !important;
-    flex-wrap: nowrap !important;
-  }
-}
-
-/* 2) Sticky TOC panel (Contents follows + active section highlight remains) */
-@media (min-width: 992px){
-  /* Keep sticky from being killed by overflow on ancestors */
-  #main,
-  #main-wrapper,
-  #core-wrapper,
-  #panel-wrapper{
-    overflow: visible !important;
-  }
-
-  /* Ensure the panel column itself stays in flow (not sticky) */
-  #panel-wrapper{
-    position: static !important;
-  }
-
-  /* Make the TOC *panel* sticky (not just inner wrapper) */
-  #panel-wrapper .panel:has(#toc-wrapper),
-  #panel-wrapper section:has(#toc-wrapper),
-  #panel-wrapper div:has(> #toc-wrapper){
-    position: sticky !important;
-    top: 5.2rem; /* below topbar */
-    align-self: flex-start !important;
-    z-index: 3;
-    max-height: calc(100vh - 6.2rem);
-    overflow-y: auto;
-  }
-
-  /* Prevent double constraints from the inner wrapper */
-  #toc-wrapper{
-    position: static !important;
-    top: auto !important;
-    max-height: none !important;
-    overflow: visible !important;
-  }
-}
-
-
-/* =========================
-   v7 overrides
-   - Fix: TOC not sticking (was overridden elsewhere)
-   - Fix: double "nested box" inside code blocks (styling applied to both wrapper + <pre>)
-   ========================= */
-
-/* TOC (Contents) should follow on post pages */
-@media (min-width: 992px){
-  /* keep ancestors from breaking sticky */
-  html, body,
-  #main-wrapper,
-  #main,
-  #panel-wrapper{
-    overflow: visible !important;
-  }
-
-  /* IMPORTANT: sticky the actual Chirpy wrapper */
-  section#toc-wrapper{
-    position: sticky !important;
-    top: 5.2rem !important;  /* below topbar */
-    align-self: flex-start !important;
-    z-index: 10;
-    max-height: calc(100vh - 6.2rem);
-    overflow-y: auto;
-  }
-}
-
-/* Code blocks: style the wrapper, not the inner <pre> (prevents "inner box" covering code) */
-div.highlighter-rouge,
-figure.highlight,
-div.highlight,
-div.highlighter-rouge > div.highlight{
-  background: rgba(0,0,0,.34) !important;
-  border: 1px solid rgba(45,212,191,.18) !important;
-  border-radius: 16px !important;
-  box-shadow: 0 10px 26px rgba(0,0,0,.28) !important;
-  overflow: hidden; /* keeps header/edges clean */
-}
-
-/* Neutralize inner <pre> so it doesn't draw a second box */
-div.highlighter-rouge pre,
-figure.highlight pre,
-div.highlight pre,
-div.highlighter-rouge div.highlight pre{
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  border-radius: 0 !important;
-  margin: 0 !important;
-}
-
-/* If rouge table is used (line numbers), remove extra spacing */
-div.highlight table.rouge-table{
-  margin: 0 !important;
-}
-
-
-/* =========================
-   v8: Fix "Categories/Tags/Archives/About still too narrow"
-   Root cause (from your DevTools): those pages are laid out under:
-     #main-wrapper > .container > .row.flex-grow-1 > main[...] + aside#panel-wrapper
-   There is no #main id there, so previous #main-based widening missed.
-   Solution: widen THAT container/row directly and make it "fluid core + fixed panel".
-   ========================= */
-
-@media (min-width: 1200px){
-  /* widen the actual page container used on list/about pages */
-  #main-wrapper{
-    width: 100% !important;
-  }
-
-  #main-wrapper > .container{
-    width: 100% !important;
-    max-width: 1480px !important; /* tweak 1440~1600 */
-  }
-}
-
-@media (min-width: 992px){
-  /* main layout row */
-  #main-wrapper > .container > .row.flex-grow-1{
-    width: 100% !important;
-    flex-wrap: nowrap !important;
-    align-items: flex-start !important;
-  }
-
-  /* core area on list/about pages */
-  #main-wrapper > .container > .row.flex-grow-1 > main[aria-label="Main Content"]{
-    flex: 1 1 0% !important;
-    width: auto !important;
-    max-width: none !important;
-    min-width: 0 !important;
-  }
-
-  /* panel pinned to the far right */
-  #main-wrapper > .container > .row.flex-grow-1 > aside#panel-wrapper{
-    margin-left: auto !important;
-    flex: 0 0 320px !important;
-    width: 320px !important;
-    max-width: 320px !important;
-    min-width: 320px !important;
-  }
-}
-
-/* =========================
-   v8: TOC not sticking (use the real element: section#toc-wrapper)
-   ========================= */
-@media (min-width: 992px){
-  /* Ensure no ancestor kills sticky */
-  #main-wrapper,
-  #main-wrapper > .container,
-  aside#panel-wrapper{
-    overflow: visible !important;
-  }
-
-  section#toc-wrapper{
-    position: sticky !important;
-    top: 5.2rem !important;
-    max-height: calc(100vh - 6.2rem);
-    overflow-y: auto;
-    z-index: 20;
-  }
-}
-
-
-/* =========================
-   v9: Remove "whole card gets washed/covered" on hover (post preview / further reading cards)
-   ========================= */
-
-/* Kill hover overlay/background on preview cards */
-#core-wrapper .post-preview:hover,
-#core-wrapper .post-preview:focus,
-#core-wrapper .post-preview:focus-within,
-#core-wrapper .post-preview a:hover,
-#core-wrapper .post-preview a:focus,
-#core-wrapper .post-preview a:focus-visible,
-#core-wrapper .card-wrapper:hover,
-#core-wrapper .card-wrapper:focus-within{
-  background: var(--k-surface) !important;
-  filter: none !important;
-  opacity: 1 !important;
-  transform: none !important;
-}
-
-/* If theme adds a pseudo overlay on hover, neutralize it */
-#core-wrapper .post-preview:hover::before,
-#core-wrapper .post-preview:hover::after,
-#core-wrapper .card-wrapper:hover::before,
-#core-wrapper .card-wrapper:hover::after,
-#core-wrapper .post-preview a:hover::before,
-#core-wrapper .post-preview a:hover::after{
-  opacity: .55 !important; /* keep your thin top highlight only */
-  background: none !important;
-}
-
-/* Also prevent link hover from drawing a block highlight */
-#core-wrapper .post-preview a,
-#core-wrapper .card-wrapper a{
-  background: transparent !important;
-}
-
 
 /* =========================================================
-   v10: Fixes
-   - Remove "selected/washed" hover on post cards & lists
-   - Prevent huge clickable blank area in "Further Reading"
-   - Make TOC (Contents) truly sticky + scrollable
-   - Footer text in a single line
+   2) Categories/Tags 페이지: 글 제목 옆 '점(불릿)' 제거
+   - markdown 글 내부 ul/li 는 건드리지 않기 위해:
+     main의 "직계" ul/ol 만 제거 (페이지 리스트에만 주로 해당)
    ========================================================= */
+main[aria-label="Main Content"] > ul,
+main[aria-label="Main Content"] > ol{
+  list-style: none !important;
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+}
 
-/* 1) Home/List cards: stop hover wash / lift */
-.post-preview,
-.post-preview:hover,
-.post-preview:focus-within {
-  background: var(--k-surface) !important;
-  box-shadow: none !important;
-  filter: none !important;
-  transform: none !important;
-  transition: none !important;
+main[aria-label="Main Content"] > ul > li,
+main[aria-label="Main Content"] > ol > li{
+  list-style: none !important;
+}
+
+main[aria-label="Main Content"] > ul > li::marker,
+main[aria-label="Main Content"] > ol > li::marker{
+  content: "" !important;
+}
+
+/* =========================================================
+   3) Search bar: 더 크게 (폭/높이/패딩)
+   ========================================================= */
+#search-input{
+  height: 2.4rem !important;
+  padding: .45rem .95rem !important;
+  border-radius: 999px !important;
+  font-size: .95rem !important;
+}
+
+/* 데스크탑에서 폭 크게 */
+@media (min-width: 992px){
+  #search-input{
+    width: min(440px, 36vw) !important;
+  }
+}
+
+/* =========================================================
+   4) (선택) 미리보기 카드 hover 시 “선택된 것처럼” 칠해지는 느낌 완화
+   ========================================================= */
+.post-preview a,
+.post-preview a:hover{
+  background: transparent !important;
 }
 
 .post-preview::before,
 .post-preview::after,
 .post-preview a::before,
-.post-preview a::after,
-.post-preview .post-link::before,
-.post-preview .post-link::after {
+.post-preview a::after{
   content: none !important;
-  display: none !important;
-  opacity: 0 !important;
 }
 
-/* 2) Generic "card-wrapper" hover overlays (Chirpy uses pseudo overlays) */
-.card-wrapper,
-.card-wrapper:hover,
-a.card-wrapper,
-a.card-wrapper:hover {
-  box-shadow: none !important;
-  filter: none !important;
-  transform: none !important;
-  transition: none !important;
-}
-
-.card-wrapper::before,
-.card-wrapper::after,
-a.card-wrapper::before,
-a.card-wrapper::after {
-  content: none !important;
-  display: none !important;
-  opacity: 0 !important;
-}
-
-/* 3) Further Reading / post navigation: prevent tall links that cover blank space */
-.related-posts,
-#related-posts,
-.post-tail-wrapper .related-posts,
-.post-tail-wrapper #related-posts,
-.post-tail-wrapper .post-nav,
-.post-tail-wrapper .post-navigation,
-.post-tail-wrapper .post-nav-wrapper {
-  display: block !important;
-}
-
-.related-posts li,
-#related-posts li,
-.post-tail-wrapper .related-posts li,
-.post-tail-wrapper #related-posts li {
-  display: block !important;
-  align-items: flex-start !important;
-}
-
-.related-posts a,
-#related-posts a,
-.post-tail-wrapper .related-posts a,
-.post-tail-wrapper #related-posts a,
-.post-tail-wrapper .post-nav a,
-.post-tail-wrapper .post-navigation a {
-  display: block !important;
-  height: auto !important;
-  min-height: 0 !important;
-  flex: 0 0 auto !important;
-  background: transparent !important;
-}
-
-.related-posts a:hover,
-#related-posts a:hover,
-.post-tail-wrapper .related-posts a:hover,
-.post-tail-wrapper #related-posts a:hover,
-.post-tail-wrapper .post-nav a:hover,
-.post-tail-wrapper .post-navigation a:hover {
-  background: transparent !important;
-  box-shadow: none !important;
-}
-
-/* 4) TOC: force sticky behavior (needs top) + keep it usable with internal scroll */
-#panel-wrapper {
-  overflow: visible !important;
-  position: relative !important;
-  align-self: flex-start !important;
-}
-
-#toc-wrapper,
-#toc-wrapper.position-sticky {
-  position: sticky !important;
-  top: 5.2rem !important; /* below topbar */
-  max-height: calc(100vh - 5.2rem) !important;
-  overflow: auto !important;
-}
-
-/* 5) Footer: render as a single line (join two <p>) */
-#footer,
-footer {
-  text-align: center;
-}
-
-#footer p,
-footer p {
-  margin: 0 !important;
-  display: inline !important;
-}
-
-#footer p + p::before,
-footer p + p::before {
-  content: " · ";
-  padding: 0 .35rem;
-  opacity: .8;
-}
-
-/* Footer: 배경/네모 제거 + 본문 폭 가운데 정렬 */
+/* =========================================================
+   5) Footer: 네모 배경/박스 느낌 제거 + 문구 한 줄로
+   ========================================================= */
 footer,
-#footer {
+#footer{
   background: transparent !important;
-  box-shadow: none !important;
   border: 0 !important;
-
-  display: flex;
-  justify-content: center !important;
-  align-items: center;
-  text-align: center;
-
-  padding: 1rem 0 1.25rem;
+  box-shadow: none !important;
+  text-align: center !important;
+  padding: 1rem 0 1.25rem !important;
 }
 
-/* footer 내부가 "컨테이너"로 잡혀도 가운데로 */
-footer .container,
-#footer .container {
-  background: transparent !important;
-  box-shadow: none !important;
-  border: 0 !important;
-
-  display: flex;
-  justify-content: center !important;
-  align-items: center;
-}
-
-/* 두 줄로 깨지는 문구 -> 한 줄 + 구분점 */
+/* footer 문구가 <p> 2개로 나뉘는 걸 한 줄로 붙임 */
 footer p,
-#footer p {
+#footer p{
   margin: 0 !important;
   display: inline !important;
   white-space: nowrap;
 }
 
 footer p + p::before,
-#footer p + p::before {
+#footer p + p::before{
   content: " · ";
   padding: 0 .35rem;
   opacity: .8;
