@@ -227,3 +227,27 @@ code{
   }
 }
 
+/* Sticky TOC (Contents) */
+@media (min-width: 992px){
+  #toc-wrapper,
+  #panel-wrapper .toc-wrapper{
+    position: sticky;
+    top: 5.2rem; /* topbar 아래 여백 */
+  }
+
+  /* TOC가 길어지면 내부만 스크롤 */
+  #toc-wrapper{
+    max-height: calc(100vh - 6.2rem);
+    overflow-y: auto;
+  }
+}
+
+/* Extreme one-line bash blocks: allow wrapping so layout never breaks */
+@media (min-width: 992px){
+  .language-bash .highlight pre,
+  .language-bash pre{
+    white-space: pre-wrap !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+  }
+}
