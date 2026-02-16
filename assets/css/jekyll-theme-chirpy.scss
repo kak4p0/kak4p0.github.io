@@ -277,7 +277,7 @@ code{
   #panel-wrapper .toc-wrapper,
   #panel-wrapper .panel.toc-wrapper{
     position: sticky !important;
-    top: 5.6rem; /* below topbar */
+    top: 5.2rem; /* below topbar */
     align-self: flex-start !important;
     z-index: 2;
   }
@@ -521,4 +521,71 @@ div.highlighter-rouge div.highlight pre{
 /* If rouge table is used (line numbers), remove extra spacing */
 div.highlight table.rouge-table{
   margin: 0 !important;
+}
+
+
+/* =========================
+   v8: Fix "Categories/Tags/Archives/About still too narrow"
+   Root cause (from your DevTools): those pages are laid out under:
+     #main-wrapper > .container > .row.flex-grow-1 > main[...] + aside#panel-wrapper
+   There is no #main id there, so previous #main-based widening missed.
+   Solution: widen THAT container/row directly and make it "fluid core + fixed panel".
+   ========================= */
+
+@media (min-width: 1200px){
+  /* widen the actual page container used on list/about pages */
+  #main-wrapper{
+    width: 100% !important;
+  }
+
+  #main-wrapper > .container{
+    width: 100% !important;
+    max-width: 1480px !important; /* tweak 1440~1600 */
+  }
+}
+
+@media (min-width: 992px){
+  /* main layout row */
+  #main-wrapper > .container > .row.flex-grow-1{
+    width: 100% !important;
+    flex-wrap: nowrap !important;
+    align-items: flex-start !important;
+  }
+
+  /* core area on list/about pages */
+  #main-wrapper > .container > .row.flex-grow-1 > main[aria-label="Main Content"]{
+    flex: 1 1 0% !important;
+    width: auto !important;
+    max-width: none !important;
+    min-width: 0 !important;
+  }
+
+  /* panel pinned to the far right */
+  #main-wrapper > .container > .row.flex-grow-1 > aside#panel-wrapper{
+    margin-left: auto !important;
+    flex: 0 0 320px !important;
+    width: 320px !important;
+    max-width: 320px !important;
+    min-width: 320px !important;
+  }
+}
+
+/* =========================
+   v8: TOC not sticking (use the real element: section#toc-wrapper)
+   ========================= */
+@media (min-width: 992px){
+  /* Ensure no ancestor kills sticky */
+  #main-wrapper,
+  #main-wrapper > .container,
+  aside#panel-wrapper{
+    overflow: visible !important;
+  }
+
+  section#toc-wrapper{
+    position: sticky !important;
+    top: 5.2rem !important;
+    max-height: calc(100vh - 6.2rem);
+    overflow-y: auto;
+    z-index: 20;
+  }
 }
