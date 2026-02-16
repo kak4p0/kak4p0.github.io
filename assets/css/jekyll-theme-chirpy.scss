@@ -589,3 +589,40 @@ div.highlight table.rouge-table{
     z-index: 20;
   }
 }
+
+
+/* =========================
+   v9: Remove "whole card gets washed/covered" on hover (post preview / further reading cards)
+   ========================= */
+
+/* Kill hover overlay/background on preview cards */
+#core-wrapper .post-preview:hover,
+#core-wrapper .post-preview:focus,
+#core-wrapper .post-preview:focus-within,
+#core-wrapper .post-preview a:hover,
+#core-wrapper .post-preview a:focus,
+#core-wrapper .post-preview a:focus-visible,
+#core-wrapper .card-wrapper:hover,
+#core-wrapper .card-wrapper:focus-within{
+  background: var(--k-surface) !important;
+  filter: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* If theme adds a pseudo overlay on hover, neutralize it */
+#core-wrapper .post-preview:hover::before,
+#core-wrapper .post-preview:hover::after,
+#core-wrapper .card-wrapper:hover::before,
+#core-wrapper .card-wrapper:hover::after,
+#core-wrapper .post-preview a:hover::before,
+#core-wrapper .post-preview a:hover::after{
+  opacity: .55 !important; /* keep your thin top highlight only */
+  background: none !important;
+}
+
+/* Also prevent link hover from drawing a block highlight */
+#core-wrapper .post-preview a,
+#core-wrapper .card-wrapper a{
+  background: transparent !important;
+}
