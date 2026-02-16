@@ -1,0 +1,110 @@
+---
+title: "LA CTF 2026 | glotq"
+date: 2026-02-10 01:00:00 +0900
+categories: [LA CTF 2026, Web]
+tags: [Web]
+toc: true
+comments: false
+---
+
+# glotq
+
+## TL;DR
+glotq는 jq/yq/xq/man을 웹에서 실행해주는 서비스다. 플래그는 /flag.txt(root-only)에 있고, 
+SUID root 바이너리 `/readflag`가 `/flag.txt`를 읽어 출력한다. 핵심 취약점은 /yaml 엔드포인트에서 “검증(미들웨어)”과 “실행(핸들러)”이 서로 다른 파서를 사용한다는 점이다. 
+미들웨어는 `Content-Type`이 `application/json`이면 json.Unmarshal로 Request{Command,Args}를 채워 검증하지만, 핸들러는 /yaml이므로 yaml.Unmarshal로 다시 파싱해 실행한다. 
+Go JSON 디코더의 필드 매칭은 대소문자에 느슨하고(command/Command, args/Args가 같은 필드로 매칭될 수 있음) 동일 필드가 여러 번 등장하면 보통 마지막 값(last wins)이 남는다. 
+반면 YAML 쪽은 yaml 태그(yaml:"command"/yaml:"args")에 맞춰 소문자 키만 매칭되는 동작이 나와, 
+같은 바디가 미들웨어에서는 yq로 보이지만 실행 단계에서는 man으로 보이는 “parsing desync”를 만들 수 있다. 
+이후 man의 --html=<browser> 옵션은 HTML 렌더를 위해 외부 “브라우저”를 실행하므로, browser 자리에 /readflag를 넣으면 SUID 바이너리가 실행되어 플래그가 출력된다.
+
+---
+
+## Overview
+- 기능: jq/yq/xq/man “as a service”
+  - `POST /json`  : json.Unmarshal 후 command/args 실행
+  - `POST /yaml`  : yaml.Unmarshal 후 command/args 실행
+  - `POST /xml`   : xml.Unmarshal 후 command/args 실행
+- 보안 장치: SecurityMiddleware가 command/args를 파싱해 allowlist 검사
+  - command ∈ {jq,yq,xq,man}만 허용
+  - 특히 man은 args를 강하게 제한(예: 인자 개수/대상 페이지 제한)해서 임의 옵션을 막음
+- 플래그 구조:
+  - `/flag.txt` : root만 읽기 가능
+  - `/readflag` : SUID root, 실행 시 /flag.txt를 읽어 stdout으로 출력
+
+---
+
+## Solution
+### 1) Recon (소스 구조/흐름)
+- `main.go`에서 엔드포인트별 핸들러:
+  - /json → json.Unmarshal(req)로 Request 구성 후 exec.Command(req.Command, req.Args...)
+  - /yaml → yaml.Unmarshal(req)로 Request 구성 후 exec.Command(...)
+- SecurityMiddleware:
+  - Content-Type을 기준으로 “검증용 파서”를 선택
+    - application/json → json.Unmarshal
+    - application/yaml → yaml.Unmarshal
+    - application/xml  → xml.Unmarshal
+  - 파싱된 Request를 기준으로 allowlist 검사 후 next로 전달
+- 취약점의 본질: “검증 단계 파서”와 “실행 단계 파서”가 일치하지 않음
+  - 특히 /yaml에 Content-Type: application/json을 주면
+    - 검증: JSON 파서
+    - 실행: YAML 파서
+---
+
+### 2) Root Cause (Parsing Desync + Case-Collision)
+- 공격 목표: 검증은 yq로 통과시키되, 실행은 man으로 바꾸기(= man 제한 로직 회피)
+- 관찰:
+  - Go encoding/json은 구조체 필드 매칭이 느슨해서 command/Command, args/Args가 같은 필드로 인식될 수 있음
+  - 동일 필드가 여러 번 주어지면 마지막 값이 최종 값이 되는 동작이 흔함
+- 반면 YAML 디코딩은 yaml 태그(yaml:"command"/"args")를 기준으로 키를 매칭하는 쪽이라,
+  - “command”는 읽히지만 “Command”는 무시되는 동작이 나올 수 있음(환경/라이브러리 구현에 따라 차이가 있을 수 있으나 이번 인스턴스에서 해당 동작이 확인됨)
+- 결과적으로 같은 요청 바디가:
+  - 미들웨어(JSON)에서는 Command=yq, Args=["."]로 보이고
+  - 핸들러(YAML)에서는 command=man, args=["--html=/readflag","jq"]로 보이게 된다.
+
+---
+
+### 3) Exploit Chain
+A. 미들웨어 통과(= yq로 보이게 만들기)
+- Content-Type: application/json
+- JSON 바디에 command/args와 Command/Args를 동시에 넣어,
+  - JSON 파서(검증)는 마지막 값(Command/Args)을 최종으로 채택 → yq, ["."]
+B. 실제 실행(= man으로 실행되게 만들기)
+- /yaml 핸들러는 yaml.Unmarshal로 다시 파싱하여,
+  - command/args만 매칭 → man, ["--html=/readflag","jq"]
+C. /readflag 실행 유도
+- man은 --html=<browser> 옵션으로 “브라우저 실행”을 수행한다.
+- browser에 /readflag를 지정하면 man이 외부 프로그램으로 /readflag를 실행하려고 하며,
+  - /readflag는 SUID root이므로 /flag.txt를 읽어 출력 → 응답으로 플래그가 반환된다.
+
+Payload
+- 아래 요청 한 번으로 플래그가 출력됨:
+
+```
+POST /yaml
+Content-Type: application/json
+
+{
+  "command": "man",
+  "args": ["--html=/readflag", "jq"],
+  "Command": "yq",
+  "Args": ["."]
+}
+```
+
+### 4) Flag
+- lactf{PoLY9LOt_TH3_Fl49}
+
+---
+
+## Solver
+1) curl
+```bash
+HOST="<INSTANCE URL>"
+curl -sS -X POST "$HOST/yaml"   -H "Content-Type: application/json"   --data-binary '{"command":"man","args":["--html=/readflag","jq"],"Command":"yq","Args":["."]}'
+```
+
+2) solve.py
+```bash
+python3 solve.py --base "<INSTANCE URL>"
+```
