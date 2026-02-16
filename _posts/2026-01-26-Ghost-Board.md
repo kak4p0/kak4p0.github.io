@@ -7,9 +7,9 @@ toc: true
 comments: false
 ---
 
-| Name | Category | Difficulty |
-|---|:---:|:---:|
-| Ghost Boord | Web | ★★☆ | 
+Writing about the "slot whisperer" of 0xFun CTF 2026.
+
+
 
 ## TL;DR
 
