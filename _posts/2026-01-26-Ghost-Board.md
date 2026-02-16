@@ -7,9 +7,9 @@ toc: true
 comments: false
 ---
 
-| Name | Category | Difficulty | Keywords |
-|---|:---:|:---:|:---:|
-| Ghost Boord | Web | ★★☆ | Stored XSS → Admin bot → SpringEL/Thymeleaf SSTI → H2 ALIAS → Arbitrary file read |
+| Name | Category | Difficulty |
+|---|:---:|:---:|
+| Ghost Boord | Web | ★★☆ | 
 
 ## TL;DR
 
