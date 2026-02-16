@@ -365,35 +365,33 @@ footer p + p::before,
    4) Home card: preview image sizing (when you use front-matter image:)
    ========================================================= */
 
-/* ---------- 1) TOC only sticky (Desktop) ---------- */
-/* Keep only "Contents" sticky; other right-panel blocks scroll normally */
+/* ---------- 1) Right panel sticky (Desktop) ---------- */
 @media (min-width: 992px){
-  /* Ensure sticky isn't disabled by overflow clipping */
+  /* Make the whole right panel stick */
+  aside#panel-wrapper{
+    position: sticky !important;
+    top: 5.2rem !important;                 /* below topbar */
+    height: calc(100vh - 6.2rem) !important;
+    overflow-y: auto !important;
+    align-self: flex-start !important;
+    z-index: 30 !important;
+  }
+
+  /* Avoid nested stickies fighting each other */
+  #panel-wrapper #toc-wrapper{
+    position: static !important;
+    top: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  /* Sticky prerequisite: no overflow clipping */
   #main-wrapper,
   #main-wrapper > .container,
   #main-wrapper .row,
   #main-wrapper [class*="col-"],
-  aside#panel-wrapper{
+  #panel-wrapper{
     overflow: visible !important;
-  }
-
-  /* Make sure the whole aside is NOT sticky */
-  aside#panel-wrapper{
-    position: static !important;
-    top: auto !important;
-    height: auto !important;
-    overflow: visible !important;
-  }
-
-  /* Sticky ONLY for TOC box */
-  #panel-wrapper #toc-wrapper,
-  #panel-wrapper section#toc-wrapper{
-    position: sticky !important;
-    top: 5.2rem !important;                 /* below topbar */
-    max-height: calc(100vh - 6.2rem) !important;
-    overflow-y: auto !important;
-    align-self: flex-start !important;
-    z-index: 30 !important;
   }
 }
 
