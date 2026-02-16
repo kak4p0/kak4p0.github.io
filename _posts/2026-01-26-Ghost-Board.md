@@ -7,9 +7,8 @@ toc: true
 comments: false
 ---
 
-Writing about the "slot whisperer" of 0xFun CTF 2026.  
-  
-
+Writing about the "slot whisperer" of 0xFun CTF 2026.
+<!--more-->
 
 ## TL;DR
 
