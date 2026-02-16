@@ -237,7 +237,7 @@ main[aria-label="Main Content"] li::marker{
   #main-wrapper > .container > .row.flex-grow-1{
     display: flex !important;
     flex-wrap: nowrap !important;
-    align-items: stretch !important;
+    align-items: flex-start !important;
     width: 100% !important;
   }
 
@@ -256,7 +256,7 @@ main[aria-label="Main Content"] li::marker{
     max-width: 320px !important;
     min-width: 320px !important;
     margin-left: auto !important;
-    align-self: stretch !important;
+    align-self: flex-start !important;
   }
 
   /* Prevent any ancestor overflow from killing sticky */
@@ -355,102 +355,148 @@ footer p + p::before,
     width: min(420px, 34vw) !important;
   }
 }
-
-
 /* =========================================================
-   Post meta layout: 2-line (Posted/Updated) + (By / readtime)
+   Post meta: restore "Updated" + clean spacing
    ========================================================= */
-@media (min-width: 992px) {
-  article header .post-meta {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    align-items: center !important;
-    gap: 0.15rem 0.75rem !important;
-  }
 
-  /* 1st line: spans (Posted / Updated) stay inline */
-  article header .post-meta > span {
-    flex: 0 0 auto !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 0.35rem !important;
-  }
+/* If the "Updated" line exists, make sure it is visible */
+.post-meta > span + span {
+  display: inline-flex !important;
+  align-items: center;
+}
 
-  /* Kill theme's trailing separators that depend on :last-child (div breaks it) */
-  article header .post-meta > span::after {
-    content: none !important;
-  }
+/* Prevent "PostedFeb" / "UpdatedFeb" stuck text (flex can eat the whitespace visually) */
+.post-meta > span > time {
+  margin-left: .35rem;
+}
 
-  /* Add separator only between span siblings (Posted · Updated) */
-  article header .post-meta > span:not(:last-of-type)::after {
-    content: " · " !important;
-    opacity: 0.65;
-    margin-left: 0.4rem;
-  }
+/* Put a dot between Posted and Updated when they're on the same line */
+.post-meta > span + span::before {
+  content: "•";
+  opacity: .6;
+  margin: 0 .55rem 0 .45rem;
+}
 
-  /* 2nd line: (By / readtime) takes full width */
-  article header .post-meta > div.d-flex.justify-content-between {
-    flex: 1 0 100% !important;
-    width: 100% !important;
-    margin-top: 0.35rem !important;
-  }
-
-  /* Make the right side "readtime" align nicely */
-  article header .post-meta > div.d-flex.justify-content-between > div {
-    display: flex !important;
-    justify-content: flex-end !important;
-  }
+/* Keep the author/readtime row on its own line (your preferred 2-line layout) */
+.post-meta > .d-flex.justify-content-between {
+  flex: 0 0 100%;
+  margin-top: .35rem;
 }
 
 /* =========================================================
-   Right panel: only Contents (TOC) should be sticky
+   Right panel: remove the gray "cover bar" above TOC
    ========================================================= */
-@media (min-width: 992px) {
-  /* Make sure the sidebar column spans the main column height so sticky can work */
-  #main-wrapper > .container > .row.flex-grow-1 {
-    align-items: stretch !important;
-  }
-
-  aside#panel-wrapper {
-    position: static !important; /* override theme if it makes the whole panel sticky */
-    top: auto !important;
-    align-self: stretch !important;
-  }
-
-  /* Let "Recently Updated / Trending Tags" scroll normally */
-  aside#panel-wrapper .access {
-    position: static !important;
-    top: auto !important;
-  }
-
-  /* Contents (TOC) sticks */
-  aside#panel-wrapper section#toc-wrapper {
-    position: sticky !important;
-    top: 5.2rem !important;
-    z-index: 3;
-    max-height: calc(100vh - 6.2rem);
-    overflow: auto;
-  }
-
-  /* Hide the 'toc-border-cover' bar (it can look like a gray block between panels) */
-  aside#panel-wrapper .toc-border-cover {
-    display: none !important;
-  }
+#panel-wrapper .toc-border-cover {
+  display: none !important;
 }
 
 /* =========================================================
-   Home post list: show only the first line (your fixed message)
-   - Works even if the theme doesn't honor <!--more-->
+   Post tail: license + share on ONE line (like your reference)
    ========================================================= */
-@media (min-width: 576px) {
-  /* The home list area (Chirpy uses #post-list) */
-  #post-list .post-content,
-  #post-list .post-content > p,
-  #post-list .post-preview .post-content,
-  #post-list .post-preview .post-content > p {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1; /* only 1 line */
-    overflow: hidden;
+.post-tail-wrapper .post-tail-bottom,
+#post-tail-wrapper .post-tail-bottom {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .5rem 1rem;
+}
+
+.post-tail-wrapper .license-wrapper,
+#post-tail-wrapper .license-wrapper {
+  flex: 1 1 auto;
+  margin: 0;
+}
+
+.post-tail-wrapper .share-wrapper,
+#post-tail-wrapper .share-wrapper {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+.post-tail-wrapper .share-wrapper .share-icons,
+#post-tail-wrapper .share-wrapper .share-icons {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  margin: 0;
+  padding: 0;
+}
+
+.post-tail-wrapper .share-wrapper .share-icons > li,
+#post-tail-wrapper .share-wrapper .share-icons > li {
+  list-style: none;
+  margin: 0;
+}
+
+/* =========================================================
+   Further Reading: force CARD layout (fallback for both card/grid and list markup)
+   ========================================================= */
+
+/* 1) If theme already renders cards, style them */
+#related-posts .card,
+.post-tail-wrapper #related-posts .card {
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, .08);
+  background: rgba(255, 255, 255, .03);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, .35);
+  overflow: hidden;
+}
+
+#related-posts .card .card-body {
+  padding: 1.15rem;
+}
+
+/* 2) If it renders as a list/preview, convert it to a responsive card grid */
+#related-posts ul,
+#related-posts .post-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 1rem 0 0 0;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@media (max-width: 1199px) {
+  #related-posts ul,
+  #related-posts .post-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+@media (max-width: 767px) {
+  #related-posts ul,
+  #related-posts .post-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+#related-posts ul > li,
+#related-posts .post-list > li,
+#related-posts .post-preview {
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, .08);
+  background: rgba(255, 255, 255, .03);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, .35);
+  padding: 1.15rem;
+  margin: 0;
+}
+
+/* Make the whole card clickable if the list item contains a single link */
+#related-posts ul > li > a,
+#related-posts .post-list > li > a {
+  display: block;
+  text-decoration: none;
+}
+
+/* Tidy typography inside related cards (works for both structures) */
+#related-posts .post-title,
+#related-posts h1,
+#related-posts h2,
+#related-posts h3 {
+  margin-top: .25rem;
+  margin-bottom: .5rem;
+}
+
