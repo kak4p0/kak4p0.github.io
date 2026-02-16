@@ -418,24 +418,54 @@ footer p + p::before,
   scroll-margin-top: 6.25rem;
 }
 
-/* ---------- 2) Post meta one-line (Desktop) ---------- */
-/* Example: Posted ... · Updated ... · By kak4p0 · 6 min read */
+/* ---------- 2) Post meta two-line (Desktop) ---------- */
+/* Line 1: Posted/Updated ...   Line 2: By ... (left) + readtime (right) */
 @media (min-width: 992px){
   .post-meta{
     display: flex !important;
-    flex-wrap: nowrap !important;
+    flex-wrap: wrap !important;
     align-items: center !important;
-    gap: .55rem !important;
-    white-space: nowrap !important;
+    gap: .55rem .65rem !important;
   }
+
+  /* Everything is line 1 by default */
   .post-meta > *{
+    order: 1 !important;
     display: inline-flex !important;
     align-items: center !important;
+    white-space: nowrap !important;
   }
-  .post-meta > * + *::before{
+
+  /* Force a line break between line1 and line2 using a flex-item pseudo-element */
+  .post-meta::after{
+    content: "" !important;
+    flex: 0 0 100% !important;
+    height: 0 !important;
+    order: 2 !important;
+  }
+
+  /* Line 2 elements */
+  .post-meta .post-author,
+  .post-meta .author,
+  .post-meta .byline,
+  .post-meta .post-meta__author{
+    order: 3 !important;
+  }
+
+  .post-meta .readtime,
+  .post-meta .post-read-time,
+  .post-meta .post-meta__readtime{
+    order: 3 !important;
+    margin-left: auto !important; /* push to right on line 2 */
+  }
+
+  /* Optional: add a dot only between author and readtime (line2) */
+  .post-meta .post-author + .readtime::before,
+  .post-meta .post-author + .post-read-time::before,
+  .post-meta .author + .readtime::before{
     content: " · " !important;
     opacity: .65 !important;
-    margin-right: .55rem !important;
+    margin: 0 .25rem 0 .15rem !important;
   }
 }
 
