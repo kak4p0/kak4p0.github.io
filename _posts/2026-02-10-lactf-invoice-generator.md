@@ -7,6 +7,7 @@ toc: true
 comments: false
 ---
 
+## TL;DR
 인보이스 생성 기능이 사용자 입력을 sanitize 없이 HTML에 그대로 삽입하고, 
 이를 puppeteer로 내부망에서 렌더링한 뒤 PDF로 출력한다.  
 `item` 필드에 `<iframe>` 또는 `<object>`를 주입해 내부 컨테이너의 `/flag`를 렌더링시키면, 
