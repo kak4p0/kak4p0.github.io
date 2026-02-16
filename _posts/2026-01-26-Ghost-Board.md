@@ -1,7 +1,7 @@
 ---
 title: "0xL4ugh CTF 2026 | Ghost Board"
 date: 2026-01-26 01:00:00 +0900
-categories: ["0xL4ugh CTF 2026/Web"]
+categories: [0xL4ugh CTF 2026, Web]
 tags: [Web]
 toc: true
 comments: false
