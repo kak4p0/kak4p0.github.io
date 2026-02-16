@@ -365,7 +365,35 @@ footer p + p::before,
    4) Home card: preview image sizing (when you use front-matter image:)
    ========================================================= */
 
+/* ---------- 1) Right panel sticky (Desktop) ---------- */
+@media (min-width: 992px){
+  /* Make the whole right panel stick */
+  aside#panel-wrapper{
+    position: sticky !important;
+    top: 5.2rem !important;                 /* below topbar */
+    height: calc(100vh - 6.2rem) !important;
+    overflow-y: auto !important;
+    align-self: flex-start !important;
+    z-index: 30 !important;
+  }
 
+  /* Avoid nested stickies fighting each other */
+  #panel-wrapper #toc-wrapper{
+    position: static !important;
+    top: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  /* Sticky prerequisite: no overflow clipping */
+  #main-wrapper,
+  #main-wrapper > .container,
+  #main-wrapper .row,
+  #main-wrapper [class*="col-"],
+  #panel-wrapper{
+    overflow: visible !important;
+  }
+}
 
 /* Make active TOC item obvious (so it "moves" while scrolling) */
 #toc-wrapper a.nav-link,
@@ -388,142 +416,27 @@ footer p + p::before,
 .post-content h3,
 .post-content h4{
   scroll-margin-top: 6.25rem;
-
-
-/* ---------- 1) TOC only follows (NOT Recently/Tags) ---------- */
-/* Based on your DOM:
-   #panel-wrapper
-     .access                (Recently Updated / Trending Tags)
-     .toc-border-cover
-     section#toc-wrapper.position-sticky (Contents)
-*/
-@media (min-width: 992px){
-  /* Sticky can break if ANY ancestor clips overflow */
-  html, body,
-  #main-wrapper,
-  #main-wrapper > .container,
-  #main-wrapper > .container > .row,
-  #panel-wrapper{
-    overflow: visible !important;
-  }
-
-  /* Make sure access area scrolls away (disable any sticky) */
-  #panel-wrapper .access,
-  #panel-wrapper .access.position-sticky,
-  #panel-wrapper .access.sticky-top{
-    position: static !important;
-    top: auto !important;
-  }
-
-  /* Force ONLY TOC to be sticky */
-  #panel-wrapper section#toc-wrapper,
-  #panel-wrapper section#toc-wrapper.position-sticky{
-    position: sticky !important;
-    top: 5.2rem !important;
-    max-height: calc(100vh - 6.2rem) !important;
-    overflow-y: auto !important;
-    z-index: 30 !important;
-  }
-
-  /* Optional: keep the seam cover aligned with TOC */
-  #panel-wrapper .toc-border-cover{
-    position: sticky !important;
-    top: 5.2rem !important;
-    z-index: 31 !important;
-    background: transparent !important;
-  }
 }
 
-/* ---------- 2) Post meta layout (match Axlotol style) ---------- */
-/* Your markup:
-   .post-meta
-     span(Posted...)
-     span(Updated...)   [sometimes]
-     div.d-flex.justify-content-between (By... | readtime)
-*/
+/* ---------- 2) Post meta two-line (Desktop) ---------- */
+/* Line 1: Posted/Updated ...   Line 2: By ... (left) + readtime (right) */
 @media (min-width: 992px){
-  /* Do NOT use flex on .post-meta (it merges items into one line) */
   .post-meta{
-    display: block !important;
-    white-space: normal !important;
-  }
-
-  /* Line 1: Posted/Updated inline */
-  .post-meta > span{
-    display: inline-block !important;
-    margin-right: .6rem !important;
-    white-space: nowrap !important;
-  }
-  .post-meta > span + span::before{
-    content: " · " !important;
-    opacity: .65 !important;
-    margin-right: .6rem !important;
-  }
-
-  /* Line 2: By (left) / readtime (right) */
-  .post-meta > div.d-flex.justify-content-between{
     display: flex !important;
-    justify-content: space-between !important;
-    align-items: baseline !important;
-    margin-top: .35rem !important;
-    width: 100% !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: .55rem .65rem !important;
   }
 
-  /* Make readtime stay one token on the right */
-  .post-meta .readtime{
-    white-space: nowrap !important;
-  }
-}
-
-/* ---------- 3) Home preview: one-line "fixed comment" ---------- */
-/* CSS clamp (works even if excerpt still long) */
-#post-list .post-preview p{
-  display: -webkit-box !important;
-  -webkit-box-orient: vertical !important;
-  -webkit-line-clamp: 1 !important;
-  overflow: hidden !important;
-}
-
-/* But ideally: use excerpt_separator + <!--more--> (exact spelling) */
-
-}
-
-
-
-  /* Recently Updated / Trending Tags should NOT be sticky */
-  #panel-wrapper .access{
-    position: static !important;
-    top: auto !important;
-  }
-
-  /* TOC only sticks */
-  #panel-wrapper section#toc-wrapper,
-  #panel-wrapper #toc-wrapper,
-  #panel-wrapper section#toc-wrapper.position-sticky{
-    position: sticky !important;
-    top: 5.2rem !important; /* below topbar */
-    max-height: calc(100vh - 6.2rem) !important;
-    overflow-y: auto !important;
-    z-index: 30 !important;
-  }
-
-  /* Keep the border cover aligned with the sticky TOC (optional, but avoids weird seam) */
-  #panel-wrapper .toc-border-cover{
-    position: sticky !important;
-    top: 5.2rem !important;
-    z-index: 35 !important;
-    background: transparent !important;
-  }
-}
-
-
-  /* Default: line 1 */
+  /* Everything is line 1 by default */
   .post-meta > *{
     order: 1 !important;
+    display: inline-flex !important;
+    align-items: center !important;
     white-space: nowrap !important;
   }
 
-  /* Force line break before author/readtime */
+  /* Force a line break between line1 and line2 using a flex-item pseudo-element */
   .post-meta::after{
     content: "" !important;
     flex: 0 0 100% !important;
@@ -531,29 +444,41 @@ footer p + p::before,
     order: 2 !important;
   }
 
-  /* Author (line 2, left) */
+  /* Line 2 elements */
   .post-meta .post-author,
   .post-meta .author,
-  .post-meta a[rel="author"],
-  .post-meta [itemprop="author"]{
+  .post-meta .byline,
+  .post-meta .post-meta__author{
     order: 3 !important;
-    margin-right: .35rem !important;
   }
 
-  /* Read time (line 2, right) */
   .post-meta .readtime,
   .post-meta .post-read-time,
   .post-meta .post-meta__readtime{
     order: 3 !important;
-    margin-left: auto !important;
+    margin-left: auto !important; /* push to right on line 2 */
   }
 
-  /* Ensure Posted/Updated stays together on line 1 (they usually have these classes) */
-  .post-meta .posted-date,
-  .post-meta .post-updated,
-  .post-meta time{
-    order: 1 !important;
+  /* Optional: add a dot only between author and readtime (line2) */
+  .post-meta .post-author + .readtime::before,
+  .post-meta .post-author + .post-read-time::before,
+  .post-meta .author + .readtime::before{
+    content: " · " !important;
+    opacity: .65 !important;
+    margin: 0 .25rem 0 .15rem !important;
   }
+}
+
+/* ---------- 3) Home cards excerpt: one-line "fixed comment" ---------- */
+.post-preview .post-content,
+.post-preview .post-content p,
+.card-wrapper .post-content,
+.card-wrapper .post-content p{
+  display: -webkit-box !important;
+  -webkit-box-orient: vertical !important;
+  -webkit-line-clamp: 1 !important;   /* 한 줄만 */
+  overflow: hidden !important;
+  max-width: 100% !important;
 }
 
 /* ---------- 4) Home card preview image (when front-matter image is set) ---------- */
