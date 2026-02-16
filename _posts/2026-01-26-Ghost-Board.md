@@ -9,7 +9,7 @@ comments: false
 
 | Name | Category | Difficulty | Keywords |
 |---|:---:|:---:|:---:|
-| Ghost Boord | Web | ★★☆ | Lodash, Template Option Injection |
+| Ghost Boord | Web | ★★☆ | Stored XSS → Admin bot → SpringEL/Thymeleaf SSTI → H2 ALIAS → Arbitrary file read |
 
 ## TL;DR
 
