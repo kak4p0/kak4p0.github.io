@@ -174,18 +174,56 @@ code{
 /* ---------- Right panel stability (desktop) ----------
    If a long code/table forces the main column to exceed width,
    Bootstrap's row may wrap -> panel drops to bottom.
-   We guard both by (1) overflow-x on code/table, (2) min-width:0,
-   and (3) keep the main row from wrapping on large screens. */
+   Fix: force nowrap + min-width:0 (core can shrink) + fixed panel width.
+   Also covers Chirpy layouts where #main-wrapper itself is .row. */
 @media (min-width: 992px){
-  /* try several top-level row shapes used by Chirpy */
+  /* Case A: #main-wrapper itself behaves like a Bootstrap row */
+  #main-wrapper{
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: flex-start;
+  }
+
+  /* Case B: #main-wrapper contains the row */
   #main-wrapper > .row,
   #main-wrapper > .container > .row,
   #main-wrapper .row.flex-grow-1{
-    flex-wrap: nowrap;
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: flex-start;
   }
 
+  /* Critical: allow flex items to shrink even when content is long */
+  #core-wrapper,
+  #panel-wrapper,
+  #main-wrapper > .row > *,
+  #main-wrapper > .container > .row > *,
+  #main-wrapper .row.flex-grow-1 > *{
+    min-width: 0 !important;
+  }
+
+  /* Core takes remaining space (0-basis prevents min-content expansion) */
+  #core-wrapper{
+    flex: 1 1 0% !important;
+    width: auto !important;
+    min-width: 0 !important;
+  }
+
+  /* Panel fixed width so it never drops below */
   #panel-wrapper{
-    align-self: flex-start;
-    min-width: 280px;
+    flex: 0 0 320px !important;
+    width: 320px !important;
+    max-width: 320px !important;
+    min-width: 320px !important;
+    align-self: flex-start !important;
+    margin-top: 0 !important;
+  }
+
+  /* Rouge line-number tables can still inflate min-content width */
+  #core-wrapper .rouge-table{
+    display: block;
+    overflow-x: auto;
+    max-width: 100%;
   }
 }
+
