@@ -1,5 +1,5 @@
 ---
-title: "LA CTF 2026 | [Web] narnes-and-bobles"
+title: "[Web] narnes-and-bobles"
 date: 2026-02-10 01:00:00 +0900
 categories: [LA CTF 2026]
 tags: [Web]
