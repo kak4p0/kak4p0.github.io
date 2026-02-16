@@ -365,44 +365,6 @@ footer p + p::before,
    4) Home card: preview image sizing (when you use front-matter image:)
    ========================================================= */
 
-/* ---------- 1) TOC only sticky (Desktop) ---------- */
-/* Keep only "Contents" sticky; Recently Updated / Trending Tags should scroll away */
-@media (min-width: 992px){
-  /* Sticky prerequisite: no overflow clipping on ancestors */
-  #main-wrapper,
-  #main-wrapper > .container,
-  #main-wrapper .row,
-  #main-wrapper [class*="col-"],
-  aside#panel-wrapper{
-    overflow: visible !important;
-  }
-
-  /* Ensure the whole right panel is NOT sticky */
-  aside#panel-wrapper{
-    position: static !important;
-    top: auto !important;
-    height: auto !important;
-    overflow: visible !important;
-  }
-
-  /* Chirpy sometimes makes the 'access' block sticky; disable it */
-  #panel-wrapper .access,
-  #panel-wrapper .panel{
-    position: static !important;
-    top: auto !important;
-  }
-
-  /* Sticky ONLY for TOC box (Chirpy uses either #toc-wrapper or .position-sticky) */
-  #panel-wrapper #toc-wrapper,
-  #panel-wrapper section#toc-wrapper,
-  #panel-wrapper section#toc-wrapper.position-sticky{
-    position: sticky !important;
-    top: 5.2rem !important;                 /* below topbar */
-    max-height: calc(100vh - 6.2rem) !important;
-    overflow-y: auto !important;
-    z-index: 30 !important;
-  }
-}
 
 
 /* Make active TOC item obvious (so it "moves" while scrolling) */
@@ -428,11 +390,54 @@ footer p + p::before,
   scroll-margin-top: 6.25rem;
 }
 
-/* ---------- 2) Post meta two-line (Desktop) ---------- */
-/* Goal (like your example):
-   Line 1: Posted ... · Updated ...
-   Line 2: By <author> (left)     <readtime> (right)
-   NOTE: Avoid making meta children flex (it can remove spaces, causing "PostedFeb" etc.)
+
+/* ---------- 1) TOC only sticky (Desktop, Chirpy DOM-aware) ---------- */
+/* DOM (your DevTools):
+   <aside id="panel-wrapper">
+     <div class="access"> ... Recently/Tags ... </div>
+     <div class="toc-border-cover ..."></div>
+     <section id="toc-wrapper" class="... position-sticky ..."> ... </section>
+*/
+@media (min-width: 992px){
+  /* Sticky prerequisite: do not clip sticky inside ancestors */
+  #main-wrapper,
+  #main-wrapper > .container,
+  #main-wrapper .row,
+  #main-wrapper [class*="col-"],
+  #panel-wrapper{
+    overflow: visible !important;
+  }
+
+  /* Recently Updated / Trending Tags should NOT be sticky */
+  #panel-wrapper .access{
+    position: static !important;
+    top: auto !important;
+  }
+
+  /* TOC only sticks */
+  #panel-wrapper section#toc-wrapper,
+  #panel-wrapper #toc-wrapper,
+  #panel-wrapper section#toc-wrapper.position-sticky{
+    position: sticky !important;
+    top: 5.2rem !important; /* below topbar */
+    max-height: calc(100vh - 6.2rem) !important;
+    overflow-y: auto !important;
+    z-index: 30 !important;
+  }
+
+  /* Keep the border cover aligned with the sticky TOC (optional, but avoids weird seam) */
+  #panel-wrapper .toc-border-cover{
+    position: sticky !important;
+    top: 5.2rem !important;
+    z-index: 35 !important;
+    background: transparent !important;
+  }
+}
+
+/* ---------- 2) Post meta: 2 lines (Posted/Updated on line1, By+readtime on line2) ---------- */
+/* Fixes:
+   - Prevent "PostedFeb" (flex on children can eat whitespace)
+   - Avoid squeezing date by moving By/readtime to line 2
 */
 @media (min-width: 992px){
   .post-meta{
@@ -443,13 +448,13 @@ footer p + p::before,
     row-gap: .35rem !important;
   }
 
-  /* Default ordering: line 1 */
+  /* Default: line 1 */
   .post-meta > *{
     order: 1 !important;
     white-space: nowrap !important;
   }
 
-  /* Force line break between line 1 and line 2 */
+  /* Force line break before author/readtime */
   .post-meta::after{
     content: "" !important;
     flex: 0 0 100% !important;
@@ -457,35 +462,48 @@ footer p + p::before,
     order: 2 !important;
   }
 
-  /* Assume last two meta items are (By ...) and (readtime) in Chirpy */
-  .post-meta > :nth-last-child(2){
-    order: 3 !important; /* By ... */
+  /* Author (line 2, left) */
+  .post-meta .post-author,
+  .post-meta .author,
+  .post-meta a[rel="author"],
+  .post-meta [itemprop="author"]{
+    order: 3 !important;
+    margin-right: .35rem !important;
   }
-  .post-meta > :last-child{
-    order: 3 !important; /* readtime */
+
+  /* Read time (line 2, right) */
+  .post-meta .readtime,
+  .post-meta .post-read-time,
+  .post-meta .post-meta__readtime{
+    order: 3 !important;
     margin-left: auto !important;
   }
 
-  /* Dot only between By and readtime (line 2) */
-  .post-meta > :nth-last-child(2)::after{
-    content: " · " !important;
-    opacity: .65 !important;
-    margin: 0 .25rem 0 .15rem !important;
+  /* Ensure Posted/Updated stays together on line 1 (they usually have these classes) */
+  .post-meta .posted-date,
+  .post-meta .post-updated,
+  .post-meta time{
+    order: 1 !important;
   }
 }
 
-
-/* ---------- 3) Home cards excerpt: one-line "fixed comment" ---------- */
-.post-preview .post-content,
-.post-preview .post-content p,
-.card-wrapper .post-content,
-.card-wrapper .post-content p{
+/* ---------- 3) Home cards excerpt: one-line clamp (broader selectors) ---------- */
+#post-list .post-preview .post-content,
+#post-list .post-preview .post-content p,
+#post-list .post-preview .post-excerpt,
+#post-list .post-preview .post-subtitle,
+#post-list .post-preview .post-preview__content,
+#post-list .post-preview .post-preview__content p,
+#post-list .card-wrapper .post-content,
+#post-list .card-wrapper .post-content p{
   display: -webkit-box !important;
   -webkit-box-orient: vertical !important;
-  -webkit-line-clamp: 1 !important;   /* 한 줄만 */
+  -webkit-line-clamp: 1 !important;
   overflow: hidden !important;
-  max-width: 100% !important;
 }
+
+
+
 
 /* ---------- 4) Home card preview image (when front-matter image is set) ---------- */
 /* Chirpy commonly uses .preview-img or an <img> in the preview area. */
