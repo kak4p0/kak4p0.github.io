@@ -332,3 +332,67 @@ code{
     min-width: 320px !important;
   }
 }
+
+
+/* =========================
+   Categories / Tags / Archives: core column is not #core-wrapper (Chirpy uses <main aria-label="Main Content">)
+   Force the main row to behave as "fluid core + fixed panel" on ALL pages.
+   ========================= */
+@media (min-width: 992px){
+  /* Chirpy main layout row */
+  #main > .row.flex-grow-1{
+    flex-wrap: nowrap !important;
+  }
+
+  /* Core column (used on list pages) */
+  #main > .row.flex-grow-1 > main[aria-label="Main Content"]{
+    flex: 1 1 0% !important;
+    width: auto !important;
+    max-width: none !important;
+    min-width: 0 !important;
+  }
+
+  /* Panel pinned to the far right */
+  #main > .row.flex-grow-1 > #panel-wrapper{
+    margin-left: auto !important;
+    flex: 0 0 320px !important;
+    width: 320px !important;
+    max-width: 320px !important;
+    min-width: 320px !important;
+  }
+}
+
+/* =========================
+   Move Search to top-right (Topbar)
+   - Keep breadcrumbs on the left
+   - Push search wrapper to the far right
+   ========================= */
+@media (min-width: 992px){
+  #topbar{
+    display: flex !important;
+    align-items: center;
+    gap: .75rem;
+  }
+
+  /* Breadcrumb/Title side expands */
+  #topbar #breadcrumb,
+  #topbar nav[aria-label="Breadcrumb"],
+  #topbar .breadcrumb,
+  #topbar .topbar-title{
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  /* Search side sticks to the right */
+  #topbar #search-wrapper,
+  #topbar .search-wrapper,
+  #topbar #search-trigger,
+  #topbar #search{
+    margin-left: auto !important;
+  }
+
+  /* Make the visible input a bit more "top-right" sized */
+  #topbar #search-input{
+    width: min(340px, 32vw);
+  }
+}
