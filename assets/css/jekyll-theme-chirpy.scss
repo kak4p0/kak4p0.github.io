@@ -251,3 +251,31 @@ code{
     word-break: break-word !important;
   }
 }
+
+/* =========================
+   Sticky TOC (Contents 따라오기)
+   ========================= */
+@media (min-width: 992px){
+  /* sticky가 먹으려면 조상에 overflow가 걸려있으면 안 됨 → 안전빵 */
+  #main-wrapper,
+  #core-wrapper,
+  #panel-wrapper{
+    overflow: visible !important;
+  }
+
+  /* Chirpy TOC wrapper (버전/스킨 따라 class가 조금씩 달라서 selector 넓게) */
+  #toc-wrapper,
+  #panel-wrapper .toc-wrapper,
+  #panel-wrapper .panel.toc-wrapper{
+    position: sticky !important;
+    top: 5.2rem; /* topbar 아래에 걸리게 */
+    align-self: flex-start;
+    z-index: 2;
+  }
+
+  /* TOC가 길어지면 TOC 영역만 스크롤 */
+  #toc-wrapper{
+    max-height: calc(100vh - 6.2rem);
+    overflow-y: auto;
+  }
+}
