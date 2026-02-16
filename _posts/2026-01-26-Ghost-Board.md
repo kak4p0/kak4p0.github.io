@@ -1,14 +1,12 @@
 ---
 title: "[Web] Ghost Board"
+description: Writing about the "Ghost Board" of 0xL4ugh CTF 2026.
 date: 2026-01-26 01:00:00 +0900
 categories: [0xL4ugh CTF 2026]
 tags: [Web]
 toc: true
 comments: false
 ---
-
-Writing about the "Ghost Board" of 0xL4ugh CTF 2026.
-<!--more-->
 
 ## TL;DR
 
