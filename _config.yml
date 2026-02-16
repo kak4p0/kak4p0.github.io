@@ -18,6 +18,8 @@ title: kak4p0 # the main title
 
 tagline: kak4p0 Blogs # it will display as the subtitle
 
+excerpt_separator: "<!--more-->"
+
 description: >- # used by seo meta and the atom feed
   A minimal, responsive and feature-rich Jekyll theme for technical writing.
 
