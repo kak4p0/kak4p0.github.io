@@ -358,24 +358,26 @@ footer p + p::before,
 
 
 /* =========================================================
-   TOC VISIBILITY FIX (Desktop)
-   Symptom: right "Contents" scrolls away (not visible while reading)
-   Cause: sticky selector mismatch (section#toc-wrapper only) OR sticky disabled by layout.
-   Fix: make the whole right panel sticky + keep it scrollable.
+   UI PACK (Chirpy)
+   1) Right panel (Contents) stays visible while reading (sticky)
+   2) Post meta: "By ... · 6 min read" on one line (desktop)
+   3) Home post-card excerpt: one-line "fixed comment" look
+   4) Home card: preview image sizing (when you use front-matter image:)
    ========================================================= */
 
+/* ---------- 1) Right panel sticky (Desktop) ---------- */
 @media (min-width: 992px){
-  /* Make the entire right panel stick in viewport */
+  /* Make the whole right panel stick */
   aside#panel-wrapper{
     position: sticky !important;
-    top: 5.2rem !important;
+    top: 5.2rem !important;                 /* below topbar */
     height: calc(100vh - 6.2rem) !important;
     overflow-y: auto !important;
     align-self: flex-start !important;
-    z-index: 20 !important;
+    z-index: 30 !important;
   }
 
-  /* Disable inner sticky to avoid double-sticky weirdness */
+  /* Avoid nested stickies fighting each other */
   #panel-wrapper #toc-wrapper{
     position: static !important;
     top: auto !important;
@@ -383,7 +385,7 @@ footer p + p::before,
     overflow: visible !important;
   }
 
-  /* Sticky prerequisites: no overflow clipping on ancestors */
+  /* Sticky prerequisite: no overflow clipping */
   #main-wrapper,
   #main-wrapper > .container,
   #main-wrapper .row,
@@ -393,7 +395,7 @@ footer p + p::before,
   }
 }
 
-/* Active item emphasis (so it "moves" visually while scrolling) */
+/* Make active TOC item obvious (so it "moves" while scrolling) */
 #toc-wrapper a.nav-link,
 #toc-wrapper a.toc-link{
   color: rgba(255,255,255,.62) !important;
@@ -415,3 +417,63 @@ footer p + p::before,
 .post-content h4{
   scroll-margin-top: 6.25rem;
 }
+
+/* ---------- 2) Post meta one-line (Desktop) ---------- */
+/* Example: Posted ... · Updated ... · By kak4p0 · 6 min read */
+@media (min-width: 992px){
+  .post-meta{
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    gap: .55rem !important;
+    white-space: nowrap !important;
+  }
+  .post-meta > *{
+    display: inline-flex !important;
+    align-items: center !important;
+  }
+  .post-meta > * + *::before{
+    content: " · " !important;
+    opacity: .65 !important;
+    margin-right: .55rem !important;
+  }
+}
+
+/* ---------- 3) Home cards excerpt: one-line "fixed comment" ---------- */
+.post-preview .post-content,
+.post-preview .post-content p,
+.card-wrapper .post-content,
+.card-wrapper .post-content p{
+  display: -webkit-box !important;
+  -webkit-box-orient: vertical !important;
+  -webkit-line-clamp: 1 !important;   /* 한 줄만 */
+  overflow: hidden !important;
+  max-width: 100% !important;
+}
+
+/* ---------- 4) Home card preview image (when front-matter image is set) ---------- */
+/* Chirpy commonly uses .preview-img or an <img> in the preview area. */
+@media (min-width: 992px){
+  .post-preview img.preview-img,
+  .post-preview .preview-img,
+  .post-preview img.post-img,
+  .post-preview .post-img img{
+    width: 320px !important;          /* 오른쪽 로고 영역 */
+    max-width: 320px !important;
+    height: 180px !important;
+    object-fit: contain !important;   /* 로고는 contain이 예쁨 */
+    border-radius: 16px !important;
+    background: rgba(0,0,0,.18) !important;
+    border: 1px solid rgba(255,255,255,.06) !important;
+  }
+}
+
+/* (옵션) Right panel "Trending Tags" 회색 박스 제거를 유지하고 싶으면 켜기
+#panel-wrapper section#access-tags.panel,
+#panel-wrapper #access-tags.panel{
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+*/
+
