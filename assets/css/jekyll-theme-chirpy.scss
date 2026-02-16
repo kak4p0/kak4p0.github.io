@@ -227,55 +227,53 @@ code{
   }
 }
 
-/* Sticky TOC (Contents) */
-@media (min-width: 992px){
-  #toc-wrapper,
-  #panel-wrapper .toc-wrapper{
-    position: sticky;
-    top: 5.2rem; /* topbar 아래 여백 */
+
+
+/* =========================
+   Wider layout on big screens (less "narrow" look)
+   - Chirpy uses Bootstrap containers with max-width ~1320px on 2k monitors.
+   - Increase main content max-width so core+panel can breathe.
+   ========================= */
+@media (min-width: 1400px){
+  /* If #main-wrapper is used as the main container */
+  #main-wrapper{
+    width: 100%;
+    max-width: 1480px; /* tweak: 1440~1600 */
+    margin-left: auto;
+    margin-right: auto;
   }
 
-  /* TOC가 길어지면 내부만 스크롤 */
-  #toc-wrapper{
-    max-height: calc(100vh - 6.2rem);
-    overflow-y: auto;
-  }
-}
-
-/* Extreme one-line bash blocks: allow wrapping so layout never breaks */
-@media (min-width: 992px){
-  .language-bash .highlight pre,
-  .language-bash pre{
-    white-space: pre-wrap !important;
-    overflow-wrap: anywhere !important;
-    word-break: break-word !important;
+  /* If a Bootstrap .container wraps the row */
+  #main-wrapper > .container,
+  #main-wrapper .container{
+    max-width: 1480px;
   }
 }
 
 /* =========================
-   Sticky TOC (Contents 따라오기)
+   Sticky right panel (Contents follows while scrolling)
+   - Makes the entire right panel stay visible like reference blogs.
+   - Panel becomes its own scroll area if content exceeds viewport.
    ========================= */
 @media (min-width: 992px){
-  /* sticky가 먹으려면 조상에 overflow가 걸려있으면 안 됨 → 안전빵 */
+  /* Sticky can be disabled by overflow on ancestors; keep them visible */
+  #main,
   #main-wrapper,
-  #core-wrapper,
-  #panel-wrapper{
+  #core-wrapper{
     overflow: visible !important;
   }
 
-  /* Chirpy TOC wrapper (버전/스킨 따라 class가 조금씩 달라서 selector 넓게) */
-  #toc-wrapper,
-  #panel-wrapper .toc-wrapper,
-  #panel-wrapper .panel.toc-wrapper{
+  #panel-wrapper{
     position: sticky !important;
-    top: 5.2rem; /* topbar 아래에 걸리게 */
-    align-self: flex-start;
-    z-index: 2;
-  }
-
-  /* TOC가 길어지면 TOC 영역만 스크롤 */
-  #toc-wrapper{
+    top: 5.2rem; /* below topbar */
+    align-self: flex-start !important;
     max-height: calc(100vh - 6.2rem);
     overflow-y: auto;
+  }
+
+  /* Avoid nested scroll if panel itself scrolls */
+  #toc-wrapper{
+    max-height: none !important;
+    overflow: visible !important;
   }
 }
