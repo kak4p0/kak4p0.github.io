@@ -465,3 +465,60 @@ code{
     overflow: visible !important;
   }
 }
+
+
+/* =========================
+   v7 overrides
+   - Fix: TOC not sticking (was overridden elsewhere)
+   - Fix: double "nested box" inside code blocks (styling applied to both wrapper + <pre>)
+   ========================= */
+
+/* TOC (Contents) should follow on post pages */
+@media (min-width: 992px){
+  /* keep ancestors from breaking sticky */
+  html, body,
+  #main-wrapper,
+  #main,
+  #panel-wrapper{
+    overflow: visible !important;
+  }
+
+  /* IMPORTANT: sticky the actual Chirpy wrapper */
+  section#toc-wrapper{
+    position: sticky !important;
+    top: 5.2rem !important;  /* below topbar */
+    align-self: flex-start !important;
+    z-index: 10;
+    max-height: calc(100vh - 6.2rem);
+    overflow-y: auto;
+  }
+}
+
+/* Code blocks: style the wrapper, not the inner <pre> (prevents "inner box" covering code) */
+div.highlighter-rouge,
+figure.highlight,
+div.highlight,
+div.highlighter-rouge > div.highlight{
+  background: rgba(0,0,0,.34) !important;
+  border: 1px solid rgba(45,212,191,.18) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 10px 26px rgba(0,0,0,.28) !important;
+  overflow: hidden; /* keeps header/edges clean */
+}
+
+/* Neutralize inner <pre> so it doesn't draw a second box */
+div.highlighter-rouge pre,
+figure.highlight pre,
+div.highlight pre,
+div.highlighter-rouge div.highlight pre{
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+}
+
+/* If rouge table is used (line numbers), remove extra spacing */
+div.highlight table.rouge-table{
+  margin: 0 !important;
+}
