@@ -396,3 +396,72 @@ code{
     width: min(340px, 32vw);
   }
 }
+
+
+/* =========================
+   FINAL OVERRIDES (v6)
+   1) Make ALL pages (home/posts/categories/tags/archives/about) use the same wider container.
+      - Your earlier rule only kicked in at >=1400px; with sidebar/topbar, the effective width can be <1400.
+   2) Make TOC actually stick: stick the *TOC panel* (parent), not the inner #toc-wrapper,
+      because sticky is constrained by parent height.
+   ========================= */
+
+/* 1) Wider container on desktop (applies earlier: wins) */
+@media (min-width: 1200px){
+  #main{
+    width: 100% !important;
+    max-width: 1480px !important; /* tweak 1440~1600 */
+  }
+
+  #main-wrapper{
+    width: 100% !important;
+  }
+
+  #main-wrapper > .container,
+  #main-wrapper .container{
+    max-width: 1480px !important;
+  }
+
+  /* Main layout row should stretch full width */
+  #main > .row.flex-grow-1{
+    width: 100% !important;
+    justify-content: space-between !important;
+    flex-wrap: nowrap !important;
+  }
+}
+
+/* 2) Sticky TOC panel (Contents follows + active section highlight remains) */
+@media (min-width: 992px){
+  /* Keep sticky from being killed by overflow on ancestors */
+  #main,
+  #main-wrapper,
+  #core-wrapper,
+  #panel-wrapper{
+    overflow: visible !important;
+  }
+
+  /* Ensure the panel column itself stays in flow (not sticky) */
+  #panel-wrapper{
+    position: static !important;
+  }
+
+  /* Make the TOC *panel* sticky (not just inner wrapper) */
+  #panel-wrapper .panel:has(#toc-wrapper),
+  #panel-wrapper section:has(#toc-wrapper),
+  #panel-wrapper div:has(> #toc-wrapper){
+    position: sticky !important;
+    top: 5.2rem; /* below topbar */
+    align-self: flex-start !important;
+    z-index: 3;
+    max-height: calc(100vh - 6.2rem);
+    overflow-y: auto;
+  }
+
+  /* Prevent double constraints from the inner wrapper */
+  #toc-wrapper{
+    position: static !important;
+    top: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+}
