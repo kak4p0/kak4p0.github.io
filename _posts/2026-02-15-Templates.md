@@ -26,7 +26,7 @@ comments: false
 ### 1) Recon
 - 기능: /에 POST로 name=`<input>` 전송 → 페이지가 “greeting” 형태로 렌더링
 - DevTools Network에서 확인:
-  - Request: POST http://chall.0xfun.org:49811/
+  - Request: POST `http://chall.0xfun.org:49811/`
   - Form Data: name=...
 
 - 응답 헤더에 Werkzeug/2.3.7 Python/3.11.14 → Flask 계열 + Jinja2 가능성 높음
