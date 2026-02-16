@@ -626,3 +626,130 @@ div.highlight table.rouge-table{
 #core-wrapper .card-wrapper a{
   background: transparent !important;
 }
+
+
+/* =========================================================
+   v10: Fixes
+   - Remove "selected/washed" hover on post cards & lists
+   - Prevent huge clickable blank area in "Further Reading"
+   - Make TOC (Contents) truly sticky + scrollable
+   - Footer text in a single line
+   ========================================================= */
+
+/* 1) Home/List cards: stop hover wash / lift */
+.post-preview,
+.post-preview:hover,
+.post-preview:focus-within {
+  background: var(--k-surface) !important;
+  box-shadow: none !important;
+  filter: none !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+.post-preview::before,
+.post-preview::after,
+.post-preview a::before,
+.post-preview a::after,
+.post-preview .post-link::before,
+.post-preview .post-link::after {
+  content: none !important;
+  display: none !important;
+  opacity: 0 !important;
+}
+
+/* 2) Generic "card-wrapper" hover overlays (Chirpy uses pseudo overlays) */
+.card-wrapper,
+.card-wrapper:hover,
+a.card-wrapper,
+a.card-wrapper:hover {
+  box-shadow: none !important;
+  filter: none !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+.card-wrapper::before,
+.card-wrapper::after,
+a.card-wrapper::before,
+a.card-wrapper::after {
+  content: none !important;
+  display: none !important;
+  opacity: 0 !important;
+}
+
+/* 3) Further Reading / post navigation: prevent tall links that cover blank space */
+.related-posts,
+#related-posts,
+.post-tail-wrapper .related-posts,
+.post-tail-wrapper #related-posts,
+.post-tail-wrapper .post-nav,
+.post-tail-wrapper .post-navigation,
+.post-tail-wrapper .post-nav-wrapper {
+  display: block !important;
+}
+
+.related-posts li,
+#related-posts li,
+.post-tail-wrapper .related-posts li,
+.post-tail-wrapper #related-posts li {
+  display: block !important;
+  align-items: flex-start !important;
+}
+
+.related-posts a,
+#related-posts a,
+.post-tail-wrapper .related-posts a,
+.post-tail-wrapper #related-posts a,
+.post-tail-wrapper .post-nav a,
+.post-tail-wrapper .post-navigation a {
+  display: block !important;
+  height: auto !important;
+  min-height: 0 !important;
+  flex: 0 0 auto !important;
+  background: transparent !important;
+}
+
+.related-posts a:hover,
+#related-posts a:hover,
+.post-tail-wrapper .related-posts a:hover,
+.post-tail-wrapper #related-posts a:hover,
+.post-tail-wrapper .post-nav a:hover,
+.post-tail-wrapper .post-navigation a:hover {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* 4) TOC: force sticky behavior (needs top) + keep it usable with internal scroll */
+#panel-wrapper {
+  overflow: visible !important;
+  position: relative !important;
+  align-self: flex-start !important;
+}
+
+#toc-wrapper,
+#toc-wrapper.position-sticky {
+  position: sticky !important;
+  top: 5.2rem !important; /* below topbar */
+  max-height: calc(100vh - 5.2rem) !important;
+  overflow: auto !important;
+}
+
+/* 5) Footer: render as a single line (join two <p>) */
+#footer,
+footer {
+  text-align: center;
+}
+
+#footer p,
+footer p {
+  margin: 0 !important;
+  display: inline !important;
+}
+
+#footer p + p::before,
+footer p + p::before {
+  content: " · ";
+  padding: 0 .35rem;
+  opacity: .8;
+}
