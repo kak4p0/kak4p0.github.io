@@ -355,3 +355,63 @@ footer p + p::before,
     width: min(420px, 34vw) !important;
   }
 }
+
+
+/* =========================================================
+   TOC VISIBILITY FIX (Desktop)
+   Symptom: right "Contents" scrolls away (not visible while reading)
+   Cause: sticky selector mismatch (section#toc-wrapper only) OR sticky disabled by layout.
+   Fix: make the whole right panel sticky + keep it scrollable.
+   ========================================================= */
+
+@media (min-width: 992px){
+  /* Make the entire right panel stick in viewport */
+  aside#panel-wrapper{
+    position: sticky !important;
+    top: 5.2rem !important;
+    height: calc(100vh - 6.2rem) !important;
+    overflow-y: auto !important;
+    align-self: flex-start !important;
+    z-index: 20 !important;
+  }
+
+  /* Disable inner sticky to avoid double-sticky weirdness */
+  #panel-wrapper #toc-wrapper{
+    position: static !important;
+    top: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  /* Sticky prerequisites: no overflow clipping on ancestors */
+  #main-wrapper,
+  #main-wrapper > .container,
+  #main-wrapper .row,
+  #main-wrapper [class*="col-"],
+  #panel-wrapper{
+    overflow: visible !important;
+  }
+}
+
+/* Active item emphasis (so it "moves" visually while scrolling) */
+#toc-wrapper a.nav-link,
+#toc-wrapper a.toc-link{
+  color: rgba(255,255,255,.62) !important;
+}
+#toc-wrapper a.nav-link.active,
+#toc-wrapper a.toc-link.active,
+#toc-wrapper .is-active-link{
+  color: var(--k-mint) !important;
+  font-weight: 650 !important;
+  background: rgba(45,212,191,.10) !important;
+  border-left: 3px solid rgba(45,212,191,.75) !important;
+  padding-left: .65rem !important;
+  border-radius: 10px !important;
+}
+
+/* TOC click: headings not hidden behind topbar */
+.post-content h2,
+.post-content h3,
+.post-content h4{
+  scroll-margin-top: 6.25rem;
+}
