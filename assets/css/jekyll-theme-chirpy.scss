@@ -2,174 +2,253 @@
 ---
 @import "main";
 
-/* =========================================
-   Kak4p0 Mint/Lime — crisp writeup skin
-   - readability first
-   - NO heavy blur (less hazy)
-   - keep right panel on desktop
-   ========================================= */
+/* ==========================================================
+   Kak4p0 Kakapo Mint/Lime (v2)
+   - crisp (no blur)
+   - writeup readability
+   - fixes right panel dropping (flex min-width issue)
+   - more distinctive than stock Chirpy
+   ========================================================== */
 
-:root {
-  --k-mint: #2dd4bf;
-  --k-lime: #a3e635;
+:root{
+  /* kakapo accents */
+  --k-mint:#2dd4bf;
+  --k-lime:#a3e635;
 
-  --k-bg0:  #0b0f12;
-  --k-bg1:  #0f151b;
+  /* dark base */
+  --k-bg0:#0b0f12;
+  --k-bg1:#0e141a;
 
-  --k-surface:  rgba(255, 255, 255, 0.045);
-  --k-surface2: rgba(255, 255, 255, 0.030);
+  /* surfaces */
+  --k-surface:rgba(255,255,255,.055);
+  --k-surface2:rgba(255,255,255,.075);
 
-  --k-border:      rgba(255, 255, 255, 0.085);
-  --k-border-mint: rgba(45, 212, 191, 0.22);
-  --k-border-lime: rgba(163, 230, 53, 0.20);
+  /* borders / shadows */
+  --k-border:rgba(255,255,255,.09);
+  --k-border-mint:rgba(45,212,191,.22);
+  --k-border-lime:rgba(163,230,53,.20);
+  --k-shadow:0 18px 34px rgba(0,0,0,.34);
 
-  --k-text:  rgba(232, 240, 247, 0.92);
-  --k-muted: rgba(232, 240, 247, 0.66);
+  /* text */
+  --k-text:rgba(255,255,255,.90);
+  --k-muted:rgba(255,255,255,.68);
 }
 
-/* Background: subtle kakapo-ish mint/lime haze (not blur) */
-body {
+/* 0) Background: subtle aura + micro texture (looks less "template") */
+body{
   background:
-    radial-gradient(1000px 700px at 16% -12%, rgba(45, 212, 191, 0.14), transparent 62%),
-    radial-gradient(1000px 700px at 88%  10%, rgba(163, 230, 53, 0.12), transparent 62%),
+    radial-gradient(740px 560px at 12% -10%, rgba(45,212,191,.10), transparent 62%),
+    radial-gradient(760px 580px at 92%  10%, rgba(163,230,53,.08), transparent 64%),
     linear-gradient(180deg, var(--k-bg0), var(--k-bg1));
-  background-attachment: fixed;
 }
 
-/* =========================
-   FIX: keep right panel on desktop
-   - If base flex rules are missing/overridden, panel drops under.
-   ========================= */
-@media (min-width: 1200px) {
-  /* Chirpy layouts vary slightly by version: cover both */
-  #main,
-  #main-wrapper > .row,
-  #main-wrapper .row {
-    display: flex !important;
-    flex-wrap: nowrap !important;
-    align-items: flex-start;
-  }
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  /* tiny scanline/noise 느낌 (과하면 거슬림 → 아주 약하게) */
+  background:
+    repeating-linear-gradient(
+      180deg,
+      rgba(255,255,255,.018) 0,
+      rgba(255,255,255,.018) 1px,
+      transparent 1px,
+      transparent 6px
+    );
+  opacity:.35;
+  mix-blend-mode:overlay;
+}
 
-  #core-wrapper {
-    flex: 1 1 auto !important;
-    min-width: 0;
-  }
+/* 1) Right panel dropping fix
+   원인: flex item 기본 min-width:auto 때문에 긴 컨텐츠(코드/표)가 core 폭을 강제로 키워 row가 wrap됨.
+   해결: 큰 화면에서 nowrap + flex children min-width:0 */
+@media (min-width: 992px){
+  #main-wrapper > .row{ flex-wrap: nowrap; }
+  #main-wrapper > .row > *{ min-width: 0; }
 
-  #panel-wrapper {
-    flex: 0 0 320px !important;
-    width: 320px !important;
-    max-width: 320px !important;
+  #core-wrapper{ min-width: 0; }
+  #panel-wrapper{
+    flex: 0 0 320px;
+    max-width: 320px;
+    min-width: 320px;
   }
 }
 
-/* Typography (writeup-friendly) */
-.post-content {
-  line-height: 1.75;
-  letter-spacing: 0.1px;
-  color: var(--k-text);
-}
+/* 긴 문자열이 레이아웃을 깨지 않도록(본문/목록) */
+.post-content,
 .post-content p,
-.post-content li {
-  color: var(--k-text);
-}
-.text-muted,
-.post-content .text-muted,
-.post-content small {
-  color: var(--k-muted) !important;
-}
-@media (min-width: 992px) {
-  .post-content { font-size: 1.03rem; }
+.post-content li{
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
-/* Links: mint -> lime hover */
+/* 표는 가로 스크롤 */
+.post-content table{
+  display:block;
+  max-width:100%;
+  overflow-x:auto;
+}
+
+/* 코드블록은 wrap하지 말고 스크롤(줄바꿈이 레이아웃 깨는 경우 방지) */
+pre,
+.highlight,
+div.highlighter-rouge{
+  max-width:100%;
+  overflow-x:auto;
+}
+
+/* 2) Typography: writeup-friendly */
+.post-content{
+  line-height: 1.78;
+  letter-spacing: .1px;
+  color: var(--k-text);
+}
+.post-content .text-muted,
+.post-content small{ color: var(--k-muted) !important; }
+
+/* Headings: 왼쪽 "카카포 바" 포인트로 분위기 차별 */
+.post-content h2,
+.post-content h3{
+  position:relative;
+  padding-left:.85rem;
+  margin-top: 2.1rem;
+}
+.post-content h2::before,
+.post-content h3::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:.38em;
+  width:6px;
+  height:.92em;
+  border-radius:999px;
+  background: linear-gradient(180deg, var(--k-mint), var(--k-lime));
+  box-shadow: 0 0 0 1px rgba(0,0,0,.25);
+}
+
+/* 3) Links: mint → lime hover */
 a,
-.post-content a {
+.post-content a{
   color: var(--k-mint);
-  text-decoration-color: rgba(45, 212, 191, 0.55);
+  text-decoration-color: rgba(45,212,191,.55);
   text-decoration-thickness: 1px;
   text-underline-offset: 3px;
 }
 a:hover,
-.post-content a:hover {
+.post-content a:hover{
   color: var(--k-lime);
-  text-decoration-color: rgba(163, 230, 53, 0.55);
+  text-decoration-color: rgba(163,230,53,.55);
 }
 
-/* Cards/Panels: crisp surface, no blur */
+/* 4) Surfaces: 카드 느낌을 "유리" 대신 "클린 패널"로 */
 .card,
 .card-wrapper,
 #panel-wrapper .panel,
-.list-group-item {
+#core-wrapper .post-preview,
+#core-wrapper .post,
+#core-wrapper .page{
   background: var(--k-surface) !important;
   border: 1px solid var(--k-border) !important;
-  border-radius: 16px !important;
-}
-#panel-wrapper .panel {
-  border-color: var(--k-border-mint) !important;
-}
-.card:hover,
-.card-wrapper:hover {
-  border-color: var(--k-border-lime) !important;
+  border-radius: 18px !important;
+  box-shadow: var(--k-shadow);
 }
 
-/* Sidebar: make it feel “not a clone” */
-#sidebar {
+/* 상단 얇은 하이라이트 라인(템플릿 느낌 감소) */
+.card,
+#panel-wrapper .panel,
+#core-wrapper .post-preview,
+#core-wrapper .post,
+#core-wrapper .page{
+  position:relative;
+}
+.card::before,
+#panel-wrapper .panel::before,
+#core-wrapper .post-preview::before,
+#core-wrapper .post::before,
+#core-wrapper .page::before{
+  content:"";
+  position:absolute;
+  left:14px;
+  right:14px;
+  top:0;
+  height:1px;
+  background: linear-gradient(90deg, rgba(45,212,191,.0), rgba(45,212,191,.55), rgba(163,230,53,.35), rgba(163,230,53,.0));
+  opacity:.55;
+}
+
+/* list items (categories/tags) */
+.list-group-item{
+  background: transparent !important;
+  border-color: rgba(255,255,255,.07) !important;
+}
+.list-group-item:hover{
+  background: rgba(45,212,191,.06) !important;
+}
+
+/* 5) Sidebar: kakapo tint + 명확한 active */
+#sidebar{
   background:
-    radial-gradient(900px 600px at 20% 0%, rgba(45, 212, 191, 0.12), transparent 55%),
-    radial-gradient(900px 600px at 75% 18%, rgba(163, 230, 53, 0.10), transparent 55%),
-    linear-gradient(180deg, rgba(0,0,0,0.20), rgba(0,0,0,0.46));
-  border-right: 1px solid rgba(255,255,255,0.06);
+    radial-gradient(540px 540px at 18% 0%, rgba(45,212,191,.16), transparent 58%),
+    radial-gradient(540px 540px at 80% 18%, rgba(163,230,53,.11), transparent 62%),
+    linear-gradient(180deg, rgba(0,0,0,.28), rgba(0,0,0,.56));
+  border-right: 1px solid rgba(255,255,255,.06);
 }
-#sidebar .nav-link { position: relative; }
-#sidebar .nav-link.active {
-  background: rgba(45, 212, 191, 0.12) !important;
-  border: 1px solid rgba(255,255,255,0.06) !important;
+
+#sidebar .profile-wrapper .avatar{
+  border-radius: 14px; /* default랑 차별 */
+  box-shadow:
+    0 0 0 2px rgba(45,212,191,.22),
+    0 0 0 6px rgba(163,230,53,.10);
 }
-#sidebar .nav-link.active::before {
-  content: "";
-  position: absolute;
-  left: -1px;
-  top: 8px;
-  bottom: 8px;
-  width: 3px;
-  border-radius: 3px;
+
+#sidebar .nav-link.active{
+  background: rgba(45,212,191,.12) !important;
+  border: 1px solid rgba(45,212,191,.18) !important;
+  box-shadow: 0 0 0 1px rgba(163,230,53,.10) inset;
+}
+#sidebar .nav-link.active::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:10px;
+  bottom:10px;
+  width:4px;
+  border-radius: 999px;
   background: linear-gradient(180deg, var(--k-mint), var(--k-lime));
 }
 
-/* Tag chips */
+/* 6) Tags: pill + 얇은 민트 테두리 */
 .tag,
 .post-tag,
-#panel-wrapper .post-tag {
+#panel-wrapper .post-tag{
   border-radius: 999px !important;
-  border: 1px solid var(--k-border-mint) !important;
-  background: rgba(45, 212, 191, 0.10) !important;
-  color: var(--k-text) !important;
+  border: 1px solid rgba(45,212,191,.22) !important;
+  background: rgba(45,212,191,.08) !important;
 }
 .tag:hover,
-.post-tag:hover {
-  border-color: var(--k-border-lime) !important;
-  background: rgba(163, 230, 53, 0.12) !important;
+.post-tag:hover{
+  border-color: rgba(163,230,53,.32) !important;
+  background: rgba(163,230,53,.10) !important;
 }
 
-/* Code blocks: high contrast */
+/* 7) Code blocks: 대비 + 테두리 (writeup 핵심) */
 pre,
-div.highlighter-rouge,
-.highlight {
-  background: rgba(0, 0, 0, 0.40) !important;
-  border: 1px solid rgba(255,255,255,0.10) !important;
-  border-radius: 14px !important;
+.highlight,
+div.highlighter-rouge{
+  background: rgba(0,0,0,.34) !important;
+  border: 1px solid rgba(45,212,191,.18) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 10px 26px rgba(0,0,0,.28);
 }
-code {
+code{
   font-family: ui-monospace, "JetBrains Mono", "Cascadia Mono", "D2Coding", SFMono-Regular, Menlo, Consolas, monospace;
 }
-:not(pre) > code {
-  background: rgba(0, 0, 0, 0.28);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 6px;
-  padding: 0.12em 0.35em;
-}
 
-/* Headings: very subtle lime glow */
-h1, h2, h3 {
-  text-shadow: 0 0 14px rgba(163, 230, 53, 0.05);
-}
+/* 8) Topbar / breadcrumbs: 포인트만 살짝 */
+#topbar-wrapper a{ color: rgba(255,255,255,.78); }
+#topbar-wrapper a:hover{ color: var(--k-lime); }
+
+/* 9) Selection: 카카포 느낌 포인트 */
+::selection{ background: rgba(163,230,53,.22); }
+
