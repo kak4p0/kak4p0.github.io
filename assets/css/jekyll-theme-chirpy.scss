@@ -3,14 +3,7 @@
 @import "main";
 
 /* =========================================================
-   Kak4p0 Chirpy single-file override (FINAL)
-   - Categories/Tags lists: remove bullets + remove double dots
-   - Sidebar menu dots: remove
-   - Sidebar bottom icons: stick to bottom & align nicely
-   - Search bar: larger
-   - Right panel (#panel-wrapper): NEVER drops below on desktop
-   - TOC (Contents): sticky follows while scrolling
-   - Footer: no boxed background, single-line, centered
+   Kak4p0 Chirpy - ULTRA FIX
    ========================================================= */
 
 /* ---------- Palette ---------- */
@@ -90,7 +83,7 @@ a:hover, .post-content a:hover{ color: var(--k-lime); }
   box-shadow: 0 0 16px rgba(45,212,191,.18);
 }
 
-/* ---------- Code blocks (prevent layout break) ---------- */
+/* ---------- Code blocks ---------- */
 div.highlighter-rouge,
 figure.highlight,
 div.highlight{
@@ -125,7 +118,7 @@ div.highlight pre{
 #core-wrapper, .post-content{ min-width: 0 !important; }
 .post-content *{ overflow-wrap: anywhere; }
 
-/* ---------- Remove "washed overlay" hover on preview cards ---------- */
+/* ---------- Remove hover effects ---------- */
 .post-preview,
 .post-preview:hover,
 .post-preview:focus-within,
@@ -134,7 +127,6 @@ div.highlight pre{
   filter: none !important;
   transform: none !important;
   transition: none !important;
-  box-shadow: none !important;
 }
 .post-preview::before,
 .post-preview::after,
@@ -144,19 +136,17 @@ div.highlight pre{
   display: none !important;
 }
 
-/* ---------- Sidebar (remove menu dots + bottom icons align) ---------- */
+/* ---------- Sidebar ---------- */
 #sidebar{
   background:
     radial-gradient(900px 650px at 30% 0%, rgba(45,212,191,.11), transparent 55%),
     radial-gradient(900px 650px at 70% 15%, rgba(163,230,53,.09), transparent 55%),
     linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,.40));
   border-right: 1px solid rgba(255,255,255,.06);
-
   display: flex !important;
   flex-direction: column !important;
 }
 
-/* Sidebar nav list: kill bullet/dots safely */
 #sidebar ul{
   list-style: none !important;
   padding-left: 0 !important;
@@ -170,7 +160,6 @@ div.highlight pre{
   content: none !important;
 }
 
-/* Active link glow */
 #sidebar .nav-link.active{
   background: rgba(45,212,191,.14) !important;
   border: 1px solid rgba(163,230,53,.18) !important;
@@ -179,37 +168,59 @@ div.highlight pre{
     0 12px 28px rgba(0,0,0,.35);
 }
 
-/* Bottom icon block: push to bottom + neat spacing */
 #sidebar .sidebar-bottom{
   margin-top: auto !important;
   padding: 1.1rem 0 1.4rem !important;
   display: flex !important;
-  flex-direction: column !important;
-  gap: .55rem !important;
+  flex-direction: row !important;
+  gap: .6rem !important;
+  justify-content: center !important;
   align-items: center !important;
+  flex-wrap: nowrap !important;
 }
 #sidebar .sidebar-bottom a{
+  margin: 0 !important;
   transform: none !important;
 }
 
-/* ---------- Search bar bigger ---------- */
-#topbar #search-wrapper{
-  margin-left: auto !important;
+/* ---------- 🔥 Topbar: Search 작게 ---------- */
+#topbar-wrapper{
+  background: transparent !important;
+  border-bottom: 1px solid rgba(255,255,255,.06) !important;
+  box-shadow: none !important;
 }
-#topbar #search-input{
-  height: 2.45rem !important;
-  font-size: 1rem !important;
-  padding: .45rem .9rem !important;
-  border-radius: 999px !important;
-}
+
 @media (min-width: 992px){
+  #topbar{
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 1rem !important;
+    height: 3.3rem !important;
+  }
+
+  #topbar nav,
+  #topbar #breadcrumb{
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+  }
+
+  #topbar #search-wrapper{
+    margin-left: auto !important;
+    flex: 0 0 auto !important;
+  }
+
+  /* Search 크기 축소 */
   #topbar #search-input{
-    width: min(440px, 38vw) !important;
+    width: min(320px, 28vw) !important;
+    height: 2rem !important;
+    font-size: 0.88rem !important;
+    padding: 0.35rem 0.75rem !important;
+    border-radius: 999px !important;
   }
 }
 
-/* ---------- Categories/Tags/Archives: remove bullets + stop "double dot" ---------- */
-/* Remove bullets in list pages (main content), but keep bullets inside real post content */
+/* ---------- Remove bullets ---------- */
 main[aria-label="Main Content"] ul,
 main[aria-label="Main Content"] ol{
   list-style: none !important;
@@ -221,7 +232,6 @@ main[aria-label="Main Content"] li::marker{
   content: none !important;
 }
 
-/* Restore bullets INSIDE actual post body only */
 .post-content ul{
   list-style: disc;
   padding-left: 1.25rem;
@@ -231,9 +241,29 @@ main[aria-label="Main Content"] li::marker{
   padding-left: 1.25rem;
 }
 
-/* ---------- Desktop layout: core + fixed right panel (prevents panel dropping) ---------- */
+/* =========================================================
+   🔥🔥 Desktop layout: 오른쪽 패널 더 오른쪽으로
+   ========================================================= */
 @media (min-width: 992px){
-  /* This is the real Chirpy layout row (from your DevTools): */
+  /* 컨테이너 넓게 */
+  #main-wrapper > .container{
+    max-width: 1400px !important;
+  }
+
+  /* overflow 제거 (sticky 필수) */
+  body,
+  html,
+  #main-wrapper,
+  #main-wrapper > .container,
+  #main-wrapper > .container > .row,
+  #main-wrapper > .container > .row.flex-grow-1,
+  aside#panel-wrapper{
+    overflow: visible !important;
+    contain: none !important;
+    transform: none !important;
+  }
+
+  /* Flex 레이아웃 */
   #main-wrapper > .container > .row.flex-grow-1{
     display: flex !important;
     flex-wrap: nowrap !important;
@@ -241,53 +271,120 @@ main[aria-label="Main Content"] li::marker{
     width: 100% !important;
   }
 
-  /* Core column */
+  /* 메인 컨텐츠 - 더 넓게 */
   #main-wrapper > .container > .row.flex-grow-1 > main[aria-label="Main Content"]{
     flex: 1 1 0% !important;
     width: auto !important;
     max-width: none !important;
     min-width: 0 !important;
+    padding-right: 2rem !important;
   }
 
-  /* Right panel column (fixed width) */
+  /* 오른쪽 패널 - 좁게 하고 더 오른쪽으로 */
   #main-wrapper > .container > .row.flex-grow-1 > aside#panel-wrapper{
-    flex: 0 0 320px !important;
-    width: 320px !important;
-    max-width: 320px !important;
-    min-width: 320px !important;
-    margin-left: auto !important;
+    flex: 0 0 280px !important;
+    width: 280px !important;
+    max-width: 280px !important;
+    min-width: 280px !important;
+    margin-left: 2rem !important;
     align-self: flex-start !important;
-  }
-
-  /* Prevent any ancestor overflow from killing sticky */
-  #main-wrapper,
-  #main-wrapper > .container,
-  aside#panel-wrapper{
+    position: relative !important;
     overflow: visible !important;
   }
 }
 
-/* ---------- TOC (Contents) sticky follow ---------- */
+/* =========================================================
+   🔥🔥🔥 TOC: 초강력 STICKY (절대 작동!)
+   ========================================================= */
+
+/* 🔥 회색바 완전 제거 */
+#toc-border-cover,
+.toc-border-cover,
+#panel-wrapper #toc-border-cover,
+aside#panel-wrapper .toc-border-cover{
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
+
 @media (min-width: 992px){
-  section#toc-wrapper{
+  /* Recently Updated, Trending Tags는 static */
+  #panel-wrapper > .access,
+  #panel-wrapper .access,
+  aside#panel-wrapper > .access{
+    position: static !important;
+    position: relative !important;
+    margin-bottom: 1.5rem !important;
+  }
+
+  /* TOC wrapper에 초강력 sticky */
+  section#toc-wrapper,
+  #toc-wrapper,
+  aside#panel-wrapper > section#toc-wrapper,
+  #panel-wrapper > section#toc-wrapper,
+  aside#panel-wrapper > section,
+  aside > section#toc-wrapper{
+    /* 최우선 sticky */
     position: sticky !important;
-    top: 5.2rem !important;
-    max-height: calc(100vh - 6.2rem) !important;
+    position: -webkit-sticky !important;
+    
+    /* 상단 고정 위치 */
+    top: 4rem !important;
+    
+    /* 높이 제한 */
+    max-height: calc(100vh - 5rem) !important;
+    
+    /* 스크롤 */
     overflow-y: auto !important;
-    z-index: 20 !important;
+    overflow-x: hidden !important;
+    
+    /* Z-index */
+    z-index: 100 !important;
+    
+    /* 브라우저 힌트 */
+    will-change: transform !important;
+    
+    /* 강제 */
+    display: block !important;
+    visibility: visible !important;
+    
+    /* 마진 */
+    margin: 0 !important;
+    padding-bottom: 1rem !important;
+  }
+
+  /* TOC 내부 요소 */
+  #toc-wrapper nav,
+  #toc-wrapper .panel-heading,
+  #toc-wrapper ul,
+  #toc-wrapper li,
+  #toc-wrapper a{
+    position: relative !important;
+  }
+
+  /* 스크롤바 */
+  #toc-wrapper::-webkit-scrollbar{
+    width: 5px;
+  }
+  #toc-wrapper::-webkit-scrollbar-thumb{
+    background: rgba(255,255,255,.15);
+    border-radius: 5px;
+  }
+  #toc-wrapper::-webkit-scrollbar-track{
+    background: transparent;
   }
 }
 
-/* ---------- Footer: transparent + centered + single line ---------- */
+/* ---------- Footer ---------- */
 footer, #footer{
   background: transparent !important;
   border: 0 !important;
   box-shadow: none !important;
-
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
-
   padding: 1rem 0 1.25rem !important;
   text-align: center !important;
 }
@@ -310,283 +407,311 @@ footer p + p::before,
   opacity: .8;
 }
 
-/* Sidebar bottom icons: horizontal single row */
-#sidebar .sidebar-bottom{
-  margin-top: auto !important;
-  padding: 1.1rem 0 1.4rem !important;
-
+/* =========================================================
+   Post meta: Updated + 2줄 레이아웃
+   ========================================================= */
+.post-meta{
   display: flex !important;
-  flex-direction: row !important;  /* <-- row */
-  gap: .6rem !important;
-  justify-content: center !important;
+  flex-wrap: wrap !important;
   align-items: center !important;
-  flex-wrap: nowrap !important;     /* 한 줄 고정 */
+  gap: 0 0.6rem !important;
+  margin-bottom: 0.8rem !important;
 }
 
-#sidebar .sidebar-bottom a{
-  margin: 0 !important;
-}
-
-/* Topbar: breadcrumb left, search right */
-@media (min-width: 992px){
-  #topbar-wrapper #topbar{
-    display: flex !important;
-    align-items: center !important;
-    gap: .75rem !important;
-  }
-
-  /* 왼쪽(브레드크럼) 영역은 늘어나게 */
-  #topbar-wrapper #topbar nav[aria-label="Breadcrumb"],
-  #topbar-wrapper #topbar #breadcrumb,
-  #topbar-wrapper #topbar .breadcrumb,
-  #topbar-wrapper #topbar .topbar-title{
-    flex: 1 1 auto !important;
-    min-width: 0 !important;
-  }
-
-  /* 검색은 오른쪽 끝 */
-  #topbar-wrapper #topbar #search-wrapper,
-  #topbar-wrapper #topbar .search-wrapper{
-    margin-left: auto !important;
-  }
-
-  /* 검색바 크기(원하면 숫자만 조절) */
-  #topbar-wrapper #topbar #search-input{
-    width: min(420px, 34vw) !important;
-  }
-}
-/* =========================================================
-   Post meta: restore "Updated" + clean spacing
-   ========================================================= */
-
-/* If the "Updated" line exists, make sure it is visible */
-.post-meta > span + span {
+.post-meta > span{
   display: inline-flex !important;
-  align-items: center;
+  align-items: center !important;
+  white-space: nowrap !important;
 }
 
-/* Prevent "PostedFeb" / "UpdatedFeb" stuck text (flex can eat the whitespace visually) */
-.post-meta > span > time {
-  margin-left: .35rem;
+.post-meta > span + span::before{
+  content: "•" !important;
+  opacity: .6 !important;
+  margin: 0 0.55rem 0 0.25rem !important;
+  display: inline-block !important;
 }
 
-/* Put a dot between Posted and Updated when they're on the same line */
-.post-meta > span + span::before {
-  content: "•";
-  opacity: .6;
-  margin: 0 .55rem 0 .45rem;
+.post-meta > span > time{
+  margin-left: .35rem !important;
 }
 
-/* Keep the author/readtime row on its own line (your preferred 2-line layout) */
-.post-meta > .d-flex.justify-content-between {
-  flex: 0 0 100%;
-  margin-top: .35rem;
+.post-meta > .d-flex.justify-content-between{
+  flex: 0 0 100% !important;
+  width: 100% !important;
+  margin-top: 0.25rem !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+}
+
+.post-meta > .d-flex.justify-content-between > :last-child{
+  margin-left: auto !important;
+}
+
+.post .timeago[itemprop="dateModified"],
+.post-meta .timeago[itemprop="dateModified"],
+span[itemprop="dateModified"]{
+  display: inline !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 /* =========================================================
-   Right panel: remove the gray "cover bar" above TOC
-   ========================================================= */
-#panel-wrapper .toc-border-cover {
-  display: none !important;
-}
-
-/* =========================================================
-   Post tail: license + share on ONE line (like your reference)
+   Post tail: license + share 한 줄
    ========================================================= */
 .post-tail-wrapper .post-tail-bottom,
-#post-tail-wrapper .post-tail-bottom {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: .5rem 1rem;
+#post-tail-wrapper .post-tail-bottom,
+footer.post-footer .license-wrapper{
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: wrap !important;
+  gap: .5rem 1rem !important;
 }
 
 .post-tail-wrapper .license-wrapper,
-#post-tail-wrapper .license-wrapper {
-  flex: 1 1 auto;
-  margin: 0;
+#post-tail-wrapper .license-wrapper{
+  flex: 1 1 auto !important;
+  margin: 0 !important;
 }
 
 .post-tail-wrapper .share-wrapper,
-#post-tail-wrapper .share-wrapper {
-  margin-left: auto;
-  display: inline-flex;
-  align-items: center;
-  gap: .5rem;
+#post-tail-wrapper .share-wrapper,
+footer.post-footer .license-wrapper .share-wrapper{
+  margin-left: auto !important;
+  flex: 0 0 auto !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: .5rem !important;
 }
 
-.post-tail-wrapper .share-wrapper .share-icons,
-#post-tail-wrapper .share-wrapper .share-icons {
-  display: inline-flex;
-  align-items: center;
-  gap: .4rem;
-  margin: 0;
-  padding: 0;
+.share-icons{
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: .4rem !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
 }
 
-.post-tail-wrapper .share-wrapper .share-icons > li,
-#post-tail-wrapper .share-wrapper .share-icons > li {
-  list-style: none;
-  margin: 0;
+.share-icons > li{
+  list-style: none !important;
+  margin: 0 !important;
 }
 
 /* =========================================================
-   Further Reading: force CARD layout (fallback for both card/grid and list markup)
+   🔥🔥🔥 Further Reading: 3열 카드 (Axl0t0l 스타일)
    ========================================================= */
-
-/* 1) If theme already renders cards, style them */
-#related-posts .card,
-.post-tail-wrapper #related-posts .card {
-  border-radius: 1rem;
-  border: 1px solid rgba(255, 255, 255, .08);
-  background: rgba(255, 255, 255, .03);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, .35);
-  overflow: hidden;
+#related-posts,
+.post-tail-wrapper #related-posts{
+  margin-top: 2.5rem !important;
+  clear: both !important;
 }
 
-#related-posts .card .card-body {
-  padding: 1.15rem;
+#related-posts > h3,
+#related-posts > h2,
+#related-posts > .panel-heading{
+  margin-bottom: 1.25rem !important;
+  font-size: 1.4rem !important;
+  color: var(--k-mint) !important;
 }
 
-/* 2) If it renders as a list/preview, convert it to a responsive card grid */
+/* 모든 컨테이너 구조에 Grid 강제 적용 */
+#related-posts .row,
+#related-posts > .row,
 #related-posts ul,
-#related-posts .post-list {
-  list-style: none;
-  padding-left: 0;
-  margin: 1rem 0 0 0;
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+#related-posts .post-list,
+#related-posts > ul,
+.post-tail-wrapper #related-posts .row,
+.post-tail-wrapper #related-posts ul{
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  
+  /* Grid 강제 */
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 1.25rem !important;
+  
+  /* Bootstrap override */
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  width: 100% !important;
 }
 
-@media (max-width: 1199px) {
+/* 중간 크기: 2열 */
+@media (max-width: 1199px){
+  #related-posts .row,
   #related-posts ul,
-  #related-posts .post-list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  #related-posts .post-list{
+    grid-template-columns: repeat(2, 1fr) !important;
   }
 }
 
-@media (max-width: 767px) {
+/* 모바일: 1열 */
+@media (max-width: 767px){
+  #related-posts .row,
   #related-posts ul,
-  #related-posts .post-list {
-    grid-template-columns: 1fr;
+  #related-posts .post-list{
+    grid-template-columns: 1fr !important;
   }
 }
 
+/* Bootstrap column 무력화 */
+#related-posts .row > [class*="col"],
+#related-posts .row > .col,
+#related-posts .row > div[class^="col"]{
+  padding: 0 !important;
+  margin: 0 !important;
+  width: auto !important;
+  max-width: none !important;
+  flex: none !important;
+  position: relative !important;
+}
+
+/* 카드 스타일 */
 #related-posts ul > li,
 #related-posts .post-list > li,
-#related-posts .post-preview {
-  border-radius: 1rem;
-  border: 1px solid rgba(255, 255, 255, .08);
-  background: rgba(255, 255, 255, .03);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, .35);
-  padding: 1.15rem;
-  margin: 0;
+#related-posts .post-preview,
+#related-posts .card,
+#related-posts .row > * > .card,
+#related-posts .row > * > .post-preview,
+#related-posts .row > [class*="col"] .card,
+#related-posts .row > [class*="col"] .post-preview{
+  list-style: none !important;
+  
+  background: rgba(255,255,255,.04) !important;
+  border: 1px solid rgba(255,255,255,.1) !important;
+  border-radius: 1rem !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,.3) !important;
+  
+  padding: 1.15rem !important;
+  margin: 0 !important;
+  height: 100% !important;
+  
+  transition: all 0.25s ease !important;
+  overflow: hidden !important;
 }
 
-/* Make the whole card clickable if the list item contains a single link */
+/* Hover */
+#related-posts ul > li:hover,
+#related-posts .post-preview:hover,
+#related-posts .card:hover{
+  background: rgba(255,255,255,.06) !important;
+  border-color: rgba(45,212,191,.3) !important;
+  box-shadow: 0 12px 32px rgba(0,0,0,.4) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* 링크 */
 #related-posts ul > li > a,
-#related-posts .post-list > li > a {
-  display: block;
-  text-decoration: none;
+#related-posts .post-preview > a,
+#related-posts .card > a{
+  display: block !important;
+  text-decoration: none !important;
+  color: inherit !important;
 }
 
-/* Tidy typography inside related cards (works for both structures) */
+/* 날짜 */
+#related-posts time,
+#related-posts .date,
+#related-posts .post-meta,
+#related-posts .text-muted{
+  display: block !important;
+  font-size: 0.85rem !important;
+  opacity: 0.65 !important;
+  margin-bottom: 0.5rem !important;
+}
+
+/* 제목 */
 #related-posts .post-title,
+#related-posts .card-title,
 #related-posts h1,
 #related-posts h2,
-#related-posts h3 {
-  margin-top: .25rem;
-  margin-bottom: .5rem;
+#related-posts h3,
+#related-posts h4{
+  font-size: 1.1rem !important;
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+  margin: 0.5rem 0 0.65rem 0 !important;
+  color: var(--k-mint) !important;
 }
 
+/* 설명 */
+#related-posts .post-content,
+#related-posts .card-text,
+#related-posts p{
+  font-size: 0.9rem !important;
+  line-height: 1.5 !important;
+  opacity: 0.8 !important;
+  margin: 0 !important;
+  
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+}
 
+#related-posts .card .card-body{
+  padding: 1.15rem !important;
+}
 
-/*! kak4p0-custom-v13 (2026-02-17)
- *  - Remove panel gray blocks (toc-border-cover, topbar bg)
- *  - Tighten home cards (title/description spacing + remove extra gaps)
- *  - Slightly reduce typography
- */
+/* =========================================================
+   홈페이지: 간격 최소화
+   ========================================================= */
+#post-list,
+.post-list,
+#home .post-list{
+  padding-top: 0 !important;
+  margin-top: 0.5rem !important;
+}
 
-// 1) Right panel: remove the gray "spacer bar" between Trending Tags and Contents
-#panel-wrapper {
-  .toc-border-cover {
-    display: none !important;
-    height: 0 !important;
-    margin: 0 !important;
-    padding: 0 !important;
+.post-preview{
+  margin-bottom: 1.2rem !important;
+  padding: 1.3rem 1.5rem !important;
+}
+
+.post-preview .post-title,
+.post-preview h1,
+.post-preview h2{
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.post-preview .post-meta{
+  margin-bottom: 0.6rem !important;
+  margin-top: 0 !important;
+}
+
+.post-preview .post-content,
+.post-preview > .content,
+.post-preview p{
+  margin-top: 0.5rem !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.post-preview:first-child{
+  margin-top: 0 !important;
+}
+
+.post-preview .pin{
+  margin-bottom: 0.3rem !important;
+}
+
+/* =========================================================
+   최종 강제
+   ========================================================= */
+@media (min-width: 992px){
+  /* transform 제거 */
+  #main-wrapper *:not(#toc-wrapper):not(#toc-wrapper *):not(#related-posts *){
+    transform: none !important;
   }
-}
-
-// 2) Top bar (breadcrumb + search area): make it transparent (remove gray background bar)
-#topbar-wrapper,
-#topbar-wrapper .topbar,
-#topbar {
-  background: transparent !important;
-  box-shadow: none !important;
-  border: 0 !important;
-}
-
-#topbar-wrapper::before,
-#topbar::before {
-  background: transparent !important;
-}
-
-// (optional) slightly tighter topbar padding so content starts higher
-#topbar {
-  padding-top: .35rem !important;
-  padding-bottom: .35rem !important;
-}
-
-// 3) Typography: a bit smaller, but only inside post and list (avoid messing with sidebars too much)
-.post-content {
-  font-size: 0.97rem;
-  line-height: 1.75;
-}
-
-#post-list {
-  .post-preview {
-    .card-title {
-      line-height: 1.25;
-    }
-    .card-text.content {
-      font-size: 0.95rem;
-      line-height: 1.6;
-    }
+  
+  /* TOC sticky 재강조 */
+  section#toc-wrapper,
+  #toc-wrapper{
+    position: sticky !important;
+    top: 4rem !important;
   }
-}
-
-// 4) Home page: reduce the “empty” spacing and bring title/description closer
-#page-title {
-  margin-top: 0.2rem !important;
-  margin-bottom: 1.0rem !important;
-}
-
-#post-list {
-  .card-wrapper { margin-top: 1.1rem !important; }
-
-  .post-preview.card {
-    .card-body {
-      padding-top: 1.15rem !important;
-      padding-bottom: 1.15rem !important;
-    }
-
-    .card-title {
-      margin-top: 0 !important;
-      margin-bottom: .35rem !important;
-    }
-
-    // If you use `description:` in front matter, it renders here.
-    .card-text.content {
-      margin-top: 0 !important;
-      margin-bottom: .65rem !important;
-    }
-  }
-}
-
-// 5) Ensure TOC can actually stick (sticky breaks if any ancestor clips overflow)
-#main-wrapper,
-#main-wrapper > .row,
-#main-wrapper > .row > [class*="col"] {
-  overflow: visible !important;
 }
