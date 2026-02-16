@@ -2,160 +2,158 @@
 ---
 @use "main";
 
-/* =========================================
-   Kak4p0 Mint/Lime Skin (Clean + Readable)
-   - blur 최소화(= 덜 흐릿)
-   - 라이트업 가독성 강화
-   - 데스크톱에서 오른쪽 패널(Recently/Tags) 2컬럼 유지
-   ========================================= */
+/* ==========================================================
+   Kak4p0 Mint/Lime Skin (Chirpy)
+   - crisp (NO blur/backdrop-filter)
+   - readability-first for writeups
+   - keeps right panel on desktop
+   ========================================================== */
 
-:root {
-  --k-mint: #2dd4bf;
-  --k-lime: #a3e635;
+:root{
+  --k-mint:#2dd4bf;
+  --k-lime:#a3e635;
 
-  --k-bg0: #0b0f12;
-  --k-bg1: #0f141a;
+  --k-bg0:#0b0f12;
+  --k-bg1:#0e141a;
 
-  /* “유리 느낌” 대신 “단단한 다크 카드” */
-  --k-surface: rgba(17, 22, 28, 0.88);
-  --k-surface2: rgba(17, 22, 28, 0.72);
+  --k-surface:rgba(255,255,255,.055);
+  --k-surface2:rgba(255,255,255,.075);
 
-  --k-border: rgba(163, 230, 53, 0.14);
-  --k-border2: rgba(45, 212, 191, 0.18);
+  --k-border:rgba(255,255,255,.09);
+  --k-border-mint:rgba(45,212,191,.22);
+  --k-border-lime:rgba(163,230,53,.18);
 
-  --k-text: rgba(231, 239, 247, 0.92);
-  --k-text-dim: rgba(231, 239, 247, 0.72);
+  --k-text:rgba(255,255,255,.88);
+  --k-muted:rgba(255,255,255,.66);
+
+  --k-shadow:0 14px 28px rgba(0,0,0,.28);
 }
 
-/* 0) 전체 배경: 은은하지만 과하지 않게(흐림 X) */
-body {
+/* 0) Global background (subtle, not foggy) */
+body{
   background:
-    radial-gradient(850px 520px at 16% -12%, rgba(45, 212, 191, 0.12), transparent 62%),
-    radial-gradient(850px 520px at 88%  10%, rgba(163, 230, 53, 0.10), transparent 62%),
+    radial-gradient(680px 520px at 12% -8%, rgba(45,212,191,.09), transparent 62%),
+    radial-gradient(720px 560px at 88%  6%, rgba(163,230,53,.07), transparent 64%),
     linear-gradient(180deg, var(--k-bg0), var(--k-bg1));
+}
+
+/* 1) IMPORTANT: keep right panel on desktop
+   If any element becomes “too wide”, Bootstrap row wraps and the panel drops under.
+   This guard forces side-by-side only on large screens. */
+@media (min-width: 1200px){
+  #main-wrapper > .row{ flex-wrap: nowrap; }
+  #core-wrapper{ min-width: 0; }
+  #panel-wrapper{
+    flex: 0 0 320px;
+    max-width: 320px;
+  }
+}
+
+/* 2) Typography (writeup-friendly) */
+.post-content{
+  line-height: 1.75;
+  letter-spacing: .1px;
   color: var(--k-text);
 }
+.post-content p,
+.post-content li{ color: var(--k-text); }
+.post-content .text-muted,
+.post-content small{ color: var(--k-muted) !important; }
 
-/* 1) 링크: 민트 기본 + 라임 hover */
+/* 3) Links (mint -> lime hover) */
 a,
-.post-content a {
+.post-content a{
   color: var(--k-mint);
+  text-decoration-color: rgba(45,212,191,.55);
   text-decoration-thickness: 1px;
   text-underline-offset: 3px;
 }
 a:hover,
-.post-content a:hover {
+.post-content a:hover{
   color: var(--k-lime);
+  text-decoration-color: rgba(163,230,53,.55);
 }
 
-/* 2) 라이트업 가독성 (본문만 살짝) */
-.post-content {
-  line-height: 1.78;
-  letter-spacing: 0.1px;
-  font-size: 1.02rem;
-}
-
-/* 3) 사이드바: 확실히 다른 룩(하지만 과하지 않게) */
-#sidebar {
-  background:
-    radial-gradient(760px 520px at 30% 0%, rgba(45, 212, 191, 0.10), transparent 60%),
-    radial-gradient(760px 520px at 75% 12%, rgba(163, 230, 53, 0.08), transparent 60%),
-    linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.38));
-  border-right: 1px solid rgba(255,255,255,0.06);
-}
-
-#sidebar .nav-link.active {
-  background: rgba(45, 212, 191, 0.12) !important;
-  border: 1px solid rgba(163, 230, 53, 0.16) !important;
-  box-shadow: 0 0 0 1px rgba(45, 212, 191, 0.10) inset;
-}
-
-/* 4) “카드/패널/리스트” 공통: blur 제거 + 단단한 표면 */
+/* 4) Surfaces (ONLY cards/panels/items) — avoid styling layout wrappers */
 .card,
 .card-wrapper,
 #panel-wrapper .panel,
+#core-wrapper .post-preview,
 #core-wrapper .post,
-#core-wrapper .page,
-#core-wrapper .home,
-#core-wrapper .archive {
+#core-wrapper .page{
   background: var(--k-surface) !important;
   border: 1px solid var(--k-border) !important;
   border-radius: 16px !important;
+  box-shadow: var(--k-shadow);
 }
 
-/* 리스트/테이블처럼 얇게 깔리는 영역은 한 톤 더 낮게 */
-.list-group,
-.list-group-item,
-#topbar-wrapper {
-  background: var(--k-surface2) !important;
-  border: 1px solid rgba(255,255,255,0.06) !important;
-  border-radius: 16px !important;
+/* category/tag list items (crisp) */
+.list-group-item{
+  background: transparent !important;
+  border-color: rgba(255,255,255,.07) !important;
+}
+.list-group-item:hover{
+  background: rgba(45,212,191,.06) !important;
 }
 
-/* 5) 태그 칩: pill + 민트 테두리, hover 라임 */
+/* 5) Sidebar: make it feel “kak4p0” (mint/lime tint + clear active state) */
+#sidebar{
+  background:
+    radial-gradient(520px 520px at 18% 0%, rgba(45,212,191,.14), transparent 58%),
+    radial-gradient(520px 520px at 78% 18%, rgba(163,230,53,.10), transparent 62%),
+    linear-gradient(180deg, rgba(0,0,0,.30), rgba(0,0,0,.55));
+  border-right: 1px solid rgba(255,255,255,.06);
+}
+
+/* avatar: soft “ring” without blur */
+#sidebar .profile-wrapper .avatar{
+  box-shadow:
+    0 0 0 2px rgba(45,212,191,.22),
+    0 0 0 5px rgba(163,230,53,.10);
+  border-radius: 14px; /* makes it feel different from default */
+}
+
+/* active nav: left bar + subtle surface */
+#sidebar .nav-link.active{
+  background: rgba(45,212,191,.12) !important;
+  border: 1px solid rgba(45,212,191,.18) !important;
+  box-shadow: 0 0 0 1px rgba(163,230,53,.10) inset;
+}
+
+/* 6) Tag “chips” */
 .tag,
 .post-tag,
-#panel-wrapper .post-tag {
+#panel-wrapper .post-tag{
   border-radius: 999px !important;
-  border: 1px solid rgba(45, 212, 191, 0.22) !important;
-  background: rgba(45, 212, 191, 0.08) !important;
-  color: var(--k-text) !important;
+  border: 1px solid rgba(45,212,191,.24) !important;
+  background: rgba(45,212,191,.08) !important;
 }
 .tag:hover,
-.post-tag:hover {
-  border-color: rgba(163, 230, 53, 0.32) !important;
-  background: rgba(163, 230, 53, 0.10) !important;
+.post-tag:hover{
+  border-color: rgba(163,230,53,.32) !important;
+  background: rgba(163,230,53,.10) !important;
 }
 
-/* 6) 코드블록: 라이트업 핵심 → 대비/테두리 확실하게 */
+/* 7) Code blocks (high-contrast, readable) */
 pre,
 .highlight,
-div.highlighter-rouge {
-  background: rgba(0, 0, 0, 0.40) !important;
-  border: 1px solid rgba(45, 212, 191, 0.18) !important;
+div.highlighter-rouge{
+  background: rgba(6,10,12,.90) !important;
+  border: 1px solid rgba(45,212,191,.18) !important;
   border-radius: 14px !important;
 }
-code {
-  font-family: ui-monospace, "JetBrains Mono", "Cascadia Mono", "D2Coding",
-               SFMono-Regular, Menlo, Consolas, monospace;
+code{
+  font-family: ui-monospace, "JetBrains Mono", "Cascadia Mono", "D2Coding", SFMono-Regular, Menlo, Consolas, monospace;
 }
 
-/* 7) 인용/주의 박스 느낌(라이트업에서 보기 좋게) */
-blockquote {
-  border-left: 4px solid rgba(45, 212, 191, 0.55);
-  background: rgba(45, 212, 191, 0.06);
-  color: var(--k-text);
-  border-radius: 12px;
+/* 8) Headings: tiny lime glow (very subtle) */
+h1,h2,h3{
+  text-shadow: 0 0 14px rgba(163,230,53,.05);
 }
 
-/* 8) 제목: 살짝만 포인트 */
-h1, h2, h3 {
-  text-shadow: 0 0 14px rgba(163, 230, 53, 0.05);
-}
-
-/* 9) ✅ 레이아웃 안전장치: 데스크톱에서 오른쪽 패널이 아래로 떨어지는 현상 방지
-      - Chirpy가 반응형으로 패널을 아래로 보내는 경우가 있는데,
-        커스텀 CSS/폰트/여백 영향으로 “데스크톱 조건”이 깨져도 강제로 2컬럼 유지 */
-@media (min-width: 1200px) {
-  #main-wrapper {
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: flex-start !important;
-  }
-  #core-wrapper {
-    flex: 1 1 0% !important;
-    min-width: 0 !important;
-  }
-  #panel-wrapper {
-    flex: 0 0 22rem !important;
-    width: 22rem !important;
-    max-width: 22rem !important;
-  }
-}
-
-/* 10) 글 메타(날짜/카테고리) 가독성 */
-.post-meta,
-.post-meta a,
-.post-tail-wrapper {
-  color: var(--k-text-dim) !important;
+/* 9) Horizontal rules + tables: keep borders consistent */
+hr{ border-color: rgba(255,255,255,.10); }
+.table{ color: var(--k-text); }
+.table > :not(caption) > * > *{
+  border-color: rgba(255,255,255,.10);
 }
