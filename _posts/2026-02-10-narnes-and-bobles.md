@@ -1,7 +1,7 @@
 ---
 title: "LA CTF 2026 | narnes-and-bobles"
 date: 2026-02-10 01:00:00 +0900
-categories: [LA CTF 2026, Web]
+categories: ["LA CTF 2026/Web"]
 tags: [Web]
 toc: true
 comments: false
