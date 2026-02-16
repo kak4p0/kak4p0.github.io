@@ -355,155 +355,102 @@ footer p + p::before,
     width: min(420px, 34vw) !important;
   }
 }
-
-
 /* =========================================================
-   UI PACK (Chirpy)
-   1) Right panel (Contents) stays visible while reading (sticky)
-   2) Post meta: "By ... · 6 min read" on one line (desktop)
-   3) Home post-card excerpt: one-line "fixed comment" look
-   4) Home card: preview image sizing (when you use front-matter image:)
+   v7 FIX PACK (build-safe)
+   - Fix GitHub Actions build error (brace mismatch in v6)
+   - Post meta: 2-line layout (Posted/Updated on line 1, By/readtime on line 2)
+   - Right panel: ONLY Contents follows (disable sticky on whole panel/access)
+   - Home/list preview: clamp excerpt to 2 lines (pairs with <!--more-->)
    ========================================================= */
 
-/* ---------- 1) Right panel sticky (Desktop) ---------- */
-@media (min-width: 992px){
-  /* Make the whole right panel stick */
-  aside#panel-wrapper{
-    position: sticky !important;
-    top: 5.2rem !important;                 /* below topbar */
-    height: calc(100vh - 6.2rem) !important;
-    overflow-y: auto !important;
-    align-self: flex-start !important;
-    z-index: 30 !important;
-  }
+/* ---------- Post meta: 2-line layout ---------- */
+.post-meta{
+  display: block !important;
+}
 
-  /* Avoid nested stickies fighting each other */
-  #panel-wrapper #toc-wrapper{
+/* Line 1: Posted + Updated in one row */
+.post-meta > span{
+  display: inline !important;
+  white-space: nowrap !important;
+}
+.post-meta > span + span{
+  margin-left: .55rem !important;
+}
+
+/* Line 2: By (left) / readtime (right) */
+.post-meta > div.d-flex.justify-content-between{
+  margin-top: .25rem !important;
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  gap: 1rem !important;
+}
+.post-meta > div.d-flex.justify-content-between > span,
+.post-meta > div.d-flex.justify-content-between > div{
+  white-space: nowrap !important;
+}
+
+/* ---------- Right panel: ONLY Contents sticky ---------- */
+@media (min-width: 992px){
+  /* If the theme makes the whole panel sticky, kill it */
+  aside#panel-wrapper,
+  #panel-wrapper{
     position: static !important;
     top: auto !important;
-    max-height: none !important;
-    overflow: visible !important;
   }
 
-  /* Sticky prerequisite: no overflow clipping */
+  /* Recently Updated / Trending Tags should NOT follow */
+  #panel-wrapper .access{
+    position: static !important;
+    top: auto !important;
+  }
+
+  /* Only TOC follows */
+  #panel-wrapper section#toc-wrapper{
+    position: sticky !important;
+    top: 5.2rem !important;
+    max-height: calc(100vh - 6.2rem) !important;
+    overflow-y: auto !important;
+    z-index: 40 !important;
+  }
+
+  /* This is just a visual border cover; keep it non-sticky */
+  #panel-wrapper .toc-border-cover{
+    position: static !important;
+    top: auto !important;
+    background: transparent !important;
+  }
+
+  /* Sticky dies when an ancestor has overflow hidden/auto */
   #main-wrapper,
   #main-wrapper > .container,
-  #main-wrapper .row,
-  #main-wrapper [class*="col-"],
+  #main-wrapper > .container > .row.flex-grow-1,
   #panel-wrapper{
     overflow: visible !important;
   }
 }
 
-/* Make active TOC item obvious (so it "moves" while scrolling) */
-#toc-wrapper a.nav-link,
-#toc-wrapper a.toc-link{
-  color: rgba(255,255,255,.62) !important;
-}
-#toc-wrapper a.nav-link.active,
-#toc-wrapper a.toc-link.active,
-#toc-wrapper .is-active-link{
-  color: var(--k-mint) !important;
-  font-weight: 650 !important;
-  background: rgba(45,212,191,.10) !important;
-  border-left: 3px solid rgba(45,212,191,.75) !important;
-  padding-left: .65rem !important;
-  border-radius: 10px !important;
-}
-
-/* TOC click: headings not hidden behind topbar */
-.post-content h2,
-.post-content h3,
-.post-content h4{
-  scroll-margin-top: 6.25rem;
-}
-
-/* ---------- 2) Post meta two-line (Desktop) ---------- */
-/* Line 1: Posted/Updated ...   Line 2: By ... (left) + readtime (right) */
-@media (min-width: 992px){
-  .post-meta{
-    display: flex !important;
-    flex-wrap: wrap !important;
-    align-items: center !important;
-    gap: .55rem .65rem !important;
-  }
-
-  /* Everything is line 1 by default */
-  .post-meta > *{
-    order: 1 !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    white-space: nowrap !important;
-  }
-
-  /* Force a line break between line1 and line2 using a flex-item pseudo-element */
-  .post-meta::after{
-    content: "" !important;
-    flex: 0 0 100% !important;
-    height: 0 !important;
-    order: 2 !important;
-  }
-
-  /* Line 2 elements */
-  .post-meta .post-author,
-  .post-meta .author,
-  .post-meta .byline,
-  .post-meta .post-meta__author{
-    order: 3 !important;
-  }
-
-  .post-meta .readtime,
-  .post-meta .post-read-time,
-  .post-meta .post-meta__readtime{
-    order: 3 !important;
-    margin-left: auto !important; /* push to right on line 2 */
-  }
-
-  /* Optional: add a dot only between author and readtime (line2) */
-  .post-meta .post-author + .readtime::before,
-  .post-meta .post-author + .post-read-time::before,
-  .post-meta .author + .readtime::before{
-    content: " · " !important;
-    opacity: .65 !important;
-    margin: 0 .25rem 0 .15rem !important;
-  }
-}
-
-/* ---------- 3) Home cards excerpt: one-line "fixed comment" ---------- */
-.post-preview .post-content,
-.post-preview .post-content p,
-.card-wrapper .post-content,
-.card-wrapper .post-content p{
-  display: -webkit-box !important;
-  -webkit-box-orient: vertical !important;
-  -webkit-line-clamp: 1 !important;   /* 한 줄만 */
-  overflow: hidden !important;
-  max-width: 100% !important;
-}
-
-/* ---------- 4) Home card preview image (when front-matter image is set) ---------- */
-/* Chirpy commonly uses .preview-img or an <img> in the preview area. */
-@media (min-width: 992px){
-  .post-preview img.preview-img,
-  .post-preview .preview-img,
-  .post-preview img.post-img,
-  .post-preview .post-img img{
-    width: 320px !important;          /* 오른쪽 로고 영역 */
-    max-width: 320px !important;
-    height: 180px !important;
-    object-fit: contain !important;   /* 로고는 contain이 예쁨 */
-    border-radius: 16px !important;
-    background: rgba(0,0,0,.18) !important;
-    border: 1px solid rgba(255,255,255,.06) !important;
-  }
-}
-
-/* (옵션) Right panel "Trending Tags" 회색 박스 제거를 유지하고 싶으면 켜기
-#panel-wrapper section#access-tags.panel,
-#panel-wrapper #access-tags.panel{
+/* Optional: remove the big “panel background” feel on access blocks */
+#panel-wrapper .access > section{
   background: transparent !important;
   border: 0 !important;
   box-shadow: none !important;
 }
-*/
 
+/* ---------- Home/list preview: clamp excerpt ---------- */
+#post-list .post-preview .post-content > p,
+.post-preview .post-content > p{
+  display: -webkit-box !important;
+  -webkit-box-orient: vertical !important;
+  -webkit-line-clamp: 2 !important;
+  overflow: hidden !important;
+}
+
+/* If the excerpt is rendered without a wrapping .post-content */
+#post-list .post-preview > a > p{
+  display: -webkit-box !important;
+  -webkit-box-orient: vertical !important;
+  -webkit-line-clamp: 2 !important;
+  overflow: hidden !important;
+}
