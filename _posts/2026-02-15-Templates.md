@@ -1,14 +1,12 @@
 ---
 title: "[Warmup] Templates"
+description: Writing about the "Templates" of 0xFun CTF 2026.
 date: 2026-02-15 01:00:00 +0900
 categories: [0xFun CTF 2026]
 tags: [Warmup]
 toc: true
 comments: false
 ---
-
-Writing about the "Templates" of 0xFun CTF 2026.
-<!--more-->
 
 ## TL;DR
 입력값 `name`이 서버에서 **Jinja2 템플릿으로 그대로 렌더링**되어 **SSTI(Server-Side Template Injection)**가 발생  
