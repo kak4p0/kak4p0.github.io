@@ -237,7 +237,7 @@ main[aria-label="Main Content"] li::marker{
   #main-wrapper > .container > .row.flex-grow-1{
     display: flex !important;
     flex-wrap: nowrap !important;
-    align-items: flex-start !important;
+    align-items: stretch !important;
     width: 100% !important;
   }
 
@@ -256,7 +256,7 @@ main[aria-label="Main Content"] li::marker{
     max-width: 320px !important;
     min-width: 320px !important;
     margin-left: auto !important;
-    align-self: flex-start !important;
+    align-self: stretch !important;
   }
 
   /* Prevent any ancestor overflow from killing sticky */
@@ -355,102 +355,102 @@ footer p + p::before,
     width: min(420px, 34vw) !important;
   }
 }
+
+
 /* =========================================================
-   v7 FIX PACK (build-safe)
-   - Fix GitHub Actions build error (brace mismatch in v6)
-   - Post meta: 2-line layout (Posted/Updated on line 1, By/readtime on line 2)
-   - Right panel: ONLY Contents follows (disable sticky on whole panel/access)
-   - Home/list preview: clamp excerpt to 2 lines (pairs with <!--more-->)
+   Post meta layout: 2-line (Posted/Updated) + (By / readtime)
    ========================================================= */
+@media (min-width: 992px) {
+  article header .post-meta {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 0.15rem 0.75rem !important;
+  }
 
-/* ---------- Post meta: 2-line layout ---------- */
-.post-meta{
-  display: block !important;
+  /* 1st line: spans (Posted / Updated) stay inline */
+  article header .post-meta > span {
+    flex: 0 0 auto !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.35rem !important;
+  }
+
+  /* Kill theme's trailing separators that depend on :last-child (div breaks it) */
+  article header .post-meta > span::after {
+    content: none !important;
+  }
+
+  /* Add separator only between span siblings (Posted · Updated) */
+  article header .post-meta > span:not(:last-of-type)::after {
+    content: " · " !important;
+    opacity: 0.65;
+    margin-left: 0.4rem;
+  }
+
+  /* 2nd line: (By / readtime) takes full width */
+  article header .post-meta > div.d-flex.justify-content-between {
+    flex: 1 0 100% !important;
+    width: 100% !important;
+    margin-top: 0.35rem !important;
+  }
+
+  /* Make the right side "readtime" align nicely */
+  article header .post-meta > div.d-flex.justify-content-between > div {
+    display: flex !important;
+    justify-content: flex-end !important;
+  }
 }
 
-/* Line 1: Posted + Updated in one row */
-.post-meta > span{
-  display: inline !important;
-  white-space: nowrap !important;
-}
-.post-meta > span + span{
-  margin-left: .55rem !important;
-}
+/* =========================================================
+   Right panel: only Contents (TOC) should be sticky
+   ========================================================= */
+@media (min-width: 992px) {
+  /* Make sure the sidebar column spans the main column height so sticky can work */
+  #main-wrapper > .container > .row.flex-grow-1 {
+    align-items: stretch !important;
+  }
 
-/* Line 2: By (left) / readtime (right) */
-.post-meta > div.d-flex.justify-content-between{
-  margin-top: .25rem !important;
-  display: flex !important;
-  flex-direction: row !important;
-  justify-content: space-between !important;
-  align-items: center !important;
-  gap: 1rem !important;
-}
-.post-meta > div.d-flex.justify-content-between > span,
-.post-meta > div.d-flex.justify-content-between > div{
-  white-space: nowrap !important;
-}
+  aside#panel-wrapper {
+    position: static !important; /* override theme if it makes the whole panel sticky */
+    top: auto !important;
+    align-self: stretch !important;
+  }
 
-/* ---------- Right panel: ONLY Contents sticky ---------- */
-@media (min-width: 992px){
-  /* If the theme makes the whole panel sticky, kill it */
-  aside#panel-wrapper,
-  #panel-wrapper{
+  /* Let "Recently Updated / Trending Tags" scroll normally */
+  aside#panel-wrapper .access {
     position: static !important;
     top: auto !important;
   }
 
-  /* Recently Updated / Trending Tags should NOT follow */
-  #panel-wrapper .access{
-    position: static !important;
-    top: auto !important;
-  }
-
-  /* Only TOC follows */
-  #panel-wrapper section#toc-wrapper{
+  /* Contents (TOC) sticks */
+  aside#panel-wrapper section#toc-wrapper {
     position: sticky !important;
     top: 5.2rem !important;
-    max-height: calc(100vh - 6.2rem) !important;
-    overflow-y: auto !important;
-    z-index: 40 !important;
+    z-index: 3;
+    max-height: calc(100vh - 6.2rem);
+    overflow: auto;
   }
 
-  /* This is just a visual border cover; keep it non-sticky */
-  #panel-wrapper .toc-border-cover{
-    position: static !important;
-    top: auto !important;
-    background: transparent !important;
-  }
-
-  /* Sticky dies when an ancestor has overflow hidden/auto */
-  #main-wrapper,
-  #main-wrapper > .container,
-  #main-wrapper > .container > .row.flex-grow-1,
-  #panel-wrapper{
-    overflow: visible !important;
+  /* Optional: hide the toc border cover ghost layer if it blocks clicks */
+  aside#panel-wrapper .toc-border-cover {
+    pointer-events: none;
   }
 }
 
-/* Optional: remove the big “panel background” feel on access blocks */
-#panel-wrapper .access > section{
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
-}
-
-/* ---------- Home/list preview: clamp excerpt ---------- */
-#post-list .post-preview .post-content > p,
-.post-preview .post-content > p{
-  display: -webkit-box !important;
-  -webkit-box-orient: vertical !important;
-  -webkit-line-clamp: 2 !important;
-  overflow: hidden !important;
-}
-
-/* If the excerpt is rendered without a wrapping .post-content */
-#post-list .post-preview > a > p{
-  display: -webkit-box !important;
-  -webkit-box-orient: vertical !important;
-  -webkit-line-clamp: 2 !important;
-  overflow: hidden !important;
+/* =========================================================
+   Home post list: show only the first line (your fixed message)
+   - Works even if the theme doesn't honor <!--more-->
+   ========================================================= */
+@media (min-width: 576px) {
+  /* The home list area (Chirpy uses #post-list) */
+  #post-list .post-content,
+  #post-list .post-content > p,
+  #post-list .post-preview .post-content,
+  #post-list .post-preview .post-content > p {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1; /* only 1 line */
+    overflow: hidden;
+  }
 }
