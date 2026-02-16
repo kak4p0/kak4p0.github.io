@@ -7,6 +7,9 @@ toc: true
 comments: false
 ---
 
+Writing about the "Templates" of 0xFun CTF 2026.
+<!--more-->
+
 ## TL;DR
 입력값 `name`이 서버에서 **Jinja2 템플릿으로 그대로 렌더링**되어 **SSTI(Server-Side Template Injection)**가 발생  
 `{{ cycler.__init__.__globals__.os.popen('...').read() }}` 체인으로 서버에서 명령을 실행(RCE)한 뒤  
