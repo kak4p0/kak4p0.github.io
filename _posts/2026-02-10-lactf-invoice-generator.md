@@ -1,14 +1,12 @@
 ---
 title: "[Web] lactf-invoice-generator"
+description: Writing about the "lactf-invoice-generator" of LA CTF 2026.
 date: 2026-02-10 01:00:00 +0900
 categories: [LA CTF 2026]
 tags: [Web]
 toc: true
 comments: false
 ---
-
-Writing about the "lactf-invoice-generator" of LA CTF 2026.
-<!--more-->
 
 ## TL;DR
 인보이스 생성 기능이 사용자 입력을 sanitize 없이 HTML에 그대로 삽입하고, 
