@@ -1079,39 +1079,67 @@ header.post-header { margin-top: 0.25rem !important; }
 #related-posts .card { height: 100%; }
 
 
-/* =========================================================
-   ✅ v23: 상단 '빈공간' (Topbar 높이 폭증) 회귀 버그 픽스
-   - v16처럼 Topbar가 콘텐츠 높이만 차지하도록 강제
-   - Bootstrap .h-100(=height:100% !important)도 함께 무력화
-   ========================================================= */
+/* ===========================================================
+ * kak4p0-custom-v24
+ * 목표:
+ *  - 상단에 생기는 과도한 빈공간 제거(=컨텐츠가 아래로 밀리는 현상 방지)
+ *  - Search bar는 오른쪽 패널(Recently Updated) 위쪽 라인에 깔끔하게 고정
+ * =========================================================== */
 
-/* Topbar wrapper가 flex 컨테이너에서 늘어나면서 화면 높이를 먹는 케이스 방지 */
-#topbar-wrapper {
-  flex: 0 0 auto !important;
-  height: auto !important;
-  min-height: 0 !important;
-  margin: 0 !important;
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
+/* 1) 상단 빈공간의 핵심 원인: #main-wrapper에 min-height(100vh) + 내부 .row.flex-grow-1 조합으로
+ *    컨테이너가 화면 높이만큼 늘어나면서 컨텐츠가 아래로 밀리는 케이스가 발생.
+ *    => min-height 강제 해제 + flex-grow 완화.
+ */
+#main-wrapper {
+  min-height: auto !important;
+  align-items: flex-start; /* 혹시 센터링이 걸려있으면 상단 정렬로 고정 */
 }
 
-/* #topbar가 .h-100 때문에 부모 높이를 따라가며 커지는 케이스 방지 */
-#topbar {
-  height: auto !important;
-  min-height: 0 !important;
-  padding-top: .25rem !important;
-  padding-bottom: .25rem !important;
-}
-
-/* 상단 여백을 과하게 만들 수 있는 전역 flex/height 영향 차단 */
 #main-wrapper > .container {
-  justify-content: flex-start !important;
+  /* v16처럼 자연스러운 상단 여백만 유지 */
+  padding-top: 0.35rem !important;
+  min-height: auto !important;
 }
 
-/* 데스크톱에서 Topbar 아래 컨텐츠 시작점을 타이트하게 */
-@media (min-width: 1200px) {
-  #main-wrapper > .container {
-    padding-top: .5rem !important;
+/* Chirpy 마크업: .container(d-flex flex-column) 안의 .row.flex-grow-1이 남은 높이를 채우면서
+ * 비정상적으로 큰 여백이 생길 수 있음 -> grow 제거(필요시 footer는 컨텐츠 바로 아래로 따라옴)
+ */
+#main-wrapper > .container > .row.flex-grow-1 {
+  flex-grow: 0 !important;
+  align-items: flex-start;
+}
+
+/* 2) 상단 topbar/search 레이아웃: 오른쪽 패널 영역에만 침범하도록 고정 */
+@media (min-width: 992px) {
+  /* topbar 영역 높이가 과하게 잡히는 경우 방지 */
+  #topbar-wrapper {
+    margin-bottom: 0.25rem;
+  }
+
+  /* Search wrapper가 컨텐츠 영역을 침범하지 않도록(패널 쪽에만) */
+  #topbar #search-wrapper,
+  #topbar #search {
+    position: fixed !important;
+    top: 1.05rem;
+    /* 오른쪽 패널 컬럼이 시작되는 위치를 대략적으로 맞춤
+     * (Chirpy: main(col-xl-9) + panel(col-xl-3) 구조)
+     */
+    right: max(1.5rem, calc((100vw - 1200px) / 2 + 1.5rem));
+    z-index: 2000;
+  }
+
+  /* 입력창 크기/간섭 최소화 */
+  #topbar #search {
+    width: 16rem;
+  }
+
+  /* Search 아이콘/트리거는 숨김(입력창 항상 노출용) */
+  #search-trigger {
+    display: none !important;
   }
 }
 
+/* 3) (선택) 메타/본문 상단 간격이 과하게 벌어지는 케이스 방어 */
+main[aria-label="Main Content"] > article {
+  margin-top: 0 !important;
+}
