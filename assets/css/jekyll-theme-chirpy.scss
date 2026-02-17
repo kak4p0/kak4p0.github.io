@@ -852,7 +852,7 @@ article header .post-meta > div.d-flex > div:last-child,
   --kak-gap: 1.25rem;
 }
 :root {
-  --kak-search-w: clamp(200px, 14vw, 240px);
+  --kak-search-w: clamp(160px, 10vw, 200px);
 }
 
 @media (min-width: 1400px) {
