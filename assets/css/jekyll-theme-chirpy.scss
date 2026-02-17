@@ -285,7 +285,7 @@ main[aria-label="Main Content"] li::marker{
   #main-wrapper > .container > .row.flex-grow-1 > aside#panel-wrapper{
     flex: 0 0 280px !important;
     width: 280px !important;
-    max-width: 280px !important;
+    max-width: var(--kak-search-w) !important;
     min-width: 280px !important;
     margin-left: 2rem !important;
     align-self: stretch !important;
@@ -633,7 +633,7 @@ article header .post-meta > div.d-flex > div:last-child,
     0 8px 24px rgba(0,0,0,.3),
     0 0 0 1px rgba(45,212,191,.05) inset !important;
   
-  padding: 1.15rem !important;
+  padding: .95rem !important;
   
   transition: all 0.25s ease !important;
   overflow: hidden !important;
@@ -651,6 +651,15 @@ article header .post-meta > div.d-flex > div:last-child,
   transform: translateY(-2px) !important;
 }
 
+
+#related-posts .row{
+  align-items: flex-start !important;
+}
+#related-posts .row > *{
+  align-self: flex-start !important;
+}
+
+
 #related-posts ul > li > a,
 #related-posts .post-preview > a,
 #related-posts .card > a{
@@ -664,9 +673,9 @@ article header .post-meta > div.d-flex > div:last-child,
 #related-posts .post-meta,
 #related-posts .text-muted{
   display: block !important;
-  font-size: 0.85rem !important;
+  font-size: 0.78rem !important;
   opacity: 0.65 !important;
-  margin-bottom: 0.5rem !important;
+  margin-bottom: 0.35rem !important;
   color: var(--k-mint) !important;
 }
 
@@ -676,17 +685,17 @@ article header .post-meta > div.d-flex > div:last-child,
 #related-posts h2,
 #related-posts h3,
 #related-posts h4{
-  font-size: 1.1rem !important;
+  font-size: 1.0rem !important;
   font-weight: 600 !important;
   line-height: 1.4 !important;
-  margin: 0.5rem 0 0.65rem 0 !important;
+  margin: 0.35rem 0 0.45rem 0 !important;
   color: var(--k-lime) !important;
 }
 
 #related-posts .post-content,
 #related-posts .card-text,
 #related-posts p{
-  font-size: 0.9rem !important;
+  font-size: 0.85rem !important;
   line-height: 1.5 !important;
   opacity: 0.8 !important;
   margin: 0 !important;
@@ -698,9 +707,13 @@ article header .post-meta > div.d-flex > div:last-child,
 }
 
 #related-posts .card .card-body{
-  padding: 1.15rem !important;
+  padding: 0.95rem !important;
 }
 
+
+#related-posts .card{
+  height: auto !important;
+}
 /* =========================================================
    🔥 홈페이지 + 로고
    ========================================================= */
@@ -793,8 +806,8 @@ article header .post-meta > div.d-flex > div:last-child,
     display: flex !important;
     align-items: center !important;
     margin-left: auto !important;
-    width: 280px !important;     /* same as panel width */
-    max-width: 280px !important;
+    width: var(--kak-search-w) !important;
+    max-width: var(--kak-search-w) !important;
     min-width: 0 !important;
   }
 
@@ -818,8 +831,8 @@ article header .post-meta > div.d-flex > div:last-child,
 @media (min-width: 1200px){
   /* tail-wrapper는 패널(#panel-wrapper)과 같은 그리드 기준으로 폭을 맞춤 */
   #tail-wrapper{
-    flex: 0 0 calc(100% - 280px - 2rem) !important; /* 280(panel) + 2rem(gap) */
-    max-width: calc(100% - 280px - 2rem) !important;
+    flex: 0 0 calc(100% - var(--kak-panel-w) - 2rem) !important; /* 280(panel) + 2rem(gap) */
+    max-width: calc(100% - var(--kak-panel-w) - 2rem) !important;
   }
 }
 
@@ -838,6 +851,10 @@ article header .post-meta > div.d-flex > div:last-child,
   --kak-panel-w: 285px;
   --kak-gap: 1.25rem;
 }
+:root {
+  --kak-search-w: clamp(200px, 14vw, 240px);
+}
+
 @media (min-width: 1400px) {
   :root { --kak-panel-w: 330px; }
 }
@@ -858,9 +875,9 @@ article header .post-meta > div.d-flex > div:last-child,
   #topbar-wrapper #topbar search#search,
   #topbar-wrapper #topbar #search {
     margin-left: auto !important;
-    width: var(--kak-panel-w) !important;
-    max-width: var(--kak-panel-w) !important;
-    flex: 0 0 var(--kak-panel-w) !important;
+    width: var(--kak-search-w) !important;
+    max-width: var(--kak-search-w) !important;
+    flex: 0 0 var(--kak-search-w) !important;
     min-width: 0 !important;
   }
 
