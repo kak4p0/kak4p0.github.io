@@ -1077,95 +1077,84 @@ header.post-header { margin-top: 0.25rem !important; }
 }
 
 #related-posts .card { height: 100%; }
-
 /* =========================================================
-   kak4p0-custom-v21 (fix: huge top gap + tail width)
+   kak4p0-custom-v22: spacing + Further Reading width fixes
    ========================================================= */
 
-/* 1) Fix the massive empty space above post header.
-   Root cause: #main-wrapper is a flex container and (in Chirpy) can be column;
-   the Bootstrap class `justify-content-center` then vertically centers the whole page.
-   Force flex-start to keep content pinned to the top.
-*/
-#main-wrapper{
-  justify-content: flex-start !important;
-  align-items: stretch !important;
-  min-height: auto !important;
+/* 1) Kill the excessive whitespace above post title */
+#topbar-wrapper {
+  height: auto !important;
+  padding-top: 0.4rem !important;
+  padding-bottom: 0.2rem !important;
 }
 
-/* Keep the topbar compact */
-#topbar-wrapper{
-  margin-bottom: 0 !important;
-}
-#topbar{
-  margin-bottom: 0 !important;
+#topbar {
+  height: auto !important;      /* overrides Bootstrap's .h-100 on #topbar */
+  min-height: 0 !important;
 }
 
-/* Reduce extra vertical padding at the start of the main container */
-#main-wrapper > .container{
-  padding-top: .5rem !important;
+#main-wrapper {
+  padding-top: 0 !important;
 }
 
-/* Post header should not introduce extra top spacing */
-header.post-header{
+#main-wrapper > .container,
+#main-wrapper > .container-fluid {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+
+#post-wrapper {
+  padding-top: 0 !important;
+}
+
+main[aria-label="Main Content"] {
+  padding-top: 0 !important;
+}
+
+main[aria-label="Main Content"] > article {
   margin-top: 0 !important;
   padding-top: 0 !important;
 }
-.post-content{
+
+main[aria-label="Main Content"] > article > header,
+main[aria-label="Main Content"] > article > header.post-header {
+  margin-top: 0 !important;
   padding-top: 0 !important;
 }
 
-/* 2) Constrain the post tail ("Further Reading") to the same width as the main content
-   so it doesn't extend under the right panel/TOC area.
-*/
-#tail-wrapper{
-  margin-right: auto !important;
-  margin-left: 0 !important;
-}
-
-/* Match Chirpy column widths even if the markup changes */
-@media (min-width: 1200px){
-  #tail-wrapper{ width: 75% !important; max-width: 75% !important; }
-}
-@media (min-width: 992px) and (max-width: 1199.98px){
-  #tail-wrapper{ width: 91.6666667% !important; max-width: 91.6666667% !important; }
-}
-
-/* 3) Further Reading cards: keep 3-up sizing on desktop (no single card stretching full width) */
-#related-posts .row{
-  display: flex !important;
-  flex-wrap: wrap !important;
-  gap: 1.5rem !important;
-  width: 100% !important;
-  margin: 0 !important;
-}
-#related-posts .row > *{
-  width: auto !important; /* neutralize bootstrap cols */
-  padding: 0 !important;
-  flex: 0 0 calc((100% - 3rem)/3) !important;
-  max-width: calc((100% - 3rem)/3) !important;
-}
-@media (max-width: 1199.98px){
-  #related-posts .row > *{
-    flex: 0 0 calc((100% - 1.5rem)/2) !important;
-    max-width: calc((100% - 1.5rem)/2) !important;
+/* 2) Constrain "Further Reading" to content width (stop at post tail/share edge) */
+@media (min-width: 992px) {
+  /* tail wrapper is the container that holds related posts + older/newer */
+  #tail-wrapper {
+    max-width: calc(100% - var(--k-panel-w, 18rem) - 1rem) !important;
+    margin-right: auto !important;
   }
-}
-@media (max-width: 767.98px){
-  #related-posts .row > *{
-    flex: 0 0 100% !important;
+
+  #related-posts {
+    width: 100% !important;
+    max-width: 54rem !important;     /* ~864px: similar to Chirpy's content column */
+    margin-left: 0 !important;       /* align left (no centering into the right panel) */
+    margin-right: auto !important;
+  }
+
+  /* Always keep 3 slots; if fewer posts exist, cards won't stretch to full width */
+  #related-posts > .row {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 1rem !important;
+    width: 100% !important;
+    margin: 0 !important;
+  }
+
+  #related-posts > .row > .col {
+    padding: 0 !important;
+    width: auto !important;
+    max-width: none !important;
+  }
+
+  #related-posts .post-preview {
+    width: 100% !important;
     max-width: 100% !important;
   }
 }
 
-/* Keep the card itself from forcing full height/width */
-#related-posts .card{
-  width: 100% !important;
-}
-
-/* 4) Desktop layout stability (borrowed from v16): keep main + right panel aligned to top */
-@media (min-width: 992px){
-  #main-wrapper > .container > .row{
-    align-items: flex-start !important;
-  }
-}
