@@ -3,11 +3,11 @@
 @import "main";
 
 /* =========================================================
-   Kak4p0 Chirpy - v15 FINAL
-   - TOC sticky 작동 ✓
-   - Post meta: 2줄 (Posted/Updated | By...읽기시간)
-   - 홈: 제목 위 공간 제거, 제목-description 붙이기
-   - Further Reading: 3열 카드
+   Kak4p0 Chirpy - v16 FINAL COMPLETE
+   - Further Reading: 3열 카드 초강력 강제
+   - 회색바 완전 제거
+   - 카카포 컨셉 (초록/라임)
+   - 사이드바 일정표
    ========================================================= */
 
 /* ---------- Palette ---------- */
@@ -187,6 +187,57 @@ div.highlight pre{
   transform: none !important;
 }
 
+/* 🔥 사이드바 일정표 스타일 */
+.sidebar-schedule{
+  padding: 1rem 1.2rem !important;
+  margin: 1.5rem 1rem 0 1rem !important;
+  background: rgba(45,212,191,.06) !important;
+  border: 1px solid rgba(45,212,191,.15) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 12px rgba(45,212,191,.08) !important;
+}
+
+.sidebar-schedule h4{
+  margin: 0 0 0.8rem 0 !important;
+  font-size: 0.95rem !important;
+  color: var(--k-lime) !important;
+  font-weight: 600 !important;
+  text-align: center !important;
+}
+
+.sidebar-schedule ul{
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.sidebar-schedule li{
+  padding: 0.45rem 0 !important;
+  border-bottom: 1px solid rgba(255,255,255,.05) !important;
+  font-size: 0.82rem !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+
+.sidebar-schedule li:last-child{
+  border-bottom: none !important;
+  padding-bottom: 0 !important;
+}
+
+.sidebar-schedule .schedule-date{
+  color: var(--k-mint) !important;
+  font-weight: 500 !important;
+  flex: 0 0 auto !important;
+  margin-right: 0.6rem !important;
+}
+
+.sidebar-schedule .schedule-title{
+  opacity: 0.85 !important;
+  flex: 1 1 auto !important;
+  text-align: right !important;
+}
+
 /* ---------- Remove bullets ---------- */
 main[aria-label="Main Content"] ul,
 main[aria-label="Main Content"] ol{
@@ -209,7 +260,7 @@ main[aria-label="Main Content"] li::marker{
 }
 
 /* =========================================================
-   Desktop layout (v9 방식)
+   Desktop layout
    ========================================================= */
 @media (min-width: 992px){
   #main-wrapper > .container{
@@ -250,19 +301,29 @@ main[aria-label="Main Content"] li::marker{
 }
 
 /* =========================================================
-   🔥 TOC sticky (v9 방식)
+   🔥🔥 TOC sticky + 회색바 완전 제거
    ========================================================= */
+
+/* 회색바 핵폭탄급 제거 */
 #toc-border-cover,
 .toc-border-cover,
 #panel-wrapper .toc-border-cover,
-aside#panel-wrapper .toc-border-cover{
+aside#panel-wrapper .toc-border-cover,
+#panel-wrapper > .toc-border-cover,
+aside > .toc-border-cover,
+div.toc-border-cover{
   display: none !important;
   visibility: hidden !important;
   opacity: 0 !important;
   height: 0 !important;
+  max-height: 0 !important;
+  min-height: 0 !important;
   margin: 0 !important;
   padding: 0 !important;
   pointer-events: none !important;
+  position: absolute !important;
+  left: -9999px !important;
+  z-index: -1 !important;
 }
 
 @media (min-width: 992px){
@@ -297,7 +358,7 @@ aside#panel-wrapper .toc-border-cover{
 }
 
 /* =========================================================
-   🔥 Topbar: Search 작게 + 투명 배경
+   Topbar
    ========================================================= */
 #topbar-wrapper,
 #topbar-wrapper .topbar,
@@ -377,7 +438,7 @@ footer p + p::before,
 }
 
 /* =========================================================
-   🔥🔥 Post meta: 2줄 레이아웃 (Axl0t0l 스타일)
+   Post meta: 2줄 레이아웃
    ========================================================= */
 article header .post-meta,
 .post-meta{
@@ -388,7 +449,6 @@ article header .post-meta,
   margin-bottom: 1rem !important;
 }
 
-/* 1줄: Posted • Updated */
 article header .post-meta > span,
 .post-meta > span{
   display: inline-flex !important;
@@ -397,7 +457,6 @@ article header .post-meta > span,
   white-space: nowrap !important;
 }
 
-/* Posted와 Updated 사이 점 */
 article header .post-meta > span:not(:last-of-type)::after,
 .post-meta > span:not(:last-of-type)::after{
   content: "•" !important;
@@ -405,27 +464,23 @@ article header .post-meta > span:not(:last-of-type)::after,
   margin-left: 0.4rem !important;
 }
 
-/* 2줄: By kak4p0 (왼쪽) | 6 min read (오른쪽) */
 article header .post-meta > div.d-flex.justify-content-between,
 .post-meta > div.d-flex.justify-content-between,
 .post-meta > .d-flex{
   flex: 0 0 100% !important;
   width: 100% !important;
   margin-top: 0.25rem !important;
-  
   display: flex !important;
   flex-direction: row !important;
   justify-content: space-between !important;
   align-items: center !important;
 }
 
-/* By kak4p0 */
 article header .post-meta > div.d-flex > div:first-child,
 .post-meta > .d-flex > div:first-child{
   flex: 0 0 auto !important;
 }
 
-/* 6 min read (오른쪽 끝) */
 article header .post-meta > div.d-flex > div:last-child,
 .post-meta > .d-flex > div:last-child,
 .post-meta .readtime{
@@ -434,7 +489,6 @@ article header .post-meta > div.d-flex > div:last-child,
   white-space: nowrap !important;
 }
 
-/* time 태그 여백 */
 .post-meta > span > time{
   margin-left: 0.35rem !important;
 }
@@ -481,7 +535,7 @@ article header .post-meta > div.d-flex > div:last-child,
 }
 
 /* =========================================================
-   🔥🔥 Further Reading: 3열 카드 (강제)
+   🔥🔥🔥 Further Reading: 핵폭탄급 3열 카드 강제
    ========================================================= */
 #related-posts{
   margin-top: 2.5rem !important;
@@ -492,22 +546,34 @@ article header .post-meta > div.d-flex > div:last-child,
 #related-posts > .panel-heading{
   margin-bottom: 1.25rem !important;
   font-size: 1.35rem !important;
+  color: var(--k-lime) !important;
 }
 
-/* 모든 컨테이너에 Grid 강제 적용 */
+/* 🔥 Bootstrap을 완전히 무력화하고 Grid로 강제 변환 */
 #related-posts .row,
 #related-posts ul,
-#related-posts .post-list{
-  list-style: none !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  
+#related-posts .post-list,
+#related-posts > .row,
+.post-tail-wrapper #related-posts .row,
+#related-posts > ul{
+  /* Bootstrap 완전 무력화 */
   display: grid !important;
+  flex-direction: unset !important;
+  flex-wrap: unset !important;
+  flex: none !important;
+  
+  /* Grid 강제 */
   grid-template-columns: repeat(3, 1fr) !important;
   gap: 1.25rem !important;
   
+  /* 초기화 */
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
   margin-left: 0 !important;
   margin-right: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
 }
 
 @media (max-width: 1199px){
@@ -526,44 +592,62 @@ article header .post-meta > div.d-flex > div:last-child,
   }
 }
 
-/* Bootstrap column 무력화 */
+/* Bootstrap column을 완전히 무력화 */
+#related-posts .row > *,
 #related-posts .row > [class*="col"],
-#related-posts .row > div{
+#related-posts .row > div,
+#related-posts .row > [class^="col"]{
+  /* Bootstrap 완전 제거 */
+  flex: none !important;
+  flex-basis: auto !important;
+  max-width: none !important;
+  width: auto !important;
+  float: none !important;
+  
+  /* Grid item */
   padding: 0 !important;
   margin: 0 !important;
-  width: auto !important;
-  max-width: none !important;
-  flex: none !important;
+  display: block !important;
 }
 
-/* 카드 스타일 */
+/* 카드 스타일 (카카포 컨셉) */
 #related-posts ul > li,
 #related-posts .post-list > li,
 #related-posts .post-preview,
 #related-posts .card,
 #related-posts .row > * > .card,
-#related-posts .row > * > .post-preview{
+#related-posts .row > * > .post-preview,
+#related-posts .row > [class*="col"] > .card,
+#related-posts .row > div > .card{
+  /* 초기화 */
   list-style: none !important;
-  
-  background: rgba(255,255,255,.04) !important;
-  border: 1px solid rgba(255,255,255,.1) !important;
-  border-radius: 1rem !important;
-  box-shadow: 0 8px 24px rgba(0,0,0,.3) !important;
-  
-  padding: 1.15rem !important;
   margin: 0 !important;
   height: 100% !important;
+  display: block !important;
+  
+  /* 카카포 스타일 */
+  background: rgba(45,212,191,.04) !important;
+  border: 1px solid rgba(45,212,191,.15) !important;
+  border-radius: 1rem !important;
+  box-shadow: 
+    0 8px 24px rgba(0,0,0,.3),
+    0 0 0 1px rgba(45,212,191,.05) inset !important;
+  
+  padding: 1.15rem !important;
   
   transition: all 0.25s ease !important;
   overflow: hidden !important;
 }
 
+/* Hover (카카포 라임 효과) */
 #related-posts ul > li:hover,
 #related-posts .post-preview:hover,
 #related-posts .card:hover{
-  background: rgba(255,255,255,.06) !important;
-  border-color: rgba(45,212,191,.3) !important;
-  box-shadow: 0 12px 32px rgba(0,0,0,.4) !important;
+  background: rgba(163,230,53,.06) !important;
+  border-color: rgba(163,230,53,.3) !important;
+  box-shadow: 
+    0 12px 32px rgba(0,0,0,.4),
+    0 0 20px rgba(163,230,53,.15) !important;
   transform: translateY(-2px) !important;
 }
 
@@ -577,11 +661,13 @@ article header .post-meta > div.d-flex > div:last-child,
 
 #related-posts time,
 #related-posts .date,
-#related-posts .post-meta{
+#related-posts .post-meta,
+#related-posts .text-muted{
   display: block !important;
   font-size: 0.85rem !important;
   opacity: 0.65 !important;
   margin-bottom: 0.5rem !important;
+  color: var(--k-mint) !important;
 }
 
 #related-posts .post-title,
@@ -594,7 +680,7 @@ article header .post-meta > div.d-flex > div:last-child,
   font-weight: 600 !important;
   line-height: 1.4 !important;
   margin: 0.5rem 0 0.65rem 0 !important;
-  color: var(--k-mint) !important;
+  color: var(--k-lime) !important;
 }
 
 #related-posts .post-content,
@@ -616,10 +702,34 @@ article header .post-meta > div.d-flex > div:last-child,
 }
 
 /* =========================================================
-   🔥🔥 홈페이지: 간격 최소화 + 로고 영역
+   🔥 홈페이지 + 로고
    ========================================================= */
 
-/* 페이지 타이틀 상단 여백 제거 */
+/* 홈 상단 로고 */
+.home-logo{
+  text-align: center !important;
+  padding: 1.5rem 0 1rem 0 !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.home-logo img{
+  width: 100px !important;
+  height: 100px !important;
+  border-radius: 50% !important;
+  border: 3px solid rgba(45,212,191,.3) !important;
+  box-shadow: 
+    0 8px 24px rgba(45,212,191,.2),
+    0 0 30px rgba(163,230,53,.1) !important;
+  transition: all 0.3s ease !important;
+}
+
+.home-logo img:hover{
+  transform: scale(1.05) !important;
+  box-shadow: 
+    0 12px 32px rgba(45,212,191,.3),
+    0 0 40px rgba(163,230,53,.2) !important;
+}
+
 #page-title,
 .page-title{
   margin-top: 0 !important;
@@ -627,13 +737,11 @@ article header .post-meta > div.d-flex > div:last-child,
   margin-bottom: 0.8rem !important;
 }
 
-/* 홈 리스트 */
 #post-list{
   padding-top: 0 !important;
   margin-top: 0 !important;
 }
 
-/* 카드 간격 */
 #post-list .card-wrapper{
   margin-top: 0.9rem !important;
   margin-bottom: 0.9rem !important;
@@ -647,7 +755,6 @@ article header .post-meta > div.d-flex > div:last-child,
   padding: 1rem 1.2rem !important;
 }
 
-/* 🔥 제목 상단 여백 제거 + description 붙이기 */
 #post-list .card-title,
 #post-list .post-preview .card-title{
   margin-top: 0 !important;
@@ -656,7 +763,6 @@ article header .post-meta > div.d-flex > div:last-child,
   line-height: 1.3 !important;
 }
 
-/* 🔥 description을 제목에 바로 붙이기 */
 #post-list .card-text.content,
 #post-list .post-preview .card-text{
   margin-top: 0.25rem !important;
@@ -665,28 +771,10 @@ article header .post-meta > div.d-flex > div:last-child,
   line-height: 1.55 !important;
 }
 
-/* Post meta (날짜/카테고리) */
 #post-list .post-meta{
   margin-bottom: 0.5rem !important;
 }
 
-/* 🔥 로고 영역 추가 (홈 상단 여백 활용) */
-#main-wrapper > .container{
-  position: relative !important;
-}
-
-/* 로고를 넣고 싶다면 이 클래스를 사용 */
-.blog-logo{
-  position: absolute !important;
-  top: -60px !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
-  width: 120px !important;
-  height: 120px !important;
-  z-index: 10 !important;
-}
-
-/* Typography 조정 */
 .post-content{
   font-size: 0.97rem !important;
   line-height: 1.75 !important;
