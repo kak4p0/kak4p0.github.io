@@ -3,10 +3,11 @@
 @import "main";
 
 /* =========================================================
-   Kak4p0 Chirpy - v17 UNIQUE STYLE
-   - 카카포 독특한 컨셉 (네온/홀로그램)
-   - Further Reading 3개 표시
-   - 차별화된 디자인
+   Kak4p0 Chirpy - v18 PERFECT
+   - Further Reading 좁게 (옆 공간 차지 안 함)
+   - Search 우측 패널 상단 이동
+   - 빈 공간 완전 제거
+   - 디자인 강화
    ========================================================= */
 
 /* ---------- Palette ---------- */
@@ -54,33 +55,6 @@ body::before{
   position: relative !important;
 }
 
-/* 🔥 카드 네온 효과 */
-.card::after,
-.card-wrapper::after{
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 18px;
-  padding: 1px;
-  background: linear-gradient(135deg, 
-    rgba(45,212,191,.0) 0%, 
-    rgba(45,212,191,.2) 50%, 
-    rgba(163,230,53,.0) 100%);
-  -webkit-mask: 
-    linear-gradient(#fff 0 0) content-box, 
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-}
-
-.card:hover::after,
-.card-wrapper:hover::after{
-  opacity: 1;
-}
-
 /* ---------- Links ---------- */
 a, .post-content a{
   color: var(--k-mint);
@@ -102,7 +76,7 @@ a:hover, .post-content a:hover{
 }
 .post-content p{ margin-bottom: 1.05rem; }
 
-/* 🔥 Headings 네온 바 */
+/* Headings 네온 바 */
 .post-content h2,
 .post-content h3{
   position: relative;
@@ -129,7 +103,7 @@ a:hover, .post-content a:hover{
   50% { box-shadow: 0 0 24px rgba(45,212,191,.3), 0 0 12px rgba(163,230,53,.4); }
 }
 
-/* ---------- 🔥 Code blocks 홀로그램 ---------- */
+/* ---------- Code blocks 홀로그램 ---------- */
 div.highlighter-rouge,
 figure.highlight,
 div.highlight{
@@ -145,7 +119,6 @@ div.highlight{
   position: relative;
 }
 
-/* 홀로그램 스캔라인 효과 */
 div.highlighter-rouge::before,
 figure.highlight::before,
 div.highlight::before{
@@ -223,7 +196,6 @@ div.highlight pre{
   overflow: hidden;
 }
 
-/* 🔥 Sidebar 파동 효과 */
 #sidebar::after{
   content: "";
   position: absolute;
@@ -462,8 +434,49 @@ div.toc-border-cover{
 }
 
 /* =========================================================
-   Topbar
+   🔥 Search를 우측 패널로 이동
    ========================================================= */
+
+/* Topbar에서 Search 숨기기 (데스크톱) */
+@media (min-width: 992px){
+  #topbar-wrapper #topbar #search-wrapper,
+  #topbar #search-wrapper{
+    display: none !important;
+  }
+}
+
+/* 우측 패널에 Search 스타일 추가 */
+.panel-search{
+  background: rgba(45,212,191,.05) !important;
+  border: 1px solid rgba(45,212,191,.15) !important;
+  border-radius: 12px !important;
+  padding: 0.8rem 1rem !important;
+  margin-bottom: 1.2rem !important;
+  box-shadow: 0 4px 12px rgba(45,212,191,.08) !important;
+}
+
+.panel-search input{
+  width: 100% !important;
+  background: rgba(0,0,0,.3) !important;
+  border: 1px solid rgba(45,212,191,.2) !important;
+  border-radius: 999px !important;
+  padding: 0.5rem 1rem !important;
+  color: #fff !important;
+  font-size: 0.85rem !important;
+  transition: all 0.3s ease !important;
+}
+
+.panel-search input:focus{
+  outline: none !important;
+  border-color: rgba(163,230,53,.4) !important;
+  box-shadow: 0 0 15px rgba(163,230,53,.2) !important;
+}
+
+.panel-search input::placeholder{
+  color: rgba(255,255,255,.4) !important;
+}
+
+/* Topbar 투명 */
 #topbar-wrapper,
 #topbar-wrapper .topbar,
 #topbar{
@@ -495,19 +508,6 @@ div.toc-border-cover{
   #topbar-wrapper #topbar .topbar-title{
     flex: 1 1 auto !important;
     min-width: 0 !important;
-  }
-
-  #topbar-wrapper #topbar #search-wrapper,
-  #topbar-wrapper #topbar .search-wrapper{
-    margin-left: auto !important;
-  }
-
-  #topbar-wrapper #topbar #search-input{
-    width: min(320px, 28vw) !important;
-    height: 2rem !important;
-    font-size: 0.88rem !important;
-    padding: 0.35rem 0.75rem !important;
-    border-radius: 999px !important;
   }
 }
 
@@ -542,8 +542,37 @@ footer p + p::before,
 }
 
 /* =========================================================
-   Post meta: 2줄 레이아웃
+   🔥 Post 상단 빈 공간 완전 제거
    ========================================================= */
+article,
+.post,
+main article{
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+
+article header,
+.post header{
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 1rem !important;
+}
+
+article header h1,
+.post header h1,
+.post-title{
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+  margin-bottom: 0.8rem !important;
+}
+
+/* Breadcrumb 간격 줄이기 */
+#breadcrumb,
+nav[aria-label="Breadcrumb"]{
+  margin-bottom: 0.5rem !important;
+}
+
+/* Post meta: 2줄 레이아웃 */
 article header .post-meta,
 .post-meta{
   display: flex !important;
@@ -551,6 +580,8 @@ article header .post-meta,
   align-items: center !important;
   gap: 0.4rem !important;
   margin-bottom: 1rem !important;
+  margin-top: 0 !important;
+  padding-top: 0 !important;
 }
 
 article header .post-meta > span,
@@ -639,23 +670,23 @@ article header .post-meta > div.d-flex > div:last-child,
 }
 
 /* =========================================================
-   🔥🔥🔥 Further Reading: 3개 + 독특한 스타일
+   🔥🔥🔥 Further Reading: 좁게 + 3개
    ========================================================= */
 #related-posts{
-  margin-top: 2.5rem !important;
+  margin-top: 2rem !important;
   clear: both !important;
 }
 
 #related-posts > h3,
 #related-posts > .panel-heading{
-  margin-bottom: 1.5rem !important;
-  font-size: 1.5rem !important;
+  margin-bottom: 1rem !important;
+  font-size: 1.35rem !important;
   color: var(--k-lime) !important;
   text-shadow: 0 0 20px rgba(163,230,53,.3);
   font-weight: 700 !important;
 }
 
-/* Grid 강제 */
+/* 🔥 Grid 좁게 (gap 줄이기) */
 #related-posts .row,
 #related-posts ul,
 #related-posts .post-list,
@@ -667,9 +698,8 @@ article header .post-meta > div.d-flex > div:last-child,
   flex-wrap: unset !important;
   flex: none !important;
   
-  /* 🔥 3개 표시 */
   grid-template-columns: repeat(3, 1fr) !important;
-  gap: 1.5rem !important;
+  gap: 1rem !important;  /* 1.5rem → 1rem */
   
   list-style: none !important;
   padding: 0 !important;
@@ -711,7 +741,7 @@ article header .post-meta > div.d-flex > div:last-child,
   display: block !important;
 }
 
-/* 🔥 카드 독특한 스타일 */
+/* 카드 스타일 (padding 줄이기) */
 #related-posts ul > li,
 #related-posts .post-list > li,
 #related-posts .post-preview,
@@ -725,33 +755,30 @@ article header .post-meta > div.d-flex > div:last-child,
   height: 100% !important;
   display: block !important;
   
-  /* 네온 카드 스타일 */
   background: rgba(45,212,191,.03) !important;
   border: 1px solid rgba(45,212,191,.2) !important;
-  border-radius: 16px !important;
+  border-radius: 14px !important;
   box-shadow: 
-    0 10px 30px rgba(0,0,0,.4),
-    0 0 0 1px rgba(45,212,191,.1) inset,
-    0 4px 0 rgba(163,230,53,.05) inset !important;
+    0 8px 24px rgba(0,0,0,.35),
+    0 0 0 1px rgba(45,212,191,.08) inset !important;
   
-  padding: 1.3rem !important;
+  padding: 1rem !important;  /* 1.3rem → 1rem */
   
   transition: all 0.3s ease !important;
   overflow: hidden !important;
   position: relative;
 }
 
-/* 🔥 호버 네온 효과 */
 #related-posts ul > li:hover,
 #related-posts .post-preview:hover,
 #related-posts .card:hover{
   background: rgba(45,212,191,.06) !important;
   border-color: rgba(163,230,53,.4) !important;
   box-shadow: 
-    0 15px 40px rgba(0,0,0,.5),
-    0 0 30px rgba(163,230,53,.2),
-    0 0 0 1px rgba(163,230,53,.2) inset !important;
-  transform: translateY(-3px) scale(1.02) !important;
+    0 12px 32px rgba(0,0,0,.45),
+    0 0 25px rgba(163,230,53,.2),
+    0 0 0 1px rgba(163,230,53,.15) inset !important;
+  transform: translateY(-2px) scale(1.01) !important;
 }
 
 /* 홀로그램 글로우 */
@@ -767,7 +794,7 @@ article header .post-meta > div.d-flex > div:last-child,
     rgba(45,212,191,.3),
     rgba(163,230,53,.0)
   );
-  border-radius: 16px;
+  border-radius: 14px;
   opacity: 0;
   filter: blur(10px);
   transition: opacity 0.3s ease;
@@ -799,41 +826,39 @@ article header .post-meta > div.d-flex > div:last-child,
 #related-posts .post-meta,
 #related-posts .text-muted{
   display: block !important;
-  font-size: 0.82rem !important;
-  opacity: 0.7 !important;
-  margin-bottom: 0.6rem !important;
+  font-size: 0.78rem !important;
+  opacity: 0.65 !important;
+  margin-bottom: 0.5rem !important;
   color: var(--k-mint) !important;
   text-transform: uppercase !important;
   letter-spacing: 0.5px !important;
 }
 
-/* 🔥 제목 네온 효과 */
 #related-posts .post-title,
 #related-posts .card-title,
 #related-posts h1,
 #related-posts h2,
 #related-posts h3,
 #related-posts h4{
-  font-size: 1.15rem !important;
+  font-size: 1.05rem !important;
   font-weight: 700 !important;
-  line-height: 1.4 !important;
-  margin: 0.5rem 0 0.7rem 0 !important;
+  line-height: 1.35 !important;
+  margin: 0.4rem 0 0.6rem 0 !important;
   color: var(--k-lime) !important;
   transition: all 0.3s ease !important;
 }
 
 #related-posts ul > li:hover .post-title,
 #related-posts .card:hover .card-title{
-  text-shadow: 0 0 15px rgba(163,230,53,.5) !important;
-  letter-spacing: 0.5px !important;
+  text-shadow: 0 0 12px rgba(163,230,53,.5) !important;
 }
 
 #related-posts .post-content,
 #related-posts .card-text,
 #related-posts p{
-  font-size: 0.88rem !important;
-  line-height: 1.6 !important;
-  opacity: 0.75 !important;
+  font-size: 0.85rem !important;
+  line-height: 1.5 !important;
+  opacity: 0.7 !important;
   margin: 0 !important;
   
   display: -webkit-box !important;
@@ -843,14 +868,12 @@ article header .post-meta > div.d-flex > div:last-child,
 }
 
 #related-posts .card .card-body{
-  padding: 1.3rem !important;
+  padding: 1rem !important;
 }
 
 /* =========================================================
    홈페이지 + 로고
    ========================================================= */
-
-/* 홈 상단 로고 */
 .home-logo{
   text-align: center !important;
   padding: 1.5rem 0 1rem 0 !important;
@@ -926,7 +949,7 @@ article header .post-meta > div.d-flex > div:last-child,
   line-height: 1.75 !important;
 }
 
-/* 🔥 Tag 스타일 */
+/* Tag 스타일 */
 .post-tag,
 a[class*="tag"]{
   background: rgba(45,212,191,.08) !important;
