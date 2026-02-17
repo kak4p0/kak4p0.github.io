@@ -780,57 +780,46 @@ article header .post-meta > div.d-flex > div:last-child,
   line-height: 1.75 !important;
 }
 
+
 /* =========================================================
-   kak4p0-custom-v25
-   - Search bar: align with right panel (Recently Updated) without invading post body
-   - Further Reading: prevent overflow into the right panel area
+   v26: align topbar search to right panel + constrain tail-wrapper (Further Reading)
    ========================================================= */
 
-/* 1) Search bar (desktop): keep it on the same top line as breadcrumb,
-      but size it like the right panel width so it visually sits above "Recently Updated". */
-@media (min-width: 1200px) {
-  /* Chirpy uses either <search id="search"> or wrappers depending on version */
-  #topbar #search,
-  #topbar #search-wrapper,
-  #topbar .search-wrapper {
-    flex: 0 0 280px !important;   /* match panel width used in this theme */
-    width: 280px !important;
-    max-width: 280px !important;
+/* --- Topbar Search: match panel width and align above Recently Updated --- */
+@media (min-width: 992px){
+  /* Chirpy >=7.4 uses <search id="search"> instead of #search-wrapper */
+  #topbar-wrapper #topbar search#search,
+  #topbar-wrapper #topbar #search{
+    display: flex !important;
+    align-items: center !important;
     margin-left: auto !important;
-  }
-
-  #topbar #search input,
-  #topbar #search .form-control,
-  #topbar #search-input,
-  #topbar #search-wrapper input,
-  #topbar .search-wrapper input {
-    width: 100% !important;
+    width: 280px !important;     /* same as panel width */
+    max-width: 280px !important;
     min-width: 0 !important;
   }
+
+  #topbar-wrapper #topbar search#search #search-input,
+  #topbar-wrapper #topbar #search #search-input{
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 2rem !important;
+    font-size: 0.88rem !important;
+    padding: 0.35rem 0.75rem !important;
+    border-radius: 999px !important;
+  }
+
+  /* Cancel 버튼이 공간을 잡아먹으면 폭이 깨짐 */
+  #topbar-wrapper #topbar #search-cancel{
+    display: none !important;
+  }
 }
 
-/* 2) Further Reading (Related Posts): never bleed under/into the right panel */
-#related-posts {
-  max-width: 100% !important;
-  overflow-x: hidden; /* last-line defense: no horizontal bleed into the panel area */
-  overflow-y: visible;
+/* --- Tail wrapper: keep Further Reading within content width (no overlap into right empty column) --- */
+@media (min-width: 1200px){
+  /* tail-wrapper는 패널(#panel-wrapper)과 같은 그리드 기준으로 폭을 맞춤 */
+  #tail-wrapper{
+    flex: 0 0 calc(100% - 280px - 2rem) !important; /* 280(panel) + 2rem(gap) */
+    max-width: calc(100% - 280px - 2rem) !important;
+  }
 }
 
-@supports (overflow: clip) {
-  #related-posts { overflow-x: clip; }
-}
-
-#related-posts .row {
-  width: 100% !important;
-  max-width: 100% !important;
-  margin-left: 0 !important;
-  margin-right: 0 !important;
-}
-
-/* allow grid items/cards to shrink (prevents overflow on narrow desktops) */
-#related-posts .row > *,
-#related-posts article,
-#related-posts .post-preview,
-#related-posts .post-preview.card {
-  min-width: 0 !important;
-}
