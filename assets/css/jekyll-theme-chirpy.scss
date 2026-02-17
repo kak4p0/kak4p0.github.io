@@ -946,160 +946,118 @@ a[class*="tag"]:hover{
 }
 
 /* =========================================================
- * kak4p0-custom-v18 (2026-02-17)
- * - Fix huge top whitespace (topbar + main padding)
- * - Put Search box near the right panel area (desktop) without intruding article
- * - Remove the “gray bar” caused by invisible TOC placeholder
- * - Make TOC sticky reliably
- * - Make Further Reading 3-cards fill width cleanly
- * - Slightly reduce post font size + tighten title/description spacing
- * ======================================================= */
+   kak4p0-custom-v19 (layout polish + bugfixes)
+   - keep everything in assets/css/jekyll-theme-chirpy.scss
+   ========================================================= */
 
-/* 1) Topbar: transparent + consistent positioning */
+/* overall text slightly smaller */
+html { font-size: 15.5px; }
+
+/* if some flex rules end up bottom-aligning, force start */
+#main-wrapper .row.flex-grow-1 {
+  align-items: flex-start !important;
+}
+
+/* ---------- Topbar: breadcrumb left, search right (no gray bar) ---------- */
 #topbar-wrapper {
   background: transparent !important;
-  border-bottom: 0 !important;
   box-shadow: none !important;
+  border-bottom: 0 !important;
 }
 
 #topbar {
   background: transparent !important;
-  box-shadow: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 0.9rem;
 }
 
-@media (min-width: 768px) {
-  /* Force topbar to sit at the top so it never “floats” mid-page */
-  #topbar-wrapper {
-    position: fixed !important;
-    top: 0 !important;
-    left: var(--sidebar-width, 260px) !important;
-    right: 0 !important;
-    z-index: 999 !important;
-    padding-top: .25rem !important;
-    padding-bottom: .25rem !important;
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-  }
-
-  /* Ensure content starts right under the topbar (prevents huge empty space) */
-  #main-wrapper {
-    padding-top: 4.35rem !important; /* tune: topbar height + breathing room */
-  }
+/* breadcrumb container id in Chirpy is usually #breadcrumb */
+#breadcrumb {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
-/* 2) Search box: park it above “Recently Updated” on desktop (right side) */
-@media (min-width: 1200px) {
-  /* Pull search out of flow and place it in the right-side region */
-  #topbar #search-wrapper {
-    position: fixed !important;
-    top: 5.1rem !important;   /* sits under the fixed topbar */
-    right: 2.2rem !important;
-    width: 260px !important;
-    z-index: 1000 !important;
-  }
+/* search wrapper id in Chirpy is usually #search-wrapper */
+#search-wrapper {
+  flex: 0 0 auto;
+  margin-left: auto !important;
+  width: 18rem;
+  max-width: 40vw;
+}
 
-  #topbar #search-wrapper .form-control,
-  #topbar #search-wrapper input {
-    width: 100% !important;
+@media (max-width: 768px) {
+  #search-wrapper {
+    width: 12rem;
+    max-width: 55vw;
   }
 }
 
-@media (max-width: 1199.98px) {
-  /* Mobile/tablet: keep default behavior */
-  #topbar #search-wrapper {
-    position: static !important;
-    width: auto !important;
-  }
+/* make the search pill subtle and keep it from looking like a big gray bar */
+#search-wrapper,
+#search-wrapper * {
+  outline: none !important;
 }
 
-/* 3) Right panel: fix TOC behavior + remove the “empty gray bar” */
-#panel-wrapper {
-  overflow: visible !important; /* sticky breaks if any ancestor has overflow hidden */
+#search-wrapper .search-bar,
+#search-wrapper form {
+  background: rgba(0, 0, 0, 0.18) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 999px !important;
 }
 
-/* Bootstrap’s .invisible keeps layout space → looks like a blank/gray bar.
-   Remove it completely while it’s invisible. */
+#search-wrapper input {
+  background: transparent !important;
+}
+
+/* ---------- Right panel: remove the empty gray blocks ---------- */
+/* the bar inserted before TOC */
+aside#panel-wrapper .toc-border-cover {
+  display: none !important;
+}
+
+/* if TOC is still 'invisible', don't reserve layout height */
 #toc-wrapper.invisible {
   display: none !important;
-  height: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
 }
 
-#toc-wrapper:not(.invisible) {
-  position: sticky !important;
-  top: 7.55rem !important; /* below fixed topbar + floating search */
-  max-height: calc(100vh - 8.4rem) !important;
-  overflow: auto !important;
-}
-
-/* 4) Further Reading: fill width + keep 3 cards without leftover side gap */
-@media (min-width: 1200px) {
-  /* Tail wrapper is col-xl-9 by default → leaves 3 cols empty.
-     Make it full width so 3 cards use the space. */
-  #tail-wrapper {
-    flex: 0 0 100% !important;
-    max-width: 100% !important;
-  }
-}
-
-/* Use CSS grid so 3 cards always spread evenly */
+/* ---------- Further Reading: responsive grid that doesn't reserve empty columns ---------- */
 #related-posts .row {
   display: grid !important;
-  gap: 1.1rem !important;
-  margin: 0 !important;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important;
+  gap: 1.25rem !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
 }
 
-@media (max-width: 767.98px) {
-  #related-posts .row { grid-template-columns: 1fr !important; }
-}
-@media (min-width: 768px) and (max-width: 991.98px) {
-  #related-posts .row { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
-}
-@media (min-width: 992px) {
-  #related-posts .row { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
-}
-
-#related-posts .col,
-#related-posts article {
+#related-posts .row > div {
+  width: auto !important;
   max-width: none !important;
-  min-width: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
 
-/* 5) Typography: slightly smaller post text + tighter title/description */
-.post-content {
-  font-size: 0.96rem !important;
-  line-height: 1.75 !important;
+#related-posts .post-preview {
+  height: 100%;
 }
 
-.post-content p,
-.post-content li {
-  line-height: 1.75 !important;
+/* ---------- Home list spacing: remove the “title floats” feeling ---------- */
+#post-list .post-preview {
+  padding: 1.35rem 1.6rem !important;
 }
 
-.post-preview .post-title {
-  margin-bottom: .35rem !important;
+#post-list .post-preview h1,
+#post-list .post-preview h2 {
+  margin-top: 0 !important;
+  margin-bottom: 0.35rem !important;
 }
 
-.post-preview .post-content {
-  margin-top: .15rem !important;
-}
-/* 6) Post header (single post) spacing: reduce empty gap + bring title/desc closer */
-.post-header {
-  margin-top: .75rem !important;
+#post-list .post-preview .post-content {
+  margin-top: 0.25rem !important;
 }
 
-.post-header .post-title,
-.post-header h1 {
-  margin-bottom: .35rem !important;
-}
-
-.post-header .post-desc,
-.post-header .post-subtitle {
-  margin-top: .25rem !important;
-}
-
-.post-meta,
-.post-tail-wrapper {
-  margin-top: .55rem !important;
+/* Optional: tighten post header stack a bit */
+header.post-header {
+  margin-top: 0.2rem;
 }
