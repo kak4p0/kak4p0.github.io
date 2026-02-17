@@ -946,7 +946,7 @@ article header .post-meta > div.d-flex > div:last-child,
   --kak-gap: 1.25rem;
 
   /* Recommended: keep search within the right panel width range */
-  --kak-search-w: clamp(130px, 8vw, 170px);
+  --kak-search-w: clamp(140px, 10vw, 180px);
 }
 @media (min-width: 1400px) {
   :root { --kak-panel-w: 330px; }
@@ -1146,4 +1146,87 @@ article header .post-meta > div.d-flex > div:last-child,
 #related-posts .content,
 #related-posts p{
   flex: 1 1 auto !important;
+}
+/* =========================================================
+   v34: search alignment + related-posts padding tighten
+   ========================================================= */
+
+/* Keep panel width/gap consistent with the desktop layout block above */
+:root{
+  --kak-panel-w: 280px;
+  --kak-gap: 2rem;
+}
+
+/* --- Topbar: align Search to the right panel column (above "Recently Updated") --- */
+@media (min-width: 992px){
+  /* Ensure the right panel doesn't get constrained by the search width */
+  #main-wrapper > .container > .row.flex-grow-1 > aside#panel-wrapper{
+    max-width: var(--kak-panel-w) !important;
+  }
+
+  /* Convert topbar to a 2-column grid: [main content] [right panel] */
+  #topbar-wrapper #topbar{
+    display: grid !important;
+    grid-template-columns: 1fr var(--kak-panel-w) !important;
+    column-gap: var(--kak-gap) !important;
+    align-items: center !important;
+    justify-content: unset !important;
+  }
+
+  /* Left column: breadcrumb */
+  #topbar-wrapper #topbar nav#breadcrumb,
+  #topbar-wrapper #topbar #breadcrumb{
+    grid-column: 1 !important;
+    justify-self: start !important;
+    margin: 0 !important;
+  }
+
+  /* Right column: search box */
+  #topbar-wrapper #topbar search#search,
+  #topbar-wrapper #topbar #search{
+    grid-column: 2 !important;
+    justify-self: start !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  #topbar-wrapper #topbar search#search #search-input,
+  #topbar-wrapper #topbar #search #search-input{
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  /* These buttons are useful on mobile, but only add layout noise on desktop */
+  #topbar-wrapper #topbar #sidebar-trigger,
+  #topbar-wrapper #topbar #topbar-title,
+  #topbar-wrapper #topbar #search-trigger,
+  #topbar-wrapper #topbar #search-cancel{
+    display: none !important;
+  }
+}
+
+/* --- Further Reading: reduce inner whitespace without breaking equal heights --- */
+/* Remove double-padding when the markup uses .card > .card-body */
+#related-posts .card{
+  padding: 0 !important;
+}
+#related-posts .card .card-body{
+  padding: .75rem !important;
+}
+
+/* For non-card variants (post-preview), keep it tight */
+#related-posts ul > li,
+#related-posts .post-list > li,
+#related-posts .post-preview{
+  padding: .75rem !important;
+}
+
+/* Tighten the excerpt block (less bottom "air") */
+#related-posts .post-content,
+#related-posts .card-text,
+#related-posts p{
+  font-size: 0.82rem !important;
+  line-height: 1.45 !important;
 }
