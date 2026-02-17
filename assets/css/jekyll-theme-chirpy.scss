@@ -1077,84 +1077,41 @@ header.post-header { margin-top: 0.25rem !important; }
 }
 
 #related-posts .card { height: 100%; }
+
+
 /* =========================================================
-   kak4p0-custom-v22: spacing + Further Reading width fixes
+   ✅ v23: 상단 '빈공간' (Topbar 높이 폭증) 회귀 버그 픽스
+   - v16처럼 Topbar가 콘텐츠 높이만 차지하도록 강제
+   - Bootstrap .h-100(=height:100% !important)도 함께 무력화
    ========================================================= */
 
-/* 1) Kill the excessive whitespace above post title */
+/* Topbar wrapper가 flex 컨테이너에서 늘어나면서 화면 높이를 먹는 케이스 방지 */
 #topbar-wrapper {
+  flex: 0 0 auto !important;
   height: auto !important;
-  padding-top: 0.4rem !important;
-  padding-bottom: 0.2rem !important;
-}
-
-#topbar {
-  height: auto !important;      /* overrides Bootstrap's .h-100 on #topbar */
   min-height: 0 !important;
-}
-
-#main-wrapper {
+  margin: 0 !important;
   padding-top: 0 !important;
+  padding-bottom: 0 !important;
 }
 
-#main-wrapper > .container,
-#main-wrapper > .container-fluid {
-  padding-top: 0 !important;
-  margin-top: 0 !important;
+/* #topbar가 .h-100 때문에 부모 높이를 따라가며 커지는 케이스 방지 */
+#topbar {
+  height: auto !important;
+  min-height: 0 !important;
+  padding-top: .25rem !important;
+  padding-bottom: .25rem !important;
 }
 
-#post-wrapper {
-  padding-top: 0 !important;
+/* 상단 여백을 과하게 만들 수 있는 전역 flex/height 영향 차단 */
+#main-wrapper > .container {
+  justify-content: flex-start !important;
 }
 
-main[aria-label="Main Content"] {
-  padding-top: 0 !important;
-}
-
-main[aria-label="Main Content"] > article {
-  margin-top: 0 !important;
-  padding-top: 0 !important;
-}
-
-main[aria-label="Main Content"] > article > header,
-main[aria-label="Main Content"] > article > header.post-header {
-  margin-top: 0 !important;
-  padding-top: 0 !important;
-}
-
-/* 2) Constrain "Further Reading" to content width (stop at post tail/share edge) */
-@media (min-width: 992px) {
-  /* tail wrapper is the container that holds related posts + older/newer */
-  #tail-wrapper {
-    max-width: calc(100% - var(--k-panel-w, 18rem) - 1rem) !important;
-    margin-right: auto !important;
-  }
-
-  #related-posts {
-    width: 100% !important;
-    max-width: 54rem !important;     /* ~864px: similar to Chirpy's content column */
-    margin-left: 0 !important;       /* align left (no centering into the right panel) */
-    margin-right: auto !important;
-  }
-
-  /* Always keep 3 slots; if fewer posts exist, cards won't stretch to full width */
-  #related-posts > .row {
-    display: grid !important;
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-    gap: 1rem !important;
-    width: 100% !important;
-    margin: 0 !important;
-  }
-
-  #related-posts > .row > .col {
-    padding: 0 !important;
-    width: auto !important;
-    max-width: none !important;
-  }
-
-  #related-posts .post-preview {
-    width: 100% !important;
-    max-width: 100% !important;
+/* 데스크톱에서 Topbar 아래 컨텐츠 시작점을 타이트하게 */
+@media (min-width: 1200px) {
+  #main-wrapper > .container {
+    padding-top: .5rem !important;
   }
 }
 
