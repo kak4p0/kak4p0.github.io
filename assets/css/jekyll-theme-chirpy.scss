@@ -3,11 +3,10 @@
 @import "main";
 
 /* =========================================================
-   Kak4p0 Chirpy - v18 PERFECT
-   - Further Reading 좁게 (옆 공간 차지 안 함)
-   - Search 우측 패널 상단 이동
-   - 빈 공간 완전 제거
-   - 디자인 강화
+   Kak4p0 Chirpy - v17 UNIQUE STYLE
+   - 카카포 독특한 컨셉 (네온/홀로그램)
+   - Further Reading 3개 표시
+   - 차별화된 디자인
    ========================================================= */
 
 /* ---------- Palette ---------- */
@@ -55,6 +54,33 @@ body::before{
   position: relative !important;
 }
 
+/* 🔥 카드 네온 효과 */
+.card::after,
+.card-wrapper::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  padding: 1px;
+  background: linear-gradient(135deg, 
+    rgba(45,212,191,.0) 0%, 
+    rgba(45,212,191,.2) 50%, 
+    rgba(163,230,53,.0) 100%);
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.card:hover::after,
+.card-wrapper:hover::after{
+  opacity: 1;
+}
+
 /* ---------- Links ---------- */
 a, .post-content a{
   color: var(--k-mint);
@@ -76,7 +102,7 @@ a:hover, .post-content a:hover{
 }
 .post-content p{ margin-bottom: 1.05rem; }
 
-/* Headings 네온 바 */
+/* 🔥 Headings 네온 바 */
 .post-content h2,
 .post-content h3{
   position: relative;
@@ -103,7 +129,7 @@ a:hover, .post-content a:hover{
   50% { box-shadow: 0 0 24px rgba(45,212,191,.3), 0 0 12px rgba(163,230,53,.4); }
 }
 
-/* ---------- Code blocks 홀로그램 ---------- */
+/* ---------- 🔥 Code blocks 홀로그램 ---------- */
 div.highlighter-rouge,
 figure.highlight,
 div.highlight{
@@ -119,6 +145,7 @@ div.highlight{
   position: relative;
 }
 
+/* 홀로그램 스캔라인 효과 */
 div.highlighter-rouge::before,
 figure.highlight::before,
 div.highlight::before{
@@ -196,6 +223,7 @@ div.highlight pre{
   overflow: hidden;
 }
 
+/* 🔥 Sidebar 파동 효과 */
 #sidebar::after{
   content: "";
   position: absolute;
@@ -434,49 +462,8 @@ div.toc-border-cover{
 }
 
 /* =========================================================
-   🔥 Search를 우측 패널로 이동
+   Topbar
    ========================================================= */
-
-/* Topbar에서 Search 숨기기 (데스크톱) */
-@media (min-width: 992px){
-  #topbar-wrapper #topbar #search-wrapper,
-  #topbar #search-wrapper{
-    display: none !important;
-  }
-}
-
-/* 우측 패널에 Search 스타일 추가 */
-.panel-search{
-  background: rgba(45,212,191,.05) !important;
-  border: 1px solid rgba(45,212,191,.15) !important;
-  border-radius: 12px !important;
-  padding: 0.8rem 1rem !important;
-  margin-bottom: 1.2rem !important;
-  box-shadow: 0 4px 12px rgba(45,212,191,.08) !important;
-}
-
-.panel-search input{
-  width: 100% !important;
-  background: rgba(0,0,0,.3) !important;
-  border: 1px solid rgba(45,212,191,.2) !important;
-  border-radius: 999px !important;
-  padding: 0.5rem 1rem !important;
-  color: #fff !important;
-  font-size: 0.85rem !important;
-  transition: all 0.3s ease !important;
-}
-
-.panel-search input:focus{
-  outline: none !important;
-  border-color: rgba(163,230,53,.4) !important;
-  box-shadow: 0 0 15px rgba(163,230,53,.2) !important;
-}
-
-.panel-search input::placeholder{
-  color: rgba(255,255,255,.4) !important;
-}
-
-/* Topbar 투명 */
 #topbar-wrapper,
 #topbar-wrapper .topbar,
 #topbar{
@@ -508,6 +495,19 @@ div.toc-border-cover{
   #topbar-wrapper #topbar .topbar-title{
     flex: 1 1 auto !important;
     min-width: 0 !important;
+  }
+
+  #topbar-wrapper #topbar #search-wrapper,
+  #topbar-wrapper #topbar .search-wrapper{
+    margin-left: auto !important;
+  }
+
+  #topbar-wrapper #topbar #search-input{
+    width: min(320px, 28vw) !important;
+    height: 2rem !important;
+    font-size: 0.88rem !important;
+    padding: 0.35rem 0.75rem !important;
+    border-radius: 999px !important;
   }
 }
 
@@ -542,37 +542,8 @@ footer p + p::before,
 }
 
 /* =========================================================
-   🔥 Post 상단 빈 공간 완전 제거
+   Post meta: 2줄 레이아웃
    ========================================================= */
-article,
-.post,
-main article{
-  padding-top: 0 !important;
-  margin-top: 0 !important;
-}
-
-article header,
-.post header{
-  padding-top: 0 !important;
-  margin-top: 0 !important;
-  margin-bottom: 1rem !important;
-}
-
-article header h1,
-.post header h1,
-.post-title{
-  margin-top: 0 !important;
-  padding-top: 0 !important;
-  margin-bottom: 0.8rem !important;
-}
-
-/* Breadcrumb 간격 줄이기 */
-#breadcrumb,
-nav[aria-label="Breadcrumb"]{
-  margin-bottom: 0.5rem !important;
-}
-
-/* Post meta: 2줄 레이아웃 */
 article header .post-meta,
 .post-meta{
   display: flex !important;
@@ -580,8 +551,6 @@ article header .post-meta,
   align-items: center !important;
   gap: 0.4rem !important;
   margin-bottom: 1rem !important;
-  margin-top: 0 !important;
-  padding-top: 0 !important;
 }
 
 article header .post-meta > span,
@@ -670,23 +639,23 @@ article header .post-meta > div.d-flex > div:last-child,
 }
 
 /* =========================================================
-   🔥🔥🔥 Further Reading: 좁게 + 3개
+   🔥🔥🔥 Further Reading: 3개 + 독특한 스타일
    ========================================================= */
 #related-posts{
-  margin-top: 2rem !important;
+  margin-top: 2.5rem !important;
   clear: both !important;
 }
 
 #related-posts > h3,
 #related-posts > .panel-heading{
-  margin-bottom: 1rem !important;
-  font-size: 1.35rem !important;
+  margin-bottom: 1.5rem !important;
+  font-size: 1.5rem !important;
   color: var(--k-lime) !important;
   text-shadow: 0 0 20px rgba(163,230,53,.3);
   font-weight: 700 !important;
 }
 
-/* 🔥 Grid 좁게 (gap 줄이기) */
+/* Grid 강제 */
 #related-posts .row,
 #related-posts ul,
 #related-posts .post-list,
@@ -698,8 +667,9 @@ article header .post-meta > div.d-flex > div:last-child,
   flex-wrap: unset !important;
   flex: none !important;
   
+  /* 🔥 3개 표시 */
   grid-template-columns: repeat(3, 1fr) !important;
-  gap: 1rem !important;  /* 1.5rem → 1rem */
+  gap: 1.5rem !important;
   
   list-style: none !important;
   padding: 0 !important;
@@ -741,7 +711,7 @@ article header .post-meta > div.d-flex > div:last-child,
   display: block !important;
 }
 
-/* 카드 스타일 (padding 줄이기) */
+/* 🔥 카드 독특한 스타일 */
 #related-posts ul > li,
 #related-posts .post-list > li,
 #related-posts .post-preview,
@@ -755,30 +725,33 @@ article header .post-meta > div.d-flex > div:last-child,
   height: 100% !important;
   display: block !important;
   
+  /* 네온 카드 스타일 */
   background: rgba(45,212,191,.03) !important;
   border: 1px solid rgba(45,212,191,.2) !important;
-  border-radius: 14px !important;
+  border-radius: 16px !important;
   box-shadow: 
-    0 8px 24px rgba(0,0,0,.35),
-    0 0 0 1px rgba(45,212,191,.08) inset !important;
+    0 10px 30px rgba(0,0,0,.4),
+    0 0 0 1px rgba(45,212,191,.1) inset,
+    0 4px 0 rgba(163,230,53,.05) inset !important;
   
-  padding: 1rem !important;  /* 1.3rem → 1rem */
+  padding: 1.3rem !important;
   
   transition: all 0.3s ease !important;
   overflow: hidden !important;
   position: relative;
 }
 
+/* 🔥 호버 네온 효과 */
 #related-posts ul > li:hover,
 #related-posts .post-preview:hover,
 #related-posts .card:hover{
   background: rgba(45,212,191,.06) !important;
   border-color: rgba(163,230,53,.4) !important;
   box-shadow: 
-    0 12px 32px rgba(0,0,0,.45),
-    0 0 25px rgba(163,230,53,.2),
-    0 0 0 1px rgba(163,230,53,.15) inset !important;
-  transform: translateY(-2px) scale(1.01) !important;
+    0 15px 40px rgba(0,0,0,.5),
+    0 0 30px rgba(163,230,53,.2),
+    0 0 0 1px rgba(163,230,53,.2) inset !important;
+  transform: translateY(-3px) scale(1.02) !important;
 }
 
 /* 홀로그램 글로우 */
@@ -794,7 +767,7 @@ article header .post-meta > div.d-flex > div:last-child,
     rgba(45,212,191,.3),
     rgba(163,230,53,.0)
   );
-  border-radius: 14px;
+  border-radius: 16px;
   opacity: 0;
   filter: blur(10px);
   transition: opacity 0.3s ease;
@@ -826,39 +799,41 @@ article header .post-meta > div.d-flex > div:last-child,
 #related-posts .post-meta,
 #related-posts .text-muted{
   display: block !important;
-  font-size: 0.78rem !important;
-  opacity: 0.65 !important;
-  margin-bottom: 0.5rem !important;
+  font-size: 0.82rem !important;
+  opacity: 0.7 !important;
+  margin-bottom: 0.6rem !important;
   color: var(--k-mint) !important;
   text-transform: uppercase !important;
   letter-spacing: 0.5px !important;
 }
 
+/* 🔥 제목 네온 효과 */
 #related-posts .post-title,
 #related-posts .card-title,
 #related-posts h1,
 #related-posts h2,
 #related-posts h3,
 #related-posts h4{
-  font-size: 1.05rem !important;
+  font-size: 1.15rem !important;
   font-weight: 700 !important;
-  line-height: 1.35 !important;
-  margin: 0.4rem 0 0.6rem 0 !important;
+  line-height: 1.4 !important;
+  margin: 0.5rem 0 0.7rem 0 !important;
   color: var(--k-lime) !important;
   transition: all 0.3s ease !important;
 }
 
 #related-posts ul > li:hover .post-title,
 #related-posts .card:hover .card-title{
-  text-shadow: 0 0 12px rgba(163,230,53,.5) !important;
+  text-shadow: 0 0 15px rgba(163,230,53,.5) !important;
+  letter-spacing: 0.5px !important;
 }
 
 #related-posts .post-content,
 #related-posts .card-text,
 #related-posts p{
-  font-size: 0.85rem !important;
-  line-height: 1.5 !important;
-  opacity: 0.7 !important;
+  font-size: 0.88rem !important;
+  line-height: 1.6 !important;
+  opacity: 0.75 !important;
   margin: 0 !important;
   
   display: -webkit-box !important;
@@ -868,12 +843,14 @@ article header .post-meta > div.d-flex > div:last-child,
 }
 
 #related-posts .card .card-body{
-  padding: 1rem !important;
+  padding: 1.3rem !important;
 }
 
 /* =========================================================
    홈페이지 + 로고
    ========================================================= */
+
+/* 홈 상단 로고 */
 .home-logo{
   text-align: center !important;
   padding: 1.5rem 0 1rem 0 !important;
@@ -949,7 +926,7 @@ article header .post-meta > div.d-flex > div:last-child,
   line-height: 1.75 !important;
 }
 
-/* Tag 스타일 */
+/* 🔥 Tag 스타일 */
 .post-tag,
 a[class*="tag"]{
   background: rgba(45,212,191,.08) !important;
@@ -966,4 +943,163 @@ a[class*="tag"]:hover{
   border-color: rgba(163,230,53,.4) !important;
   box-shadow: 0 0 15px rgba(163,230,53,.2) !important;
   transform: scale(1.05) !important;
+}
+
+/* =========================================================
+ * kak4p0-custom-v18 (2026-02-17)
+ * - Fix huge top whitespace (topbar + main padding)
+ * - Put Search box near the right panel area (desktop) without intruding article
+ * - Remove the “gray bar” caused by invisible TOC placeholder
+ * - Make TOC sticky reliably
+ * - Make Further Reading 3-cards fill width cleanly
+ * - Slightly reduce post font size + tighten title/description spacing
+ * ======================================================= */
+
+/* 1) Topbar: transparent + consistent positioning */
+#topbar-wrapper {
+  background: transparent !important;
+  border-bottom: 0 !important;
+  box-shadow: none !important;
+}
+
+#topbar {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+@media (min-width: 768px) {
+  /* Force topbar to sit at the top so it never “floats” mid-page */
+  #topbar-wrapper {
+    position: fixed !important;
+    top: 0 !important;
+    left: var(--sidebar-width, 260px) !important;
+    right: 0 !important;
+    z-index: 999 !important;
+    padding-top: .25rem !important;
+    padding-bottom: .25rem !important;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
+
+  /* Ensure content starts right under the topbar (prevents huge empty space) */
+  #main-wrapper {
+    padding-top: 4.35rem !important; /* tune: topbar height + breathing room */
+  }
+}
+
+/* 2) Search box: park it above “Recently Updated” on desktop (right side) */
+@media (min-width: 1200px) {
+  /* Pull search out of flow and place it in the right-side region */
+  #topbar #search-wrapper {
+    position: fixed !important;
+    top: 5.1rem !important;   /* sits under the fixed topbar */
+    right: 2.2rem !important;
+    width: 260px !important;
+    z-index: 1000 !important;
+  }
+
+  #topbar #search-wrapper .form-control,
+  #topbar #search-wrapper input {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  /* Mobile/tablet: keep default behavior */
+  #topbar #search-wrapper {
+    position: static !important;
+    width: auto !important;
+  }
+}
+
+/* 3) Right panel: fix TOC behavior + remove the “empty gray bar” */
+#panel-wrapper {
+  overflow: visible !important; /* sticky breaks if any ancestor has overflow hidden */
+}
+
+/* Bootstrap’s .invisible keeps layout space → looks like a blank/gray bar.
+   Remove it completely while it’s invisible. */
+#toc-wrapper.invisible {
+  display: none !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+#toc-wrapper:not(.invisible) {
+  position: sticky !important;
+  top: 7.55rem !important; /* below fixed topbar + floating search */
+  max-height: calc(100vh - 8.4rem) !important;
+  overflow: auto !important;
+}
+
+/* 4) Further Reading: fill width + keep 3 cards without leftover side gap */
+@media (min-width: 1200px) {
+  /* Tail wrapper is col-xl-9 by default → leaves 3 cols empty.
+     Make it full width so 3 cards use the space. */
+  #tail-wrapper {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+/* Use CSS grid so 3 cards always spread evenly */
+#related-posts .row {
+  display: grid !important;
+  gap: 1.1rem !important;
+  margin: 0 !important;
+}
+
+@media (max-width: 767.98px) {
+  #related-posts .row { grid-template-columns: 1fr !important; }
+}
+@media (min-width: 768px) and (max-width: 991.98px) {
+  #related-posts .row { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+}
+@media (min-width: 992px) {
+  #related-posts .row { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+}
+
+#related-posts .col,
+#related-posts article {
+  max-width: none !important;
+  min-width: 0 !important;
+}
+
+/* 5) Typography: slightly smaller post text + tighter title/description */
+.post-content {
+  font-size: 0.96rem !important;
+  line-height: 1.75 !important;
+}
+
+.post-content p,
+.post-content li {
+  line-height: 1.75 !important;
+}
+
+.post-preview .post-title {
+  margin-bottom: .35rem !important;
+}
+
+.post-preview .post-content {
+  margin-top: .15rem !important;
+}
+/* 6) Post header (single post) spacing: reduce empty gap + bring title/desc closer */
+.post-header {
+  margin-top: .75rem !important;
+}
+
+.post-header .post-title,
+.post-header h1 {
+  margin-bottom: .35rem !important;
+}
+
+.post-header .post-desc,
+.post-header .post-subtitle {
+  margin-top: .25rem !important;
+}
+
+.post-meta,
+.post-tail-wrapper {
+  margin-top: .55rem !important;
 }
