@@ -852,7 +852,7 @@ article header .post-meta > div.d-flex > div:last-child,
   --kak-gap: 1.25rem;
 }
 :root {
-  --kak-search-w: clamp(140px, 10vw, 180px);
+  --kak-search-w: clamp(200px, 14vw, 240px);
 }
 
 @media (min-width: 1400px) {
@@ -925,4 +925,135 @@ article header .post-meta > div.d-flex > div:last-child,
   .post-preview .preview-img img {
     object-fit: contain;
   }
+}
+
+
+
+/* ============================================================
+   kak4p0 patch v32 (fix: search alignment to sidebar, post-meta Updated, related posts equal size)
+   ============================================================ */
+
+/* --- Variables --- */
+:root {
+  /* Search width is independent from the sidebar width.
+     (Previously, #panel-wrapper max-width incorrectly used --kak-search-w.) */
+  --kak-panel-w: 285px;
+  --kak-gap: 1.25rem;
+
+  /* Recommended: keep search within the right panel width range */
+  --kak-search-w: clamp(140px, 10vw, 180px);
+}
+@media (min-width: 1400px) {
+  :root { --kak-panel-w: 330px; }
+}
+
+/* --- 0) Sidebar panel width: DO NOT depend on search width --- */
+@media (min-width: 1200px) {
+  #panel-wrapper {
+    max-width: var(--kak-panel-w) !important;
+    flex: 0 0 var(--kak-panel-w) !important;
+  }
+}
+
+/* --- 1) Search: place it above "Recently Updated" (right panel), not above the main column --- */
+@media (min-width: 1200px) {
+  /* Some Chirpy versions constrain #topbar-wrapper to the main column width.
+     Force it to span the container so the search can align with the right panel. */
+  #topbar-wrapper {
+    width: 100% !important;
+    max-width: none !important;
+  }
+  #topbar-wrapper #topbar {
+    width: 100% !important;
+  }
+
+  /* Keep breadcrumb at the left, push search to the far right */
+  #topbar-wrapper #topbar {
+    justify-content: flex-start !important;
+  }
+  #topbar-wrapper #topbar #breadcrumb {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  #topbar-wrapper #topbar search#search,
+  #topbar-wrapper #topbar #search {
+    margin-left: auto !important;
+    width: var(--kak-search-w) !important;
+    max-width: var(--kak-search-w) !important;
+    flex: 0 0 var(--kak-search-w) !important;
+    min-width: 0 !important;
+  }
+  #topbar-wrapper #topbar search#search #search-input,
+  #topbar-wrapper #topbar #search #search-input {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  /* Remove any extra left margin that can make the search look "floating" in the middle */
+  #topbar-wrapper #topbar search#search,
+  #topbar-wrapper #topbar #search {
+    margin-right: 0 !important;
+  }
+}
+
+/* --- 2) Post meta: restore Updated + remove stray dot when Updated is hidden --- */
+.post-meta > span:not(:last-of-type)::after {
+  /* Disable the old "after previous span" dot (it shows a dangling dot if the next span is hidden) */
+  content: none !important;
+}
+
+/* Put the separator INSIDE the following span, so if it is hidden, the separator disappears too */
+.post-meta > span + span::before {
+  content: "•";
+  opacity: 0.55;
+  margin: 0 0.55rem;
+}
+
+/* Ensure the "Updated" span is visible when the theme generates it */
+@media (min-width: 768px) {
+  article header .post-meta > span:nth-of-type(2) {
+    display: inline-flex !important;
+    align-items: center;
+  }
+}
+
+/* --- 3) Further Reading: consistent card size + slightly smaller typography --- */
+#related-posts .row > div {
+  display: flex;
+}
+#related-posts .card {
+  flex: 1 1 auto;
+}
+
+/* Typography & spacing */
+#related-posts .card-body {
+  padding: 0.75rem 0.85rem;
+}
+#related-posts .card-title {
+  font-size: 0.95rem;
+  line-height: 1.25;
+  margin-bottom: 0.25rem;
+
+  /* Clamp so 3 cards look the same height */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+  min-height: 1.25em;
+}
+#related-posts .card-text {
+  font-size: 0.78rem;
+  line-height: 1.25;
+  margin-bottom: 0;
+
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+/* Reduce extra vertical breathing room under the excerpt line */
+#related-posts .card-text + * {
+  margin-top: 0 !important;
 }
