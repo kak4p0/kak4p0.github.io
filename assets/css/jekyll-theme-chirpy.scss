@@ -3,12 +3,11 @@
 @import "main";
 
 /* =========================================================
-   Kak4p0 Chirpy - v14 FINAL
-   - TOC sticky 확실히 작동 (v9 방식)
-   - Search 작게 (320px)
-   - 오른쪽 패널 더 오른쪽으로
-   - 회색바 제거
-   - Further Reading 3열 카드
+   Kak4p0 Chirpy - v15 FINAL
+   - TOC sticky 작동 ✓
+   - Post meta: 2줄 (Posted/Updated | By...읽기시간)
+   - 홈: 제목 위 공간 제거, 제목-description 붙이기
+   - Further Reading: 3열 카드
    ========================================================= */
 
 /* ---------- Palette ---------- */
@@ -210,23 +209,20 @@ main[aria-label="Main Content"] li::marker{
 }
 
 /* =========================================================
-   🔥🔥 Desktop layout (v9 방식 - 작동하는 버전)
+   Desktop layout (v9 방식)
    ========================================================= */
 @media (min-width: 992px){
-  /* 컨테이너 넓게 */
   #main-wrapper > .container{
     max-width: 1400px !important;
   }
 
-  /* 🔥 핵심: align-items를 stretch로 (v9 방식) */
   #main-wrapper > .container > .row.flex-grow-1{
     display: flex !important;
     flex-wrap: nowrap !important;
-    align-items: stretch !important;  /* ← flex-start에서 stretch로 변경! */
+    align-items: stretch !important;
     width: 100% !important;
   }
 
-  /* 메인 컨텐츠 - 더 넓게 */
   #main-wrapper > .container > .row.flex-grow-1 > main[aria-label="Main Content"]{
     flex: 1 1 0% !important;
     width: auto !important;
@@ -235,17 +231,15 @@ main[aria-label="Main Content"] li::marker{
     padding-right: 2rem !important;
   }
 
-  /* 오른쪽 패널 - 좁게 하고 더 오른쪽으로 */
   #main-wrapper > .container > .row.flex-grow-1 > aside#panel-wrapper{
     flex: 0 0 280px !important;
     width: 280px !important;
     max-width: 280px !important;
     min-width: 280px !important;
     margin-left: 2rem !important;
-    align-self: stretch !important;  /* ← flex-start에서 stretch로 변경! */
+    align-self: stretch !important;
   }
 
-  /* overflow 제거 */
   #main-wrapper,
   #main-wrapper > .container,
   #main-wrapper > .row,
@@ -256,10 +250,8 @@ main[aria-label="Main Content"] li::marker{
 }
 
 /* =========================================================
-   🔥🔥🔥 TOC sticky (v9 방식 - 100% 작동 보장)
+   🔥 TOC sticky (v9 방식)
    ========================================================= */
-
-/* 회색바 완전 제거 */
 #toc-border-cover,
 .toc-border-cover,
 #panel-wrapper .toc-border-cover,
@@ -274,21 +266,18 @@ aside#panel-wrapper .toc-border-cover{
 }
 
 @media (min-width: 992px){
-  /* 🔥 v9 핵심 1: panel-wrapper 자체는 static */
   aside#panel-wrapper{
     position: static !important;
     top: auto !important;
     align-self: stretch !important;
   }
 
-  /* 🔥 v9 핵심 2: Recently Updated, Trending Tags는 static */
   aside#panel-wrapper .access,
   aside#panel-wrapper > .access{
     position: static !important;
     top: auto !important;
   }
 
-  /* 🔥 v9 핵심 3: TOC만 sticky */
   aside#panel-wrapper section#toc-wrapper,
   section#toc-wrapper{
     position: sticky !important;
@@ -298,16 +287,12 @@ aside#panel-wrapper .toc-border-cover{
     overflow: auto !important;
   }
 
-  /* 스크롤바 스타일 */
   aside#panel-wrapper section#toc-wrapper::-webkit-scrollbar{
     width: 5px;
   }
   aside#panel-wrapper section#toc-wrapper::-webkit-scrollbar-thumb{
     background: rgba(255,255,255,.15);
     border-radius: 5px;
-  }
-  aside#panel-wrapper section#toc-wrapper::-webkit-scrollbar-track{
-    background: transparent;
   }
 }
 
@@ -352,7 +337,6 @@ aside#panel-wrapper .toc-border-cover{
     margin-left: auto !important;
   }
 
-  /* 🔥 Search 작게 */
   #topbar-wrapper #topbar #search-input{
     width: min(320px, 28vw) !important;
     height: 2rem !important;
@@ -393,26 +377,66 @@ footer p + p::before,
 }
 
 /* =========================================================
-   Post meta: Updated + 2줄 레이아웃
+   🔥🔥 Post meta: 2줄 레이아웃 (Axl0t0l 스타일)
    ========================================================= */
-.post-meta > span + span{
+article header .post-meta,
+.post-meta{
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 0.4rem !important;
+  margin-bottom: 1rem !important;
+}
+
+/* 1줄: Posted • Updated */
+article header .post-meta > span,
+.post-meta > span{
   display: inline-flex !important;
-  align-items: center;
+  align-items: center !important;
+  gap: 0.35rem !important;
+  white-space: nowrap !important;
 }
 
+/* Posted와 Updated 사이 점 */
+article header .post-meta > span:not(:last-of-type)::after,
+.post-meta > span:not(:last-of-type)::after{
+  content: "•" !important;
+  opacity: 0.6 !important;
+  margin-left: 0.4rem !important;
+}
+
+/* 2줄: By kak4p0 (왼쪽) | 6 min read (오른쪽) */
+article header .post-meta > div.d-flex.justify-content-between,
+.post-meta > div.d-flex.justify-content-between,
+.post-meta > .d-flex{
+  flex: 0 0 100% !important;
+  width: 100% !important;
+  margin-top: 0.25rem !important;
+  
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+
+/* By kak4p0 */
+article header .post-meta > div.d-flex > div:first-child,
+.post-meta > .d-flex > div:first-child{
+  flex: 0 0 auto !important;
+}
+
+/* 6 min read (오른쪽 끝) */
+article header .post-meta > div.d-flex > div:last-child,
+.post-meta > .d-flex > div:last-child,
+.post-meta .readtime{
+  margin-left: auto !important;
+  flex: 0 0 auto !important;
+  white-space: nowrap !important;
+}
+
+/* time 태그 여백 */
 .post-meta > span > time{
-  margin-left: .35rem;
-}
-
-.post-meta > span + span::before{
-  content: "•";
-  opacity: .6;
-  margin: 0 .55rem 0 .45rem;
-}
-
-.post-meta > .d-flex.justify-content-between{
-  flex: 0 0 100%;
-  margin-top: .35rem;
+  margin-left: 0.35rem !important;
 }
 
 /* =========================================================
@@ -420,142 +444,250 @@ footer p + p::before,
    ========================================================= */
 .post-tail-wrapper .post-tail-bottom,
 #post-tail-wrapper .post-tail-bottom{
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: .5rem 1rem;
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: .5rem 1rem !important;
 }
 
 .post-tail-wrapper .license-wrapper,
 #post-tail-wrapper .license-wrapper{
-  flex: 1 1 auto;
-  margin: 0;
+  flex: 1 1 auto !important;
+  margin: 0 !important;
 }
 
 .post-tail-wrapper .share-wrapper,
 #post-tail-wrapper .share-wrapper{
-  margin-left: auto;
-  display: inline-flex;
-  align-items: center;
-  gap: .5rem;
+  margin-left: auto !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: .5rem !important;
 }
 
 .post-tail-wrapper .share-wrapper .share-icons,
 #post-tail-wrapper .share-wrapper .share-icons{
-  display: inline-flex;
-  align-items: center;
-  gap: .4rem;
-  margin: 0;
-  padding: 0;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: .4rem !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
 }
 
 .post-tail-wrapper .share-wrapper .share-icons > li,
 #post-tail-wrapper .share-wrapper .share-icons > li{
-  list-style: none;
-  margin: 0;
+  list-style: none !important;
+  margin: 0 !important;
 }
 
 /* =========================================================
-   🔥 Further Reading: 3열 카드
+   🔥🔥 Further Reading: 3열 카드 (강제)
    ========================================================= */
-#related-posts .card,
-.post-tail-wrapper #related-posts .card{
-  border-radius: 1rem;
-  border: 1px solid rgba(255, 255, 255, .08);
-  background: rgba(255, 255, 255, .03);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, .35);
-  overflow: hidden;
+#related-posts{
+  margin-top: 2.5rem !important;
+  clear: both !important;
 }
 
-#related-posts .card .card-body{
-  padding: 1.15rem;
+#related-posts > h3,
+#related-posts > .panel-heading{
+  margin-bottom: 1.25rem !important;
+  font-size: 1.35rem !important;
 }
 
+/* 모든 컨테이너에 Grid 강제 적용 */
+#related-posts .row,
 #related-posts ul,
 #related-posts .post-list{
-  list-style: none;
-  padding-left: 0;
-  margin: 1rem 0 0 0;
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 1.25rem !important;
+  
+  margin-left: 0 !important;
+  margin-right: 0 !important;
 }
 
 @media (max-width: 1199px){
+  #related-posts .row,
   #related-posts ul,
   #related-posts .post-list{
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(2, 1fr) !important;
   }
 }
 
 @media (max-width: 767px){
+  #related-posts .row,
   #related-posts ul,
   #related-posts .post-list{
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
   }
 }
 
+/* Bootstrap column 무력화 */
+#related-posts .row > [class*="col"],
+#related-posts .row > div{
+  padding: 0 !important;
+  margin: 0 !important;
+  width: auto !important;
+  max-width: none !important;
+  flex: none !important;
+}
+
+/* 카드 스타일 */
 #related-posts ul > li,
 #related-posts .post-list > li,
-#related-posts .post-preview{
-  border-radius: 1rem;
-  border: 1px solid rgba(255, 255, 255, .08);
-  background: rgba(255, 255, 255, .03);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, .35);
-  padding: 1.15rem;
-  margin: 0;
+#related-posts .post-preview,
+#related-posts .card,
+#related-posts .row > * > .card,
+#related-posts .row > * > .post-preview{
+  list-style: none !important;
+  
+  background: rgba(255,255,255,.04) !important;
+  border: 1px solid rgba(255,255,255,.1) !important;
+  border-radius: 1rem !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,.3) !important;
+  
+  padding: 1.15rem !important;
+  margin: 0 !important;
+  height: 100% !important;
+  
+  transition: all 0.25s ease !important;
+  overflow: hidden !important;
+}
+
+#related-posts ul > li:hover,
+#related-posts .post-preview:hover,
+#related-posts .card:hover{
+  background: rgba(255,255,255,.06) !important;
+  border-color: rgba(45,212,191,.3) !important;
+  box-shadow: 0 12px 32px rgba(0,0,0,.4) !important;
+  transform: translateY(-2px) !important;
 }
 
 #related-posts ul > li > a,
-#related-posts .post-list > li > a{
-  display: block;
-  text-decoration: none;
+#related-posts .post-preview > a,
+#related-posts .card > a{
+  display: block !important;
+  text-decoration: none !important;
+  color: inherit !important;
+}
+
+#related-posts time,
+#related-posts .date,
+#related-posts .post-meta{
+  display: block !important;
+  font-size: 0.85rem !important;
+  opacity: 0.65 !important;
+  margin-bottom: 0.5rem !important;
 }
 
 #related-posts .post-title,
+#related-posts .card-title,
 #related-posts h1,
 #related-posts h2,
-#related-posts h3{
-  margin-top: .25rem;
-  margin-bottom: .5rem;
+#related-posts h3,
+#related-posts h4{
+  font-size: 1.1rem !important;
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+  margin: 0.5rem 0 0.65rem 0 !important;
+  color: var(--k-mint) !important;
+}
+
+#related-posts .post-content,
+#related-posts .card-text,
+#related-posts p{
+  font-size: 0.9rem !important;
+  line-height: 1.5 !important;
+  opacity: 0.8 !important;
+  margin: 0 !important;
+  
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+}
+
+#related-posts .card .card-body{
+  padding: 1.15rem !important;
 }
 
 /* =========================================================
-   홈페이지 간격 조정 (v13 기능 유지)
+   🔥🔥 홈페이지: 간격 최소화 + 로고 영역
    ========================================================= */
-#page-title{
-  margin-top: 0.2rem !important;
-  margin-bottom: 1.0rem !important;
+
+/* 페이지 타이틀 상단 여백 제거 */
+#page-title,
+.page-title{
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+  margin-bottom: 0.8rem !important;
 }
 
+/* 홈 리스트 */
 #post-list{
-  .card-wrapper{ 
-    margin-top: 1.1rem !important; 
-  }
-
-  .post-preview.card{
-    .card-body{
-      padding-top: 1.15rem !important;
-      padding-bottom: 1.15rem !important;
-    }
-
-    .card-title{
-      margin-top: 0 !important;
-      margin-bottom: .35rem !important;
-      line-height: 1.25;
-    }
-
-    .card-text.content{
-      margin-top: 0 !important;
-      margin-bottom: .65rem !important;
-      font-size: 0.95rem;
-      line-height: 1.6;
-    }
-  }
+  padding-top: 0 !important;
+  margin-top: 0 !important;
 }
 
-/* Typography 조정 (v13 기능 유지) */
+/* 카드 간격 */
+#post-list .card-wrapper{
+  margin-top: 0.9rem !important;
+  margin-bottom: 0.9rem !important;
+}
+
+#post-list .post-preview.card{
+  padding: 0 !important;
+}
+
+#post-list .post-preview.card .card-body{
+  padding: 1rem 1.2rem !important;
+}
+
+/* 🔥 제목 상단 여백 제거 + description 붙이기 */
+#post-list .card-title,
+#post-list .post-preview .card-title{
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+  margin-bottom: 0.25rem !important;
+  line-height: 1.3 !important;
+}
+
+/* 🔥 description을 제목에 바로 붙이기 */
+#post-list .card-text.content,
+#post-list .post-preview .card-text{
+  margin-top: 0.25rem !important;
+  margin-bottom: 0.5rem !important;
+  font-size: 0.93rem !important;
+  line-height: 1.55 !important;
+}
+
+/* Post meta (날짜/카테고리) */
+#post-list .post-meta{
+  margin-bottom: 0.5rem !important;
+}
+
+/* 🔥 로고 영역 추가 (홈 상단 여백 활용) */
+#main-wrapper > .container{
+  position: relative !important;
+}
+
+/* 로고를 넣고 싶다면 이 클래스를 사용 */
+.blog-logo{
+  position: absolute !important;
+  top: -60px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: 120px !important;
+  height: 120px !important;
+  z-index: 10 !important;
+}
+
+/* Typography 조정 */
 .post-content{
-  font-size: 0.97rem;
-  line-height: 1.75;
+  font-size: 0.97rem !important;
+  line-height: 1.75 !important;
 }
