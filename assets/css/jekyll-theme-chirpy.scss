@@ -946,118 +946,135 @@ a[class*="tag"]:hover{
 }
 
 /* =========================================================
-   kak4p0-custom-v19 (layout polish + bugfixes)
-   - keep everything in assets/css/jekyll-theme-chirpy.scss
+   kak4p0-custom-v20 (top spacing fix + related-posts sizing)
+   - Fix: Excessive top whitespace on desktop
+   - Fix: Further Reading width + 3-column layout (doesn't bleed to the right edge)
+   - Keep: Search box pinned to top-right on the topbar line
    ========================================================= */
 
-/* overall text slightly smaller */
-html { font-size: 15.5px; }
+/* base font slightly smaller (readability) */
+html { font-size: 15px; }
 
-/* if some flex rules end up bottom-aligning, force start */
-#main-wrapper .row.flex-grow-1 {
+/* -------------------------
+   1) Layout: prevent content from sitting too low on the page
+   ------------------------- */
+#main-wrapper {
   align-items: flex-start !important;
 }
 
-/* ---------- Topbar: breadcrumb left, search right (no gray bar) ---------- */
+#main-wrapper > .container,
+#main-wrapper > .container-fluid {
+  padding-top: 0.75rem !important;
+}
+
+#main-wrapper > .container > .row,
+#main-wrapper > .container-fluid > .row {
+  align-items: flex-start !important;
+}
+
+/* reduce post-header top gap a bit more */
+#post-wrapper { padding-top: 0.25rem !important; }
+header.post-header { margin-top: 0.25rem !important; }
+
+/* -------------------------
+   2) Topbar: transparent + search placement
+   ------------------------- */
 #topbar-wrapper {
   background: transparent !important;
   box-shadow: none !important;
-  border-bottom: 0 !important;
 }
 
 #topbar {
   background: transparent !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  gap: 0.9rem;
+  border-bottom: 0 !important;
 }
 
-/* breadcrumb container id in Chirpy is usually #breadcrumb */
-#breadcrumb {
-  flex: 1 1 auto;
-  min-width: 0;
+/* Search stays on the same top line (next to breadcrumb) */
+#topbar #search-wrapper {
+  position: fixed !important;
+  right: 2.25rem !important;
+  top: 1.05rem !important;
+  width: 16rem;
+  max-width: calc(100vw - 3.5rem);
+  z-index: 9999;
 }
 
-/* search wrapper id in Chirpy is usually #search-wrapper */
-#search-wrapper {
-  flex: 0 0 auto;
-  margin-left: auto !important;
-  width: 18rem;
-  max-width: 40vw;
+@media (max-width: 576px) {
+  #topbar #search-wrapper { width: 12rem; }
 }
 
-@media (max-width: 768px) {
-  #search-wrapper {
-    width: 12rem;
-    max-width: 55vw;
+/* -------------------------
+   3) TOC: don't kill it when it starts as .invisible
+   ------------------------- */
+#toc-wrapper {
+  position: sticky !important;
+  top: 5.2rem !important;
+  max-height: calc(100vh - 5.2rem) !important;
+  overflow: auto;
+}
+
+/* Chirpy sets .invisible before JS populates TOC; keep the element alive */
+#toc-wrapper.invisible {
+  display: block !important;
+  visibility: hidden !important;
+}
+
+#toc-wrapper:not(.invisible) {
+  visibility: visible !important;
+}
+
+/* hide the small "border cover" bar */
+.toc-border-cover { display: none !important; }
+
+/* -------------------------
+   4) Right panel: keep it aligned to top (optional but helps consistency)
+   ------------------------- */
+#panel-wrapper {
+  align-self: flex-start !important;
+}
+
+/* -------------------------
+   5) Further Reading: limit width + show up to 3 cards without stretching
+   ------------------------- */
+#related-posts {
+  max-width: 54rem;            /* roughly matches post content width */
+  margin: 0 auto !important;   /* center within tail wrapper */
+  width: 100% !important;
+}
+
+/* If the browser supports it, shrink-to-fit when only 1~2 cards exist */
+@supports (width: fit-content) {
+  #related-posts {
+    width: fit-content !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: auto !important;
   }
 }
 
-/* make the search pill subtle and keep it from looking like a big gray bar */
-#search-wrapper,
-#search-wrapper * {
-  outline: none !important;
-}
-
-#search-wrapper .search-bar,
-#search-wrapper form {
-  background: rgba(0, 0, 0, 0.18) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  border-radius: 999px !important;
-}
-
-#search-wrapper input {
-  background: transparent !important;
-}
-
-/* ---------- Right panel: remove the empty gray blocks ---------- */
-/* the bar inserted before TOC */
-aside#panel-wrapper .toc-border-cover {
-  display: none !important;
-}
-
-/* if TOC is still 'invisible', don't reserve layout height */
-#toc-wrapper.invisible {
-  display: none !important;
-}
-
-/* ---------- Further Reading: responsive grid that doesn't reserve empty columns ---------- */
-#related-posts .row {
+#related-posts > .row {
   display: grid !important;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important;
-  gap: 1.25rem !important;
-  margin-left: 0 !important;
-  margin-right: 0 !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.1rem;
+  margin: 0 !important;
 }
 
-#related-posts .row > div {
+#related-posts > .row > .col {
+  padding: 0 !important;
   width: auto !important;
-  max-width: none !important;
-  padding-left: 0 !important;
-  padding-right: 0 !important;
 }
 
-#related-posts .post-preview {
-  height: 100%;
+@media (max-width: 991.98px) {
+  #related-posts {
+    width: 100% !important;
+    margin: 0 !important;
+  }
+  #related-posts > .row { grid-template-columns: 1fr; }
 }
 
-/* ---------- Home list spacing: remove the “title floats” feeling ---------- */
-#post-list .post-preview {
-  padding: 1.35rem 1.6rem !important;
+@media (min-width: 992px) and (max-width: 1399.98px) {
+  #related-posts > .row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-#post-list .post-preview h1,
-#post-list .post-preview h2 {
-  margin-top: 0 !important;
-  margin-bottom: 0.35rem !important;
-}
+#related-posts .card { height: 100%; }
 
-#post-list .post-preview .post-content {
-  margin-top: 0.25rem !important;
-}
-
-/* Optional: tighten post header stack a bit */
-header.post-header {
-  margin-top: 0.2rem;
-}
