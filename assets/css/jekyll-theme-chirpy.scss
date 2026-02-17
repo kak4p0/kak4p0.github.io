@@ -3,17 +3,17 @@
 @import "main";
 
 /* =========================================================
-   Kak4p0 Chirpy - v16 FINAL COMPLETE
-   - Further Reading: 3열 카드 초강력 강제
-   - 회색바 완전 제거
-   - 카카포 컨셉 (초록/라임)
-   - 사이드바 일정표
+   Kak4p0 Chirpy - v17 UNIQUE STYLE
+   - 카카포 독특한 컨셉 (네온/홀로그램)
+   - Further Reading 3개 표시
+   - 차별화된 디자인
    ========================================================= */
 
 /* ---------- Palette ---------- */
 :root{
   --k-mint: #2dd4bf;
   --k-lime: #a3e635;
+  --k-neon-green: #39ff14;
   --k-ink:  #0a0f12;
   --k-ink2: #0d1417;
   --k-surface: rgba(255,255,255,.035);
@@ -51,6 +51,34 @@ body::before{
   border: 1px solid var(--k-border) !important;
   border-radius: 18px !important;
   box-shadow: 0 10px 30px rgba(0,0,0,.25);
+  position: relative !important;
+}
+
+/* 🔥 카드 네온 효과 */
+.card::after,
+.card-wrapper::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  padding: 1px;
+  background: linear-gradient(135deg, 
+    rgba(45,212,191,.0) 0%, 
+    rgba(45,212,191,.2) 50%, 
+    rgba(163,230,53,.0) 100%);
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.card:hover::after,
+.card-wrapper:hover::after{
+  opacity: 1;
 }
 
 /* ---------- Links ---------- */
@@ -58,8 +86,14 @@ a, .post-content a{
   color: var(--k-mint);
   text-decoration-thickness: 1px;
   text-underline-offset: 3px;
+  position: relative;
+  transition: all 0.3s ease;
 }
-a:hover, .post-content a:hover{ color: var(--k-lime); }
+
+a:hover, .post-content a:hover{ 
+  color: var(--k-lime);
+  text-shadow: 0 0 8px rgba(163,230,53,.4);
+}
 
 /* ---------- Post readability ---------- */
 .post-content{
@@ -68,7 +102,7 @@ a:hover, .post-content a:hover{ color: var(--k-lime); }
 }
 .post-content p{ margin-bottom: 1.05rem; }
 
-/* Headings accent bar */
+/* 🔥 Headings 네온 바 */
 .post-content h2,
 .post-content h3{
   position: relative;
@@ -84,20 +118,55 @@ a:hover, .post-content a:hover{ color: var(--k-lime); }
   height: 1.1em;
   border-radius: 999px;
   background: linear-gradient(180deg, rgba(45,212,191,.9), rgba(163,230,53,.9));
-  box-shadow: 0 0 16px rgba(45,212,191,.18);
+  box-shadow: 
+    0 0 16px rgba(45,212,191,.18),
+    0 0 8px rgba(163,230,53,.2);
+  animation: pulse-glow 2s ease-in-out infinite;
 }
 
-/* ---------- Code blocks ---------- */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 16px rgba(45,212,191,.18), 0 0 8px rgba(163,230,53,.2); }
+  50% { box-shadow: 0 0 24px rgba(45,212,191,.3), 0 0 12px rgba(163,230,53,.4); }
+}
+
+/* ---------- 🔥 Code blocks 홀로그램 ---------- */
 div.highlighter-rouge,
 figure.highlight,
 div.highlight{
   background: rgba(0,0,0,.34) !important;
   border: 1px solid rgba(45,212,191,.18) !important;
   border-radius: 16px !important;
-  box-shadow: 0 10px 26px rgba(0,0,0,.28) !important;
+  box-shadow: 
+    0 10px 26px rgba(0,0,0,.28),
+    0 0 0 1px rgba(45,212,191,.05) inset,
+    0 1px 0 rgba(163,230,53,.1) inset !important;
   overflow: hidden;
   max-width: 100% !important;
+  position: relative;
 }
+
+/* 홀로그램 스캔라인 효과 */
+div.highlighter-rouge::before,
+figure.highlight::before,
+div.highlight::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(45,212,191,.02) 0px,
+    transparent 2px,
+    transparent 4px
+  );
+  pointer-events: none;
+  animation: scanline 8s linear infinite;
+}
+
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
 div.highlighter-rouge pre,
 figure.highlight pre,
 div.highlight pre{
@@ -108,6 +177,7 @@ div.highlight pre{
   overflow-x: auto !important;
   max-width: 100% !important;
 }
+
 .post-content table{
   display: block;
   overflow-x: auto;
@@ -149,6 +219,30 @@ div.highlight pre{
   border-right: 1px solid rgba(255,255,255,.06);
   display: flex !important;
   flex-direction: column !important;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 🔥 Sidebar 파동 효과 */
+#sidebar::after{
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle at center,
+    rgba(45,212,191,.08) 0%,
+    transparent 70%
+  );
+  animation: wave 15s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes wave {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-10%, -10%); }
 }
 
 #sidebar ul{
@@ -169,7 +263,8 @@ div.highlight pre{
   border: 1px solid rgba(163,230,53,.18) !important;
   box-shadow:
     0 0 0 1px rgba(45,212,191,.10) inset,
-    0 12px 28px rgba(0,0,0,.35);
+    0 12px 28px rgba(0,0,0,.35),
+    0 0 20px rgba(45,212,191,.15);
 }
 
 #sidebar .sidebar-bottom{
@@ -181,13 +276,21 @@ div.highlight pre{
   justify-content: center !important;
   align-items: center !important;
   flex-wrap: nowrap !important;
+  position: relative;
+  z-index: 1;
 }
 #sidebar .sidebar-bottom a{
   margin: 0 !important;
   transform: none !important;
+  transition: all 0.3s ease !important;
 }
 
-/* 🔥 사이드바 일정표 스타일 */
+#sidebar .sidebar-bottom a:hover{
+  transform: scale(1.1) !important;
+  filter: drop-shadow(0 0 8px rgba(163,230,53,.5));
+}
+
+/* 사이드바 일정표 */
 .sidebar-schedule{
   padding: 1rem 1.2rem !important;
   margin: 1.5rem 1rem 0 1rem !important;
@@ -195,6 +298,8 @@ div.highlight pre{
   border: 1px solid rgba(45,212,191,.15) !important;
   border-radius: 12px !important;
   box-shadow: 0 4px 12px rgba(45,212,191,.08) !important;
+  position: relative;
+  z-index: 1;
 }
 
 .sidebar-schedule h4{
@@ -203,6 +308,7 @@ div.highlight pre{
   color: var(--k-lime) !important;
   font-weight: 600 !important;
   text-align: center !important;
+  text-shadow: 0 0 10px rgba(163,230,53,.3);
 }
 
 .sidebar-schedule ul{
@@ -301,10 +407,8 @@ main[aria-label="Main Content"] li::marker{
 }
 
 /* =========================================================
-   🔥🔥 TOC sticky + 회색바 완전 제거
+   TOC sticky + 회색바 제거
    ========================================================= */
-
-/* 회색바 핵폭탄급 제거 */
 #toc-border-cover,
 .toc-border-cover,
 #panel-wrapper .toc-border-cover,
@@ -352,7 +456,7 @@ div.toc-border-cover{
     width: 5px;
   }
   aside#panel-wrapper section#toc-wrapper::-webkit-scrollbar-thumb{
-    background: rgba(255,255,255,.15);
+    background: rgba(45,212,191,.3);
     border-radius: 5px;
   }
 }
@@ -535,7 +639,7 @@ article header .post-meta > div.d-flex > div:last-child,
 }
 
 /* =========================================================
-   🔥🔥🔥 Further Reading: 핵폭탄급 3열 카드 강제
+   🔥🔥🔥 Further Reading: 3개 + 독특한 스타일
    ========================================================= */
 #related-posts{
   margin-top: 2.5rem !important;
@@ -544,29 +648,29 @@ article header .post-meta > div.d-flex > div:last-child,
 
 #related-posts > h3,
 #related-posts > .panel-heading{
-  margin-bottom: 1.25rem !important;
-  font-size: 1.35rem !important;
+  margin-bottom: 1.5rem !important;
+  font-size: 1.5rem !important;
   color: var(--k-lime) !important;
+  text-shadow: 0 0 20px rgba(163,230,53,.3);
+  font-weight: 700 !important;
 }
 
-/* 🔥 Bootstrap을 완전히 무력화하고 Grid로 강제 변환 */
+/* Grid 강제 */
 #related-posts .row,
 #related-posts ul,
 #related-posts .post-list,
 #related-posts > .row,
 .post-tail-wrapper #related-posts .row,
 #related-posts > ul{
-  /* Bootstrap 완전 무력화 */
   display: grid !important;
   flex-direction: unset !important;
   flex-wrap: unset !important;
   flex: none !important;
   
-  /* Grid 강제 */
+  /* 🔥 3개 표시 */
   grid-template-columns: repeat(3, 1fr) !important;
-  gap: 1.25rem !important;
+  gap: 1.5rem !important;
   
-  /* 초기화 */
   list-style: none !important;
   padding: 0 !important;
   margin: 0 !important;
@@ -592,25 +696,22 @@ article header .post-meta > div.d-flex > div:last-child,
   }
 }
 
-/* Bootstrap column을 완전히 무력화 */
+/* Bootstrap 무력화 */
 #related-posts .row > *,
 #related-posts .row > [class*="col"],
 #related-posts .row > div,
 #related-posts .row > [class^="col"]{
-  /* Bootstrap 완전 제거 */
   flex: none !important;
   flex-basis: auto !important;
   max-width: none !important;
   width: auto !important;
   float: none !important;
-  
-  /* Grid item */
   padding: 0 !important;
   margin: 0 !important;
   display: block !important;
 }
 
-/* 카드 스타일 (카카포 컨셉) */
+/* 🔥 카드 독특한 스타일 */
 #related-posts ul > li,
 #related-posts .post-list > li,
 #related-posts .post-preview,
@@ -619,36 +720,70 @@ article header .post-meta > div.d-flex > div:last-child,
 #related-posts .row > * > .post-preview,
 #related-posts .row > [class*="col"] > .card,
 #related-posts .row > div > .card{
-  /* 초기화 */
   list-style: none !important;
   margin: 0 !important;
   height: 100% !important;
   display: block !important;
   
-  /* 카카포 스타일 */
-  background: rgba(45,212,191,.04) !important;
-  border: 1px solid rgba(45,212,191,.15) !important;
-  border-radius: 1rem !important;
+  /* 네온 카드 스타일 */
+  background: rgba(45,212,191,.03) !important;
+  border: 1px solid rgba(45,212,191,.2) !important;
+  border-radius: 16px !important;
   box-shadow: 
-    0 8px 24px rgba(0,0,0,.3),
-    0 0 0 1px rgba(45,212,191,.05) inset !important;
+    0 10px 30px rgba(0,0,0,.4),
+    0 0 0 1px rgba(45,212,191,.1) inset,
+    0 4px 0 rgba(163,230,53,.05) inset !important;
   
-  padding: 1.15rem !important;
+  padding: 1.3rem !important;
   
-  transition: all 0.25s ease !important;
+  transition: all 0.3s ease !important;
   overflow: hidden !important;
+  position: relative;
 }
 
-/* Hover (카카포 라임 효과) */
+/* 🔥 호버 네온 효과 */
 #related-posts ul > li:hover,
 #related-posts .post-preview:hover,
 #related-posts .card:hover{
-  background: rgba(163,230,53,.06) !important;
-  border-color: rgba(163,230,53,.3) !important;
+  background: rgba(45,212,191,.06) !important;
+  border-color: rgba(163,230,53,.4) !important;
   box-shadow: 
-    0 12px 32px rgba(0,0,0,.4),
-    0 0 20px rgba(163,230,53,.15) !important;
-  transform: translateY(-2px) !important;
+    0 15px 40px rgba(0,0,0,.5),
+    0 0 30px rgba(163,230,53,.2),
+    0 0 0 1px rgba(163,230,53,.2) inset !important;
+  transform: translateY(-3px) scale(1.02) !important;
+}
+
+/* 홀로그램 글로우 */
+#related-posts ul > li::before,
+#related-posts .post-preview::before,
+#related-posts .card::before{
+  content: "";
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(
+    135deg,
+    rgba(45,212,191,.0),
+    rgba(45,212,191,.3),
+    rgba(163,230,53,.0)
+  );
+  border-radius: 16px;
+  opacity: 0;
+  filter: blur(10px);
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+#related-posts ul > li:hover::before,
+#related-posts .post-preview:hover::before,
+#related-posts .card:hover::before{
+  opacity: 1;
+  animation: glow-rotate 3s linear infinite;
+}
+
+@keyframes glow-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 #related-posts ul > li > a,
@@ -664,31 +799,41 @@ article header .post-meta > div.d-flex > div:last-child,
 #related-posts .post-meta,
 #related-posts .text-muted{
   display: block !important;
-  font-size: 0.85rem !important;
-  opacity: 0.65 !important;
-  margin-bottom: 0.5rem !important;
+  font-size: 0.82rem !important;
+  opacity: 0.7 !important;
+  margin-bottom: 0.6rem !important;
   color: var(--k-mint) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
 }
 
+/* 🔥 제목 네온 효과 */
 #related-posts .post-title,
 #related-posts .card-title,
 #related-posts h1,
 #related-posts h2,
 #related-posts h3,
 #related-posts h4{
-  font-size: 1.1rem !important;
-  font-weight: 600 !important;
+  font-size: 1.15rem !important;
+  font-weight: 700 !important;
   line-height: 1.4 !important;
-  margin: 0.5rem 0 0.65rem 0 !important;
+  margin: 0.5rem 0 0.7rem 0 !important;
   color: var(--k-lime) !important;
+  transition: all 0.3s ease !important;
+}
+
+#related-posts ul > li:hover .post-title,
+#related-posts .card:hover .card-title{
+  text-shadow: 0 0 15px rgba(163,230,53,.5) !important;
+  letter-spacing: 0.5px !important;
 }
 
 #related-posts .post-content,
 #related-posts .card-text,
 #related-posts p{
-  font-size: 0.9rem !important;
-  line-height: 1.5 !important;
-  opacity: 0.8 !important;
+  font-size: 0.88rem !important;
+  line-height: 1.6 !important;
+  opacity: 0.75 !important;
   margin: 0 !important;
   
   display: -webkit-box !important;
@@ -698,11 +843,11 @@ article header .post-meta > div.d-flex > div:last-child,
 }
 
 #related-posts .card .card-body{
-  padding: 1.15rem !important;
+  padding: 1.3rem !important;
 }
 
 /* =========================================================
-   🔥 홈페이지 + 로고
+   홈페이지 + 로고
    ========================================================= */
 
 /* 홈 상단 로고 */
@@ -728,6 +873,7 @@ article header .post-meta > div.d-flex > div:last-child,
   box-shadow: 
     0 12px 32px rgba(45,212,191,.3),
     0 0 40px rgba(163,230,53,.2) !important;
+  border-color: rgba(163,230,53,.5) !important;
 }
 
 #page-title,
@@ -778,4 +924,248 @@ article header .post-meta > div.d-flex > div:last-child,
 .post-content{
   font-size: 0.97rem !important;
   line-height: 1.75 !important;
+}
+
+/* 🔥 Tag 스타일 */
+.post-tag,
+a[class*="tag"]{
+  background: rgba(45,212,191,.08) !important;
+  border: 1px solid rgba(45,212,191,.2) !important;
+  padding: 0.25rem 0.7rem !important;
+  border-radius: 999px !important;
+  font-size: 0.85rem !important;
+  transition: all 0.3s ease !important;
+}
+
+.post-tag:hover,
+a[class*="tag"]:hover{
+  background: rgba(163,230,53,.12) !important;
+  border-color: rgba(163,230,53,.4) !important;
+  box-shadow: 0 0 15px rgba(163,230,53,.2) !important;
+  transform: scale(1.05) !important;
+}
+
+/* =========================================================
+   kak4p0-custom-v20 (top spacing fix + related-posts sizing)
+   - Fix: Excessive top whitespace on desktop
+   - Fix: Further Reading width + 3-column layout (doesn't bleed to the right edge)
+   - Keep: Search box pinned to top-right on the topbar line
+   ========================================================= */
+
+/* base font slightly smaller (readability) */
+html { font-size: 15px; }
+
+/* -------------------------
+   1) Layout: prevent content from sitting too low on the page
+   ------------------------- */
+#main-wrapper {
+  align-items: flex-start !important;
+}
+
+#main-wrapper > .container,
+#main-wrapper > .container-fluid {
+  padding-top: 0.75rem !important;
+}
+
+#main-wrapper > .container > .row,
+#main-wrapper > .container-fluid > .row {
+  align-items: flex-start !important;
+}
+
+/* reduce post-header top gap a bit more */
+#post-wrapper { padding-top: 0.25rem !important; }
+header.post-header { margin-top: 0.25rem !important; }
+
+/* -------------------------
+   2) Topbar: transparent + search placement
+   ------------------------- */
+#topbar-wrapper {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+#topbar {
+  background: transparent !important;
+  border-bottom: 0 !important;
+}
+
+/* Search stays on the same top line (next to breadcrumb) */
+#topbar #search-wrapper {
+  position: fixed !important;
+  right: 2.25rem !important;
+  top: 1.05rem !important;
+  width: 16rem;
+  max-width: calc(100vw - 3.5rem);
+  z-index: 9999;
+}
+
+@media (max-width: 576px) {
+  #topbar #search-wrapper { width: 12rem; }
+}
+
+/* -------------------------
+   3) TOC: don't kill it when it starts as .invisible
+   ------------------------- */
+#toc-wrapper {
+  position: sticky !important;
+  top: 5.2rem !important;
+  max-height: calc(100vh - 5.2rem) !important;
+  overflow: auto;
+}
+
+/* Chirpy sets .invisible before JS populates TOC; keep the element alive */
+#toc-wrapper.invisible {
+  display: block !important;
+  visibility: hidden !important;
+}
+
+#toc-wrapper:not(.invisible) {
+  visibility: visible !important;
+}
+
+/* hide the small "border cover" bar */
+.toc-border-cover { display: none !important; }
+
+/* -------------------------
+   4) Right panel: keep it aligned to top (optional but helps consistency)
+   ------------------------- */
+#panel-wrapper {
+  align-self: flex-start !important;
+}
+
+/* -------------------------
+   5) Further Reading: limit width + show up to 3 cards without stretching
+   ------------------------- */
+#related-posts {
+  max-width: 54rem;            /* roughly matches post content width */
+  margin: 0 auto !important;   /* center within tail wrapper */
+  width: 100% !important;
+}
+
+/* If the browser supports it, shrink-to-fit when only 1~2 cards exist */
+@supports (width: fit-content) {
+  #related-posts {
+    width: fit-content !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: auto !important;
+  }
+}
+
+#related-posts > .row {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.1rem;
+  margin: 0 !important;
+}
+
+#related-posts > .row > .col {
+  padding: 0 !important;
+  width: auto !important;
+}
+
+@media (max-width: 991.98px) {
+  #related-posts {
+    width: 100% !important;
+    margin: 0 !important;
+  }
+  #related-posts > .row { grid-template-columns: 1fr; }
+}
+
+@media (min-width: 992px) and (max-width: 1399.98px) {
+  #related-posts > .row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+#related-posts .card { height: 100%; }
+
+/* =========================================================
+   kak4p0-custom-v21 (fix: huge top gap + tail width)
+   ========================================================= */
+
+/* 1) Fix the massive empty space above post header.
+   Root cause: #main-wrapper is a flex container and (in Chirpy) can be column;
+   the Bootstrap class `justify-content-center` then vertically centers the whole page.
+   Force flex-start to keep content pinned to the top.
+*/
+#main-wrapper{
+  justify-content: flex-start !important;
+  align-items: stretch !important;
+  min-height: auto !important;
+}
+
+/* Keep the topbar compact */
+#topbar-wrapper{
+  margin-bottom: 0 !important;
+}
+#topbar{
+  margin-bottom: 0 !important;
+}
+
+/* Reduce extra vertical padding at the start of the main container */
+#main-wrapper > .container{
+  padding-top: .5rem !important;
+}
+
+/* Post header should not introduce extra top spacing */
+header.post-header{
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+.post-content{
+  padding-top: 0 !important;
+}
+
+/* 2) Constrain the post tail ("Further Reading") to the same width as the main content
+   so it doesn't extend under the right panel/TOC area.
+*/
+#tail-wrapper{
+  margin-right: auto !important;
+  margin-left: 0 !important;
+}
+
+/* Match Chirpy column widths even if the markup changes */
+@media (min-width: 1200px){
+  #tail-wrapper{ width: 75% !important; max-width: 75% !important; }
+}
+@media (min-width: 992px) and (max-width: 1199.98px){
+  #tail-wrapper{ width: 91.6666667% !important; max-width: 91.6666667% !important; }
+}
+
+/* 3) Further Reading cards: keep 3-up sizing on desktop (no single card stretching full width) */
+#related-posts .row{
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 1.5rem !important;
+  width: 100% !important;
+  margin: 0 !important;
+}
+#related-posts .row > *{
+  width: auto !important; /* neutralize bootstrap cols */
+  padding: 0 !important;
+  flex: 0 0 calc((100% - 3rem)/3) !important;
+  max-width: calc((100% - 3rem)/3) !important;
+}
+@media (max-width: 1199.98px){
+  #related-posts .row > *{
+    flex: 0 0 calc((100% - 1.5rem)/2) !important;
+    max-width: calc((100% - 1.5rem)/2) !important;
+  }
+}
+@media (max-width: 767.98px){
+  #related-posts .row > *{
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+/* Keep the card itself from forcing full height/width */
+#related-posts .card{
+  width: 100% !important;
+}
+
+/* 4) Desktop layout stability (borrowed from v16): keep main + right panel aligned to top */
+@media (min-width: 992px){
+  #main-wrapper > .container > .row{
+    align-items: flex-start !important;
+  }
 }
