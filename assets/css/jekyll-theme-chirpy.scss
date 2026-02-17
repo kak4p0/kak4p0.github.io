@@ -779,3 +779,58 @@ article header .post-meta > div.d-flex > div:last-child,
   font-size: 0.97rem !important;
   line-height: 1.75 !important;
 }
+
+/* =========================================================
+   kak4p0-custom-v25
+   - Search bar: align with right panel (Recently Updated) without invading post body
+   - Further Reading: prevent overflow into the right panel area
+   ========================================================= */
+
+/* 1) Search bar (desktop): keep it on the same top line as breadcrumb,
+      but size it like the right panel width so it visually sits above "Recently Updated". */
+@media (min-width: 1200px) {
+  /* Chirpy uses either <search id="search"> or wrappers depending on version */
+  #topbar #search,
+  #topbar #search-wrapper,
+  #topbar .search-wrapper {
+    flex: 0 0 280px !important;   /* match panel width used in this theme */
+    width: 280px !important;
+    max-width: 280px !important;
+    margin-left: auto !important;
+  }
+
+  #topbar #search input,
+  #topbar #search .form-control,
+  #topbar #search-input,
+  #topbar #search-wrapper input,
+  #topbar .search-wrapper input {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+}
+
+/* 2) Further Reading (Related Posts): never bleed under/into the right panel */
+#related-posts {
+  max-width: 100% !important;
+  overflow-x: hidden; /* last-line defense: no horizontal bleed into the panel area */
+  overflow-y: visible;
+}
+
+@supports (overflow: clip) {
+  #related-posts { overflow-x: clip; }
+}
+
+#related-posts .row {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* allow grid items/cards to shrink (prevents overflow on narrow desktops) */
+#related-posts .row > *,
+#related-posts article,
+#related-posts .post-preview,
+#related-posts .post-preview.card {
+  min-width: 0 !important;
+}
