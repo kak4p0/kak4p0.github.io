@@ -823,3 +823,89 @@ article header .post-meta > div.d-flex > div:last-child,
   }
 }
 
+
+
+/* =========================================================
+   Kak4p0 Chirpy - v27 LAYOUT FIXES
+   - Topbar search aligned to right panel (above "Recently Updated")
+   - Related posts ("Further Reading") constrained to content width (no sidebar overlap)
+   - Home post list slightly narrower/centered for better balance with thumbnails/logos
+   ========================================================= */
+
+/* Bootstrap container: xl = 1140px, xxl = 1320px
+   Right panel is col-xl-3 (25%) => 285px / 330px */
+:root {
+  --kak-panel-w: 285px;
+  --kak-gap: 1.25rem;
+}
+@media (min-width: 1400px) {
+  :root { --kak-panel-w: 330px; }
+}
+
+/* 1) Search bar: keep it in the top bar, but align it to the right panel column */
+@media (min-width: 1200px) {
+  #topbar-wrapper #topbar {
+    /* override bootstrap justify-content-between */
+    justify-content: flex-start !important;
+  }
+
+  #topbar-wrapper #topbar #breadcrumb {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  /* Chirpy versions vary between <search id="search"> and #search */
+  #topbar-wrapper #topbar search#search,
+  #topbar-wrapper #topbar #search {
+    margin-left: auto !important;
+    width: var(--kak-panel-w) !important;
+    max-width: var(--kak-panel-w) !important;
+    flex: 0 0 var(--kak-panel-w) !important;
+    min-width: 0 !important;
+  }
+
+  #topbar-wrapper #topbar search#search #search-input,
+  #topbar-wrapper #topbar #search #search-input {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+}
+
+/* 2) Further Reading: never render under/into the right sidebar */
+@media (min-width: 1200px) {
+  /* If #tail-wrapper exists (Chirpy uses it for the post footer area), make its right edge
+     match the Share line boundary (i.e., reserve the sidebar width). */
+  #tail-wrapper {
+    flex: 0 0 calc(100% - var(--kak-panel-w) - var(--kak-gap)) !important;
+    max-width: calc(100% - var(--kak-panel-w) - var(--kak-gap)) !important;
+  }
+
+  /* Constrain the related-posts block */
+  #related-posts {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Keep bootstrap rows from re-expanding via negative margins */
+  #related-posts .row {
+    margin-right: 0 !important;
+    max-width: 100% !important;
+  }
+}
+
+/* 3) Home / lists: reduce "too wide" feel and give thumbnails/logos a nicer layout */
+@media (min-width: 1200px) {
+  /* This element exists on home/category/tag lists in Chirpy */
+  #post-list {
+    max-width: 980px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* If your cards have a right-side thumbnail/logo container, keep it contained */
+  #post-list .preview-img img,
+  #post-list .post-preview img,
+  .post-preview .preview-img img {
+    object-fit: contain;
+  }
+}
