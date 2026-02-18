@@ -1,5 +1,5 @@
 ---
-title: "[0xL4ugh CTF 2026][Web] Ghost Board"
+title: "[Web] Ghost Board"
 description: Writing about the "Ghost Board" of 0xL4ugh CTF 2026.
 date: 2026-01-26 01:00:00 +0900
 categories: [CTF, 0xL4ugh CTF 2026]
