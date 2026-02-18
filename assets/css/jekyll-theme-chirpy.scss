@@ -3,7 +3,7 @@
 @import "main";
 
 /* =========================================================
-   Kak4p0 Chirpy - v16 FINAL COMPLETE
+   Kak4p0 Chirpy - v17 SOFT (Kakapo subtle)
    - Further Reading: 3열 카드 초강력 강제
    - 회색바 완전 제거
    - 카카포 컨셉 (초록/라임)
@@ -13,9 +13,9 @@
 /* ---------- Palette ---------- */
 :root{
   /* Kakapo night-jungle palette (black base + neon lime glow) */
-  --k-mint: #35e3a1;   /* fern-mint */
-  --k-lime: #c7ff4a;   /* neon lime highlight */
-  --k-olive: #87c84a;  /* kakapo feather */
+  --k-mint: #3ad99a;   /* fern-mint */
+  --k-lime: #bff55a;   /* neon lime highlight */
+  --k-olive: #7fbe4a;  /* kakapo feather */
   --k-ink:  #070b08;
   --k-ink2: #07110b;
 
@@ -24,10 +24,10 @@
   --k-surface2: rgba(7,11,8,.55);
 
   /* Borders / glow */
-  --k-border:  rgba(199,255,74,.12);
-  --k-border2: rgba(53,227,161,.14);
-  --k-glow:  rgba(199,255,74,.22);
-  --k-glow2: rgba(53,227,161,.18);
+  --k-border:  rgba(199,255,74,.09);
+  --k-border2: rgba(53,227,161,.11);
+  --k-glow:  rgba(199,255,74,.16);
+  --k-glow2: rgba(53,227,161,.13);
 }
 
 /* ---------- Background ---------- */
@@ -50,11 +50,11 @@ body::before{
     radial-gradient(circle at 34px 30px, rgba(53,227,161,.06) 0 1.2px, transparent 2.2px) 0 0/64px 64px,
     repeating-linear-gradient(0deg, rgba(255,255,255,.018), rgba(255,255,255,.018) 1px, transparent 1px, transparent 7px),
     repeating-linear-gradient(90deg, rgba(0,0,0,.03), rgba(0,0,0,.03) 1px, transparent 1px, transparent 10px);
-  opacity: .26;
+  opacity: .18;
   mix-blend-mode: overlay;
 }
 
-::selection{ background: rgba(199,255,74,.25); }
+::selection{ background: rgba(199,255,74,.18); }
 /* ---------- Cards / Panels ---------- */
 .card,
 .card-wrapper,
@@ -65,12 +65,12 @@ body::before{
   /* Glass + gradient border (makes the theme look less "default Chirpy") */
   background:
     linear-gradient(180deg, rgba(10,16,12,.72), rgba(7,11,8,.62)) padding-box,
-    linear-gradient(135deg, rgba(53,227,161,.42), rgba(199,255,74,.38), rgba(53,227,161,.18)) border-box !important;
+    linear-gradient(135deg, rgba(53,227,161,.30), rgba(199,255,74,.26), rgba(53,227,161,.12)) border-box !important;
   border: 1px solid transparent !important;
   border-radius: 18px !important;
   box-shadow:
     0 14px 34px rgba(0,0,0,.38),
-    0 0 0 1px rgba(53,227,161,.07) inset;
+    0 0 0 1px rgba(53,227,161,.05) inset;
   backdrop-filter: blur(10px);
 }
 
@@ -80,8 +80,8 @@ body::before{
 #panel-wrapper .panel:hover{
   box-shadow:
     0 16px 38px rgba(0,0,0,.44),
-    0 0 0 1px rgba(199,255,74,.12) inset,
-    0 0 22px rgba(53,227,161,.14);
+    0 0 0 1px rgba(199,255,74,.08) inset,
+    0 0 18px rgba(53,227,161,.10);
 }
 /* ---------- Links ---------- */
 a, .post-content a{
@@ -113,18 +113,18 @@ a:hover, .post-content a:hover{ color: var(--k-lime); }
   width:.32rem;
   height: 1.1em;
   border-radius: 999px;
-  background: linear-gradient(180deg, rgba(53,227,161,.92), rgba(199,255,74,.92));
-  box-shadow: 0 0 18px rgba(53,227,161,.16), 0 0 26px rgba(199,255,74,.10);
+  background: linear-gradient(180deg, rgba(53,227,161,.72), rgba(199,255,74,.72));
+  box-shadow: 0 0 12px rgba(53,227,161,.12), 0 0 18px rgba(199,255,74,.07);
 }
 
 /* ---------- Code blocks ---------- */
 div.highlighter-rouge,
 figure.highlight,
 div.highlight{
-  background: rgba(0,0,0,.34) !important;
-  border: 1px solid rgba(53,227,161,.18) !important;
+  background: rgba(0,0,0,.28) !important;
+  border: 1px solid rgba(53,227,161,.14) !important;
   border-radius: 16px !important;
-  box-shadow: 0 10px 26px rgba(0,0,0,.28) !important;
+  box-shadow: 0 10px 22px rgba(0,0,0,.26) !important;
   overflow: hidden;
   max-width: 100% !important;
 }
@@ -216,13 +216,13 @@ div.highlight pre{
   opacity: .28;
 }
 #sidebar .nav-link:hover{
-  background: rgba(53,227,161,.08) !important;
-  border-color: rgba(53,227,161,.18) !important;
+  background: rgba(53,227,161,.045) !important;
+  border-color: rgba(53,227,161,.10) !important;
 }
 
 #sidebar .nav-link.active{
   background: linear-gradient(90deg, rgba(199,255,74,.18), rgba(53,227,161,.10) 60%, rgba(0,0,0,0)) !important;
-  border: 1px solid rgba(199,255,74,.22) !important;
+  border: 1px solid rgba(199,255,74,.16) !important;
   box-shadow:
     0 0 0 1px rgba(53,227,161,.10) inset,
     0 12px 28px rgba(0,0,0,.35);
@@ -256,7 +256,7 @@ div.highlight pre{
   margin: 1.5rem 1rem 0 1rem !important;
   background:
     linear-gradient(180deg, rgba(10,16,12,.72), rgba(7,11,8,.62)) padding-box,
-    linear-gradient(135deg, rgba(53,227,161,.28), rgba(199,255,74,.24)) border-box !important;
+    linear-gradient(135deg, rgba(53,227,161,.22), rgba(199,255,74,.24)) border-box !important;
   border: 1px solid transparent !important;
   border-radius: 12px !important;
   box-shadow:
@@ -1315,10 +1315,10 @@ article header .post-meta > div.d-flex > div:last-child,
 }
 #topbar-wrapper #topbar #search-input:focus{
   outline: none !important;
-  border-color: rgba(199,255,74,.46) !important;
+  border-color: rgba(199,255,74,.34) !important;
   box-shadow:
-    0 0 0 3px rgba(199,255,74,.18),
-    0 0 24px rgba(53,227,161,.14) !important;
+    0 0 0 3px rgba(199,255,74,.12),
+    0 0 18px rgba(53,227,161,.10) !important;
 }
 
 /* Tags / chips */
@@ -1328,8 +1328,8 @@ a.tag,
 .badge,
 .btn.btn-outline-primary,
 .btn.btn-outline-secondary{
-  background: rgba(53,227,161,.06) !important;
-  border: 1px solid rgba(53,227,161,.16) !important;
+  background: rgba(53,227,161,.045) !important;
+  border: 1px solid rgba(53,227,161,.13) !important;
   color: rgba(255,255,255,.86) !important;
   border-radius: 999px !important;
 }
@@ -1339,10 +1339,10 @@ a.tag:hover,
 .badge:hover,
 .btn.btn-outline-primary:hover,
 .btn.btn-outline-secondary:hover{
-  background: rgba(199,255,74,.12) !important;
-  border-color: rgba(199,255,74,.24) !important;
+  background: rgba(199,255,74,.09) !important;
+  border-color: rgba(199,255,74,.18) !important;
   color: var(--k-lime) !important;
-  box-shadow: 0 0 18px rgba(199,255,74,.10);
+  box-shadow: 0 0 12px rgba(199,255,74,.08);
 }
 
 /* TOC: active highlight */
@@ -1351,22 +1351,157 @@ a.tag:hover,
 #toc a.nav-link.active,
 #toc a.nav-link:hover{
   color: var(--k-lime) !important;
-  background: rgba(199,255,74,.08) !important;
+  background: rgba(199,255,74,.06) !important;
   border-radius: 10px !important;
 }
 #toc-wrapper a.nav-link.active{
-  box-shadow: 0 0 0 1px rgba(199,255,74,.14) inset;
+  box-shadow: 0 0 0 1px rgba(199,255,74,.10) inset;
 }
 
 /* Divider / subtle accent */
 hr{
-  border-color: rgba(53,227,161,.14) !important;
+  border-color: rgba(53,227,161,.10) !important;
 }
+
+
+/* =========================================================
+   Categories / Archives / Post page accents (Kakapo subtle)
+   - 홈이 아니라도 "테마"가 드러나는 지점들
+   ========================================================= */
+
+/* ---------- Categories page ---------- */
+#categories,
+.categories{
+  /* keep dark; add a very subtle jungle haze */
+  position: relative;
+}
+#categories .category,
+.categories .category,
+#categories .list-group-item,
+.categories .list-group-item{
+  background: linear-gradient(180deg, rgba(10,16,12,.58), rgba(7,11,8,.50)) padding-box;
+  border: 1px solid rgba(53,227,161,.10);
+  border-radius: 16px;
+}
+#categories .category:hover,
+.categories .category:hover,
+#categories .list-group-item:hover,
+.categories .list-group-item:hover{
+  border-color: rgba(199,255,74,.12);
+  box-shadow: 0 0 14px rgba(53,227,161,.08);
+}
+
+/* Category title / count pill */
+#categories .category a,
+.categories .category a{
+  color: rgba(255,255,255,.90);
+}
+#categories .category a:hover,
+.categories .category a:hover{
+  color: var(--k-lime);
+}
+#categories .category .category-count,
+.categories .category .category-count,
+#categories .category-count,
+.categories .category-count{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: .08rem .55rem;
+  border-radius: 999px;
+  background: rgba(53,227,161,.04);
+  border: 1px solid rgba(53,227,161,.10);
+  color: rgba(255,255,255,.82);
+}
+
+/* ---------- Archives page ---------- */
+/* Chirpy 기본 마크업 대비: #archives / .archives / list-group */
+#archives,
+.archives{
+  position: relative;
+}
+#archives h2,
+#archives .year,
+.archives h2,
+.archives .year{
+  color: rgba(255,255,255,.92);
+}
+#archives h2::after,
+#archives .year::after,
+.archives h2::after,
+.archives .year::after{
+  content:"";
+  display:block;
+  height: 2px;
+  margin-top: .45rem;
+  width: min(220px, 60%);
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(53,227,161,.22), rgba(199,255,74,.16), transparent);
+}
+
+#archives .list-group-item,
+.archives .list-group-item,
+#archives li,
+.archives li{
+  background: rgba(0,0,0,.22);
+  border: 1px solid rgba(53,227,161,.09);
+}
+#archives .list-group-item:hover,
+.archives .list-group-item:hover,
+#archives li:hover,
+.archives li:hover{
+  border-color: rgba(199,255,74,.12);
+}
+
+/* ---------- Inside post (글 내부) ---------- */
+/* Blockquote = 잎맥 느낌의 얇은 그라데이션 바 */
+.post-content blockquote{
+  margin: 1.2rem 0;
+  padding: .9rem 1.05rem;
+  background: rgba(53,227,161,.035);
+  border-left: 4px solid transparent;
+  border-image: linear-gradient(180deg, rgba(53,227,161,.40), rgba(199,255,74,.24)) 1;
+  border-radius: 14px;
+  color: rgba(255,255,255,.86);
+}
+
+/* Inline code */
+.post-content :not(pre) > code{
+  background: rgba(53,227,161,.045);
+  border: 1px solid rgba(53,227,161,.10);
+  border-radius: 10px;
+  padding: .12rem .38rem;
+}
+
+/* Tables: subtle hover */
+.post-content table{
+  border-collapse: separate;
+  border-spacing: 0;
+}
+.post-content table tr:hover{
+  background: rgba(53,227,161,.03);
+}
+
+/* Pagination (글 하단 페이지 이동) */
+.pagination .page-link{
+  background: rgba(53,227,161,.035);
+  border: 1px solid rgba(53,227,161,.10);
+  color: rgba(255,255,255,.84);
+  border-radius: 12px;
+}
+.pagination .page-link:hover,
+.pagination .page-item.active .page-link{
+  background: rgba(199,255,74,.07);
+  border-color: rgba(199,255,74,.14);
+  color: var(--k-lime);
+  box-shadow: 0 0 12px rgba(199,255,74,.06);
+}
+
 
 /* Scrollbars (WebKit) */
 ::-webkit-scrollbar{ width: 10px; height: 10px; }
 ::-webkit-scrollbar-thumb{
-  background: linear-gradient(180deg, rgba(53,227,161,.28), rgba(199,255,74,.22));
+  background: linear-gradient(180deg, rgba(53,227,161,.22), rgba(199,255,74,.16));
   border-radius: 10px;
   border: 2px solid rgba(0,0,0,.40);
 }
