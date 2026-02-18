@@ -2058,3 +2058,129 @@ figure.highlight div.highlight{
   box-shadow: none !important;
   background: transparent !important;
 }
+
+
+/* =========================================================
+   v7: Code header overlap fix + About page polish
+   - Fix line-number "1" being hidden by header/terminal chrome
+   - Move terminal dots into .code-header to avoid covering gutter
+   - About: content card + quote styling (only on pages)
+   ========================================================= */
+
+/* --- Code blocks: ensure header never overlaps first line --- */
+/* 1) Remove container-level dots (these can cover the gutter/line 1 on numbered blocks) */
+figure.highlight::after,
+div.highlight::after{
+  content: none !important;
+  display: none !important;
+}
+
+/* 2) Make code-header a true top bar + reserve space for code body */
+figure.highlight,
+div.highlight{
+  --k-codehead-h: 2.35rem;
+}
+
+figure.highlight > .code-header,
+div.highlight > .code-header,
+div.highlighter-rouge > .code-header{
+  position: absolute !important;
+  top: 0; left: 0; right: 0;
+  height: var(--k-codehead-h);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3.0rem 0 3.1rem; /* leave space for dots on left + copy btn on right */
+  border-bottom: 1px solid rgba(127,190,74,.14) !important;
+  background: rgba(0,0,0,.26) !important;
+  backdrop-filter: blur(10px);
+}
+
+/* Reserve vertical space so first line number is never hidden */
+figure.highlight > .code-header + .highlight,
+figure.highlight > .code-header + div.highlight,
+figure.highlight > .code-header + pre,
+div.highlighter-rouge > .code-header + .highlight,
+div.highlighter-rouge > .code-header + div.highlight,
+div.highlighter-rouge > .code-header + pre,
+div.highlight > .code-header + pre{
+  padding-top: var(--k-codehead-h) !important;
+}
+
+/* 3) Put terminal dots INSIDE the header bar (safe; never covers code/gutter) */
+figure.highlight > .code-header::before,
+div.highlight > .code-header::before,
+div.highlighter-rouge > .code-header::before{
+  content:"";
+  position:absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 34px;
+  height: 10px;
+  background:
+    radial-gradient(circle, rgba(255,255,255,.50) 0 3px, transparent 4px) 0 50%/10px 10px,
+    radial-gradient(circle, rgba(127,190,74,.62) 0 3px, transparent 4px) 50% 50%/10px 10px,
+    radial-gradient(circle, rgba(191,245,90,.52) 0 3px, transparent 4px) 100% 50%/10px 10px;
+  opacity: .85;
+  pointer-events: none;
+}
+
+/* 4) Keep pre/table content flush under the header without weird extra margins */
+figure.highlight pre,
+div.highlight pre{
+  margin-top: 0 !important;
+}
+
+/* If Rouge uses a table for line numbers, ensure the table starts below header */
+figure.highlight table.rouge-table,
+div.highlight table.rouge-table{
+  margin-top: 0 !important;
+}
+
+/* --- About page polish: make sparse pages look intentional --- */
+/* Chirpy body class differs by version; cover common variants */
+body.page #core-wrapper .post-content,
+body.layout-page #core-wrapper .post-content,
+body.about #core-wrapper .post-content,
+body[data-page="about"] #core-wrapper .post-content{
+  background: rgba(0,0,0,.18);
+  border: 1px solid rgba(127,190,74,.14);
+  border-radius: 18px;
+  padding: 1.35rem 1.45rem;
+  box-shadow: 0 14px 30px rgba(0,0,0,.28);
+}
+
+/* About quote: slightly more "profile" feeling */
+body.page #core-wrapper .post-content blockquote,
+body.layout-page #core-wrapper .post-content blockquote,
+body.about #core-wrapper .post-content blockquote,
+body[data-page="about"] #core-wrapper .post-content blockquote{
+  font-size: 1.02rem;
+  line-height: 1.75;
+  background:
+    linear-gradient(90deg, rgba(127,190,74,.10), rgba(191,245,90,.06), transparent);
+  border-left-width: 4px;
+  padding: 1.0rem 1.1rem;
+}
+
+/* About headings: a touch more weight */
+body.page #core-wrapper .post-content h2,
+body.layout-page #core-wrapper .post-content h2,
+body.about #core-wrapper .post-content h2,
+body[data-page="about"] #core-wrapper .post-content h2{
+  font-weight: 750;
+}
+
+
+/* --- v7 tweak: tags a touch smaller (requested) --- */
+.tag,
+.post-tag,
+a.tag,
+a.post-tag,
+#tags a,
+#tag-list a{
+  font-size: .89rem !important;
+  padding: .26rem .58rem !important;
+}
+
