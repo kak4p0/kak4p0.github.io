@@ -2,7 +2,7 @@
 title: "[0xFun CTF 2026][Warmup] Templates"
 description: Writing about the "Templates" of 0xFun CTF 2026.
 date: 2026-02-15 01:00:00 +0900
-categories: [0xFun CTF 2026]
+categories: [CTF, 0xFun CTF 2026]
 tags: [Warmup]
 toc: true
 comments: false
