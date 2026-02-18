@@ -1933,3 +1933,128 @@ body:not(.home) #core-wrapper{
   border-radius: 22px;
 }
 
+
+
+/* =========================================================
+   v6: Fixes + sizing tune (requested)
+   - Code blocks: prevent double terminal bars (nested wrappers)
+     + ensure no glyph is covered (z-index layering)
+   - Categories: tournament names a bit bigger / more readable
+   - Tags: slightly smaller than categories (visual hierarchy)
+   ========================================================= */
+
+/* ---------- Code blocks: prevent double bar (highlighter wrapper nesting) ---------- */
+/* Many Chirpy/Rouge blocks render: div.highlighter-rouge > div.highlight > pre...
+   v5 applied ::before/::after to BOTH, causing double lines + overlay. */
+div.highlighter-rouge{
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+div.highlighter-rouge::before,
+div.highlighter-rouge::after{
+  content: none !important;
+  display: none !important;
+}
+
+/* Apply terminal chrome ONLY to the real code container */
+figure.highlight,
+div.highlight{
+  position: relative;
+}
+
+/* Put decorative pseudo-elements behind text so they never cover glyphs */
+figure.highlight::before,
+figure.highlight::after,
+div.highlight::before,
+div.highlight::after{
+  z-index: 0;
+}
+figure.highlight pre,
+figure.highlight .code-header,
+div.highlight pre,
+div.highlight .code-header{
+  position: relative;
+  z-index: 1;
+}
+
+/* Slightly move dots upward so they sit inside header area more naturally */
+figure.highlight::after,
+div.highlight::after{
+  top: 8px !important;
+}
+
+/* ---------- Categories: make tournament rows a bit larger ---------- */
+/* Visual hierarchy:
+   Categories rows > Tags chips (slightly) */
+#categories .list-group-item,
+#categories .category,
+#categories .category-item,
+#categories li.list-group-item,
+#categories li,
+.categories .list-group-item,
+.categories .category,
+.categories li{
+  padding: .70rem 1.05rem !important;
+}
+
+#categories .list-group-item > a,
+#categories .list-group-item a,
+#categories .category a,
+.categories .list-group-item > a,
+.categories .list-group-item a,
+.categories .category a{
+  font-size: 1.05rem !important;
+  font-weight: 650 !important;
+  letter-spacing: .12px;
+  line-height: 1.25;
+}
+
+/* counts/subtext slightly smaller so the “대회명” pops */
+#categories .text-muted,
+#categories small,
+#categories .category-count,
+.categories .text-muted,
+.categories small,
+.categories .category-count{
+  font-size: .90rem !important;
+  font-weight: 500 !important;
+  opacity: .80;
+}
+
+/* nested/expanded tournament items: tiny boost */
+#categories .collapse .list-group-item a,
+#categories .collapsing .list-group-item a{
+  font-size: 1.07rem !important;
+}
+
+/* ---------- Tags: slightly smaller chips (still readable) ---------- */
+.tag,
+.post-tag,
+a.tag,
+a.post-tag,
+#tags a,
+#tag-list a{
+  font-size: .92rem !important;
+  padding: .28rem .64rem !important;
+}
+
+/* Tag count bubble (if present) slightly smaller */
+#tags sup,
+#tag-list sup{
+  font-size: .70em !important;
+}
+
+
+
+/* If Rouge nests div.highlight inside figure.highlight, keep chrome only once */
+figure.highlight div.highlight::before,
+figure.highlight div.highlight::after{
+  content: none !important;
+  display: none !important;
+}
+figure.highlight div.highlight{
+  border: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
