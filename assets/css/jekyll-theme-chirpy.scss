@@ -12,34 +12,49 @@
 
 /* ---------- Palette ---------- */
 :root{
-  --k-mint: #2dd4bf;
-  --k-lime: #a3e635;
-  --k-ink:  #0a0f12;
-  --k-ink2: #0d1417;
-  --k-surface: rgba(255,255,255,.035);
-  --k-border: rgba(255,255,255,.08);
+  /* Kakapo night-jungle palette (black base + neon lime glow) */
+  --k-mint: #35e3a1;   /* fern-mint */
+  --k-lime: #c7ff4a;   /* neon lime highlight */
+  --k-olive: #87c84a;  /* kakapo feather */
+  --k-ink:  #070b08;
+  --k-ink2: #07110b;
+
+  /* Green-tinted glass surfaces (keeps the overall black look) */
+  --k-surface:  rgba(10,16,12,.62);
+  --k-surface2: rgba(7,11,8,.55);
+
+  /* Borders / glow */
+  --k-border:  rgba(199,255,74,.12);
+  --k-border2: rgba(53,227,161,.14);
+  --k-glow:  rgba(199,255,74,.22);
+  --k-glow2: rgba(53,227,161,.18);
 }
 
 /* ---------- Background ---------- */
 body{
   background:
-    radial-gradient(900px 650px at 14% -10%, rgba(45,212,191,.12), transparent 60%),
-    radial-gradient(900px 650px at 86%  10%, rgba(163,230,53,.10), transparent 60%),
+    radial-gradient(1000px 700px at 12% -10%, rgba(53,227,161,.14), transparent 60%),
+    radial-gradient(950px 680px  at 88%  10%, rgba(199,255,74,.12), transparent 60%),
+    radial-gradient(1200px 900px at 50% 120%, rgba(135,200,74,.10), transparent 55%),
     linear-gradient(180deg, var(--k-ink), var(--k-ink2));
 }
+
+/* Subtle "feather speckle" + scanlines (no images) */
 body::before{
   content:"";
   position: fixed;
   inset: 0;
   pointer-events: none;
   background:
-    repeating-linear-gradient(0deg, rgba(255,255,255,.02), rgba(255,255,255,.02) 1px, transparent 1px, transparent 6px),
-    repeating-linear-gradient(90deg, rgba(0,0,0,.03), rgba(0,0,0,.03) 1px, transparent 1px, transparent 8px);
-  opacity: .22;
+    radial-gradient(circle at 14px 12px, rgba(199,255,74,.07) 0 1.6px, transparent 2.4px) 0 0/48px 48px,
+    radial-gradient(circle at 34px 30px, rgba(53,227,161,.06) 0 1.2px, transparent 2.2px) 0 0/64px 64px,
+    repeating-linear-gradient(0deg, rgba(255,255,255,.018), rgba(255,255,255,.018) 1px, transparent 1px, transparent 7px),
+    repeating-linear-gradient(90deg, rgba(0,0,0,.03), rgba(0,0,0,.03) 1px, transparent 1px, transparent 10px);
+  opacity: .26;
   mix-blend-mode: overlay;
 }
-::selection{ background: rgba(163,230,53,.22); }
 
+::selection{ background: rgba(199,255,74,.25); }
 /* ---------- Cards / Panels ---------- */
 .card,
 .card-wrapper,
@@ -47,12 +62,27 @@ body::before{
 #core-wrapper .post,
 #core-wrapper .page,
 #core-wrapper .home{
-  background: var(--k-surface) !important;
-  border: 1px solid var(--k-border) !important;
+  /* Glass + gradient border (makes the theme look less "default Chirpy") */
+  background:
+    linear-gradient(180deg, rgba(10,16,12,.72), rgba(7,11,8,.62)) padding-box,
+    linear-gradient(135deg, rgba(53,227,161,.42), rgba(199,255,74,.38), rgba(53,227,161,.18)) border-box !important;
+  border: 1px solid transparent !important;
   border-radius: 18px !important;
-  box-shadow: 0 10px 30px rgba(0,0,0,.25);
+  box-shadow:
+    0 14px 34px rgba(0,0,0,.38),
+    0 0 0 1px rgba(53,227,161,.07) inset;
+  backdrop-filter: blur(10px);
 }
 
+/* Hover = glow only (no movement) */
+.card:hover,
+.card-wrapper:hover,
+#panel-wrapper .panel:hover{
+  box-shadow:
+    0 16px 38px rgba(0,0,0,.44),
+    0 0 0 1px rgba(199,255,74,.12) inset,
+    0 0 22px rgba(53,227,161,.14);
+}
 /* ---------- Links ---------- */
 a, .post-content a{
   color: var(--k-mint);
@@ -83,8 +113,8 @@ a:hover, .post-content a:hover{ color: var(--k-lime); }
   width:.32rem;
   height: 1.1em;
   border-radius: 999px;
-  background: linear-gradient(180deg, rgba(45,212,191,.9), rgba(163,230,53,.9));
-  box-shadow: 0 0 16px rgba(45,212,191,.18);
+  background: linear-gradient(180deg, rgba(53,227,161,.92), rgba(199,255,74,.92));
+  box-shadow: 0 0 18px rgba(53,227,161,.16), 0 0 26px rgba(199,255,74,.10);
 }
 
 /* ---------- Code blocks ---------- */
@@ -92,7 +122,7 @@ div.highlighter-rouge,
 figure.highlight,
 div.highlight{
   background: rgba(0,0,0,.34) !important;
-  border: 1px solid rgba(45,212,191,.18) !important;
+  border: 1px solid rgba(53,227,161,.18) !important;
   border-radius: 16px !important;
   box-shadow: 0 10px 26px rgba(0,0,0,.28) !important;
   overflow: hidden;
@@ -143,8 +173,8 @@ div.highlight pre{
 /* ---------- Sidebar ---------- */
 #sidebar{
   background:
-    radial-gradient(900px 650px at 30% 0%, rgba(45,212,191,.11), transparent 55%),
-    radial-gradient(900px 650px at 70% 15%, rgba(163,230,53,.09), transparent 55%),
+    radial-gradient(900px 650px at 30% 0%, rgba(53,227,161,.11), transparent 55%),
+    radial-gradient(900px 650px at 70% 15%, rgba(199,255,74,.09), transparent 55%),
     linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,.40));
   border-right: 1px solid rgba(255,255,255,.06);
   display: flex !important;
@@ -164,12 +194,44 @@ div.highlight pre{
   content: none !important;
 }
 
+/* Kakapo sidebar nav: pill + glowing dot */
+#sidebar .nav-link{
+  position: relative;
+  margin: .12rem .75rem !important;
+  border-radius: 14px !important;
+  padding-left: 2.2rem !important;
+  border: 1px solid transparent !important;
+  transition: background .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
+#sidebar .nav-link::before{
+  content:"";
+  position:absolute;
+  left: .95rem;
+  top: 50%;
+  width: .45rem;
+  height: .45rem;
+  transform: translateY(-50%);
+  border-radius: 999px;
+  background: rgba(255,255,255,.20);
+  opacity: .28;
+}
+#sidebar .nav-link:hover{
+  background: rgba(53,227,161,.08) !important;
+  border-color: rgba(53,227,161,.18) !important;
+}
+
 #sidebar .nav-link.active{
-  background: rgba(45,212,191,.14) !important;
-  border: 1px solid rgba(163,230,53,.18) !important;
+  background: linear-gradient(90deg, rgba(199,255,74,.18), rgba(53,227,161,.10) 60%, rgba(0,0,0,0)) !important;
+  border: 1px solid rgba(199,255,74,.22) !important;
   box-shadow:
-    0 0 0 1px rgba(45,212,191,.10) inset,
+    0 0 0 1px rgba(53,227,161,.10) inset,
     0 12px 28px rgba(0,0,0,.35);
+}
+
+#sidebar .nav-link.active::before{
+  background: var(--k-lime);
+  opacity: 1;
+  box-shadow: 0 0 14px var(--k-glow), 0 0 22px var(--k-glow2);
 }
 
 #sidebar .sidebar-bottom{
@@ -188,13 +250,19 @@ div.highlight pre{
 }
 
 /* 🔥 사이드바 일정표 스타일 */
+/* 🔥 사이드바 일정표 스타일 */
 .sidebar-schedule{
   padding: 1rem 1.2rem !important;
   margin: 1.5rem 1rem 0 1rem !important;
-  background: rgba(45,212,191,.06) !important;
-  border: 1px solid rgba(45,212,191,.15) !important;
+  background:
+    linear-gradient(180deg, rgba(10,16,12,.72), rgba(7,11,8,.62)) padding-box,
+    linear-gradient(135deg, rgba(53,227,161,.28), rgba(199,255,74,.24)) border-box !important;
+  border: 1px solid transparent !important;
   border-radius: 12px !important;
-  box-shadow: 0 4px 12px rgba(45,212,191,.08) !important;
+  box-shadow:
+    0 10px 22px rgba(0,0,0,.30),
+    0 0 0 1px rgba(53,227,161,.08) inset !important;
+  backdrop-filter: blur(10px);
 }
 
 .sidebar-schedule h4{
@@ -626,12 +694,12 @@ article header .post-meta > div.d-flex > div:last-child,
   display: block !important;
   
   /* 카카포 스타일 */
-  background: rgba(45,212,191,.04) !important;
-  border: 1px solid rgba(45,212,191,.15) !important;
+  background: rgba(53,227,161,.04) !important;
+  border: 1px solid rgba(53,227,161,.15) !important;
   border-radius: 1rem !important;
   box-shadow: 
     0 8px 24px rgba(0,0,0,.3),
-    0 0 0 1px rgba(45,212,191,.05) inset !important;
+    0 0 0 1px rgba(53,227,161,.05) inset !important;
   
   padding: .95rem !important;
   
@@ -643,11 +711,11 @@ article header .post-meta > div.d-flex > div:last-child,
 #related-posts ul > li:hover,
 #related-posts .post-preview:hover,
 #related-posts .card:hover{
-  background: rgba(163,230,53,.06) !important;
-  border-color: rgba(163,230,53,.3) !important;
+  background: rgba(199,255,74,.06) !important;
+  border-color: rgba(199,255,74,.3) !important;
   box-shadow: 
     0 12px 32px rgba(0,0,0,.4),
-    0 0 20px rgba(163,230,53,.15) !important;
+    0 0 20px rgba(199,255,74,.15) !important;
   transform: translateY(-2px) !important;
 }
 
@@ -734,18 +802,18 @@ article header .post-meta > div.d-flex > div:last-child,
   width: 100px !important;
   height: 100px !important;
   border-radius: 50% !important;
-  border: 3px solid rgba(45,212,191,.3) !important;
+  border: 3px solid rgba(53,227,161,.3) !important;
   box-shadow: 
-    0 8px 24px rgba(45,212,191,.2),
-    0 0 30px rgba(163,230,53,.1) !important;
+    0 8px 24px rgba(53,227,161,.2),
+    0 0 30px rgba(199,255,74,.1) !important;
   transition: all 0.3s ease !important;
 }
 
 .home-logo img:hover{
   transform: scale(1.05) !important;
   box-shadow: 
-    0 12px 32px rgba(45,212,191,.3),
-    0 0 40px rgba(163,230,53,.2) !important;
+    0 12px 32px rgba(53,227,161,.3),
+    0 0 40px rgba(199,255,74,.2) !important;
 }
 
 #page-title,
@@ -1230,3 +1298,76 @@ article header .post-meta > div.d-flex > div:last-child,
   font-size: 0.82rem !important;
   line-height: 1.45 !important;
 }
+/* =========================================================
+   Kakapo Lime Skin v2 (aesthetic-only tweaks)
+   - neon lime accents, glass panels, feather speckle
+   ========================================================= */
+
+/* Search input: neon focus ring */
+#topbar-wrapper #topbar #search-input{
+  background: rgba(0,0,0,.36) !important;
+  border: 1px solid rgba(53,227,161,.22) !important;
+  color: rgba(255,255,255,.92) !important;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.28) inset;
+}
+#topbar-wrapper #topbar #search-input::placeholder{
+  color: rgba(255,255,255,.45) !important;
+}
+#topbar-wrapper #topbar #search-input:focus{
+  outline: none !important;
+  border-color: rgba(199,255,74,.46) !important;
+  box-shadow:
+    0 0 0 3px rgba(199,255,74,.18),
+    0 0 24px rgba(53,227,161,.14) !important;
+}
+
+/* Tags / chips */
+.post-tags a,
+a.tag,
+.tag,
+.badge,
+.btn.btn-outline-primary,
+.btn.btn-outline-secondary{
+  background: rgba(53,227,161,.06) !important;
+  border: 1px solid rgba(53,227,161,.16) !important;
+  color: rgba(255,255,255,.86) !important;
+  border-radius: 999px !important;
+}
+.post-tags a:hover,
+a.tag:hover,
+.tag:hover,
+.badge:hover,
+.btn.btn-outline-primary:hover,
+.btn.btn-outline-secondary:hover{
+  background: rgba(199,255,74,.12) !important;
+  border-color: rgba(199,255,74,.24) !important;
+  color: var(--k-lime) !important;
+  box-shadow: 0 0 18px rgba(199,255,74,.10);
+}
+
+/* TOC: active highlight */
+#toc-wrapper a.nav-link.active,
+#toc-wrapper a.nav-link:hover,
+#toc a.nav-link.active,
+#toc a.nav-link:hover{
+  color: var(--k-lime) !important;
+  background: rgba(199,255,74,.08) !important;
+  border-radius: 10px !important;
+}
+#toc-wrapper a.nav-link.active{
+  box-shadow: 0 0 0 1px rgba(199,255,74,.14) inset;
+}
+
+/* Divider / subtle accent */
+hr{
+  border-color: rgba(53,227,161,.14) !important;
+}
+
+/* Scrollbars (WebKit) */
+::-webkit-scrollbar{ width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb{
+  background: linear-gradient(180deg, rgba(53,227,161,.28), rgba(199,255,74,.22));
+  border-radius: 10px;
+  border: 2px solid rgba(0,0,0,.40);
+}
+::-webkit-scrollbar-track{ background: rgba(0,0,0,.25); }
