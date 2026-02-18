@@ -20,14 +20,14 @@
   --k-ink2: #07110b;
 
   /* Green-tinted glass surfaces (keeps the overall black look) */
-  --k-surface:  rgba(10,16,12,.62);
-  --k-surface2: rgba(7,11,8,.55);
+  --k-surface:  rgba(10,16,12,.64);
+  --k-surface2: rgba(7,11,8,.57);
 
   /* Borders / glow */
-  --k-border:  rgba(199,255,74,.09);
-  --k-border2: rgba(53,227,161,.11);
-  --k-glow:  rgba(199,255,74,.16);
-  --k-glow2: rgba(53,227,161,.13);
+  --k-border:  rgba(199,255,74,.12);
+  --k-border2: rgba(53,227,161,.14);
+  --k-glow:  rgba(199,255,74,.20);
+  --k-glow2: rgba(53,227,161,.16);
 }
 
 /* ---------- Background ---------- */
@@ -65,7 +65,7 @@ body::before{
   /* Glass + gradient border (makes the theme look less "default Chirpy") */
   background:
     linear-gradient(180deg, rgba(10,16,12,.72), rgba(7,11,8,.62)) padding-box,
-    linear-gradient(135deg, rgba(53,227,161,.30), rgba(199,255,74,.26), rgba(53,227,161,.12)) border-box !important;
+    linear-gradient(135deg, rgba(53,227,161,.38), rgba(199,255,74,.30), rgba(53,227,161,.16)) border-box !important;
   border: 1px solid transparent !important;
   border-radius: 18px !important;
   box-shadow:
@@ -81,7 +81,7 @@ body::before{
   box-shadow:
     0 16px 38px rgba(0,0,0,.44),
     0 0 0 1px rgba(199,255,74,.08) inset,
-    0 0 18px rgba(53,227,161,.10);
+    0 0 22px rgba(53,227,161,.14);
 }
 /* ---------- Links ---------- */
 a, .post-content a{
@@ -1420,23 +1420,9 @@ hr{
 .archives{
   position: relative;
 }
-#archives h2,
 #archives .year,
-.archives h2,
 .archives .year{
   color: rgba(255,255,255,.92);
-}
-#archives h2::after,
-#archives .year::after,
-.archives h2::after,
-.archives .year::after{
-  content:"";
-  display:block;
-  height: 2px;
-  margin-top: .45rem;
-  width: min(220px, 60%);
-  border-radius: 999px;
-  background: linear-gradient(90deg, rgba(53,227,161,.22), rgba(199,255,74,.16), transparent);
 }
 
 #archives .list-group-item,
@@ -1495,6 +1481,143 @@ hr{
   border-color: rgba(199,255,74,.14);
   color: var(--k-lime);
   box-shadow: 0 0 12px rgba(199,255,74,.06);
+}
+
+
+
+/* =========================================================
+   v4: non-home pages pop a bit more (without going neon-heavy)
+   - page titles / breadcrumbs / categories&tags containers
+   ========================================================= */
+
+/* Page title underline (NOT the archive year) */
+.dynamic-title,
+#page-title,
+.page-title{
+  position: relative;
+  color: rgba(255,255,255,.94) !important;
+}
+.dynamic-title::after,
+#page-title::after,
+.page-title::after{
+  content:"";
+  display:block;
+  height: 2px;
+  margin-top: .55rem;
+  width: min(300px, 74%);
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(53,227,161,.46), rgba(199,255,74,.34), transparent);
+  opacity: .90;
+}
+
+/* Breadcrumbs (Home > ...) */
+.breadcrumb,
+.breadcrumb a{
+  font-size: .92rem;
+}
+.breadcrumb a{
+  color: rgba(53,227,161,.92) !important;
+}
+.breadcrumb a:hover{
+  color: var(--k-lime) !important;
+}
+.breadcrumb .breadcrumb-item.active{
+  color: rgba(255,255,255,.64) !important;
+}
+.breadcrumb-item + .breadcrumb-item::before{
+  color: rgba(53,227,161,.35) !important;
+}
+
+/* ---- Categories: rows look less "default bootstrap" ---- */
+/* Chirpy markup differs by version, so we cover common patterns */
+#categories .list-group-item,
+#categories .category,
+#categories .category-item,
+#categories li.list-group-item,
+#categories li,
+.categories .list-group-item,
+.categories .category,
+.categories li{
+  background:
+    linear-gradient(180deg, rgba(10,16,12,.68), rgba(7,11,8,.58)) padding-box,
+    linear-gradient(135deg, rgba(53,227,161,.30), rgba(199,255,74,.26), rgba(53,227,161,.14)) border-box !important;
+  border: 1px solid transparent !important;
+  border-radius: 16px !important;
+  box-shadow: 0 12px 28px rgba(0,0,0,.30);
+}
+#categories .list-group-item:hover,
+#categories .category:hover,
+#categories .category-item:hover,
+#categories li:hover,
+.categories .list-group-item:hover,
+.categories .category:hover,
+.categories li:hover{
+  box-shadow:
+    0 14px 32px rgba(0,0,0,.34),
+    0 0 22px rgba(53,227,161,.14);
+}
+
+/* Folder icon / chevron accent */
+#categories svg,
+.categories svg{
+  color: rgba(199,255,74,.55) !important;
+}
+
+/* ---- Tags page: tag cloud container + chips ---- */
+#tags,
+#tag-list,
+#tag-cloud,
+.tags{
+  background: rgba(0,0,0,.12);
+  border: 1px solid rgba(53,227,161,.10);
+  border-radius: 18px;
+  padding: 1.1rem 1.1rem .6rem;
+  box-shadow: 0 14px 34px rgba(0,0,0,.28);
+}
+
+/* Tag chips (list + post tags) */
+.tag,
+.post-tag,
+a.tag,
+a.post-tag,
+#tags a,
+#tag-list a{
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  padding: .32rem .72rem !important;
+  margin: .15rem .25rem .55rem 0 !important;
+  border-radius: 999px !important;
+  background: rgba(53,227,161,.05) !important;
+  border: 1px solid rgba(53,227,161,.14) !important;
+  color: rgba(255,255,255,.86) !important;
+}
+.tag:hover,
+.post-tag:hover,
+a.tag:hover,
+a.post-tag:hover,
+#tags a:hover,
+#tag-list a:hover{
+  background: rgba(199,255,74,.08) !important;
+  border-color: rgba(199,255,74,.18) !important;
+  color: var(--k-lime) !important;
+  box-shadow: 0 0 16px rgba(199,255,74,.08);
+}
+
+/* ---- Archives: keep original year look; improve row identity ---- */
+#archives .list-group-item,
+.archives .list-group-item,
+#archives li,
+.archives li{
+  box-shadow: inset 3px 0 0 rgba(53,227,161,.16);
+}
+#archives .list-group-item:hover,
+.archives .list-group-item:hover,
+#archives li:hover,
+.archives li:hover{
+  box-shadow:
+    inset 3px 0 0 rgba(199,255,74,.18),
+    0 0 0 1px rgba(199,255,74,.08) inset;
 }
 
 
