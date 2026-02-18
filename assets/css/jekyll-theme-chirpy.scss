@@ -24,10 +24,10 @@
   --k-surface2: rgba(7,11,8,.57);
 
   /* Borders / glow */
-  --k-border:  rgba(199,255,74,.12);
-  --k-border2: rgba(53,227,161,.14);
-  --k-glow:  rgba(199,255,74,.20);
-  --k-glow2: rgba(53,227,161,.16);
+  --k-border:  rgba(199,255,74,.14);
+  --k-border2: rgba(53,227,161,.16);
+  --k-glow:  rgba(199,255,74,.22);
+  --k-glow2: rgba(53,227,161,.18);
 }
 
 /* ---------- Background ---------- */
@@ -1629,3 +1629,307 @@ a.post-tag:hover,
   border: 2px solid rgba(0,0,0,.40);
 }
 ::-webkit-scrollbar-track{ background: rgba(0,0,0,.25); }
+
+
+/* =========================================================
+   v5: Kakapo signature polish (mid: natural olive + cyber lime)
+   - Post list cards: subtle left lightbar + hover/focus glow
+   - Callouts (prompt-*): unified Kakapo palette
+   - Code blocks: terminal top line + dots + header skin
+   - Panels: "Recently Updated" list accent
+   ========================================================= */
+
+/* ---------- Post list: left lightbar (visible even at rest) ---------- */
+/* Re-enable transitions/pseudo-elements that were globally disabled above */
+#post-list .post-preview,
+.post-list .post-preview,
+#search-results .post-preview,
+#related-posts .post-preview{
+  position: relative !important;
+  overflow: hidden !important;
+  /* bring back a controlled transition (no movement) */
+  transition: background .22s ease, box-shadow .22s ease, border-color .22s ease !important;
+}
+
+#post-list .post-preview::before,
+.post-list .post-preview::before,
+#search-results .post-preview::before,
+#related-posts .post-preview::before{
+  content: "" !important;
+  display: block !important;
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: linear-gradient(
+    180deg,
+    rgba(127,190,74,.18),
+    rgba(127,190,74,.52),
+    rgba(191,245,90,.40)
+  );
+  opacity: .22;
+  filter: blur(.0px);
+  pointer-events: none;
+}
+
+#post-list .post-preview::after,
+.post-list .post-preview::after,
+#search-results .post-preview::after,
+#related-posts .post-preview::after{
+  content: "" !important;
+  display: block !important;
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(500px 260px at 20% 0%, rgba(127,190,74,.10), transparent 55%),
+    radial-gradient(520px 300px at 85% 20%, rgba(191,245,90,.08), transparent 60%);
+  opacity: .18;
+  pointer-events: none;
+}
+
+#post-list .post-preview:hover,
+#post-list .post-preview:focus-within,
+.post-list .post-preview:hover,
+.post-list .post-preview:focus-within,
+#search-results .post-preview:hover,
+#search-results .post-preview:focus-within,
+#related-posts .post-preview:hover,
+#related-posts .post-preview:focus-within{
+  border-color: rgba(191,245,90,.22) !important;
+  box-shadow:
+    0 18px 40px rgba(0,0,0,.46),
+    0 0 0 1px rgba(191,245,90,.10) inset,
+    0 0 22px rgba(127,190,74,.16) !important;
+}
+
+#post-list .post-preview:hover::before,
+#post-list .post-preview:focus-within::before,
+.post-list .post-preview:hover::before,
+.post-list .post-preview:focus-within::before,
+#search-results .post-preview:hover::before,
+#search-results .post-preview:focus-within::before,
+#related-posts .post-preview:hover::before,
+#related-posts .post-preview:focus-within::before{
+  opacity: .62;
+}
+
+#post-list .post-preview:hover::after,
+#post-list .post-preview:focus-within::after,
+.post-list .post-preview:hover::after,
+.post-list .post-preview:focus-within::after,
+#search-results .post-preview:hover::after,
+#search-results .post-preview:focus-within::after,
+#related-posts .post-preview:hover::after,
+#related-posts .post-preview:focus-within::after{
+  opacity: .26;
+}
+
+/* Keep "no movement" even if older rules add transforms elsewhere */
+#post-list .post-preview,
+.post-list .post-preview,
+#search-results .post-preview,
+#related-posts .post-preview,
+#post-list .post-preview:hover,
+.post-list .post-preview:hover,
+#search-results .post-preview:hover,
+#related-posts .post-preview:hover{
+  transform: none !important;
+  filter: none !important;
+}
+
+/* Title underline micro-accent inside cards (helps “changed” perception) */
+#post-list .post-preview .card-title,
+.post-list .post-preview .card-title,
+#search-results .post-preview .card-title{
+  position: relative;
+}
+#post-list .post-preview .card-title::after,
+.post-list .post-preview .card-title::after,
+#search-results .post-preview .card-title::after{
+  content:"";
+  display:block;
+  height: 2px;
+  width: 54px;
+  margin-top: .35rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(127,190,74,.65), rgba(191,245,90,.40), transparent);
+  opacity: .55;
+}
+
+/* ---------- Callouts / Prompts (Chirpy: prompt-tip/info/warning/danger) ---------- */
+.prompt,
+.prompt-tip,
+.prompt-info,
+.prompt-warning,
+.prompt-danger{
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(10,16,12,.68), rgba(7,11,8,.56)) padding-box,
+    linear-gradient(135deg, rgba(127,190,74,.26), rgba(191,245,90,.22), rgba(53,227,161,.12)) border-box !important;
+  border: 1px solid transparent !important;
+  border-radius: 16px !important;
+  padding: .95rem 1.05rem !important;
+  box-shadow:
+    0 14px 30px rgba(0,0,0,.34),
+    0 0 0 1px rgba(127,190,74,.06) inset;
+  color: rgba(255,255,255,.88) !important;
+}
+
+.prompt::before,
+.prompt-tip::before,
+.prompt-info::before,
+.prompt-warning::before,
+.prompt-danger::before{
+  content:"";
+  position:absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  border-radius: 16px 0 0 16px;
+  background: rgba(127,190,74,.55);
+  opacity: .95;
+}
+
+.prompt-tip::before{ background: rgba(127,190,74,.62); }     /* natural olive */
+.prompt-info::before{ background: rgba(58,217,154,.58); }    /* mint */
+.prompt-warning::before{ background: rgba(191,245,90,.50); } /* lime-amber */
+.prompt-danger::before{ background: rgba(255,110,110,.52); } /* muted red */
+
+.prompt a,
+.prompt-tip a,
+.prompt-info a,
+.prompt-warning a,
+.prompt-danger a{
+  color: var(--k-lime) !important;
+  text-decoration-thickness: 1px;
+}
+
+.prompt strong,
+.prompt-tip strong,
+.prompt-info strong,
+.prompt-warning strong,
+.prompt-danger strong{
+  color: rgba(255,255,255,.94);
+}
+
+/* If Chirpy renders a title span, make it look like a “leaf label” */
+.prompt .prompt-title,
+.prompt-tip .prompt-title,
+.prompt-info .prompt-title,
+.prompt-warning .prompt-title,
+.prompt-danger .prompt-title{
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  font-weight: 650;
+  letter-spacing: .2px;
+  color: rgba(255,255,255,.92);
+}
+
+/* ---------- Code blocks: terminal bar ---------- */
+div.highlighter-rouge,
+figure.highlight,
+div.highlight{
+  position: relative;
+  border-color: rgba(127,190,74,.18) !important;
+  box-shadow:
+    0 14px 28px rgba(0,0,0,.30),
+    0 0 0 1px rgba(127,190,74,.06) inset !important;
+}
+
+/* top gradient line */
+div.highlighter-rouge::before,
+figure.highlight::before,
+div.highlight::before{
+  content:"";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(127,190,74,.62), rgba(191,245,90,.42), rgba(53,227,161,.22), transparent);
+  opacity: .95;
+  pointer-events: none;
+}
+
+/* terminal dots */
+div.highlighter-rouge::after,
+figure.highlight::after,
+div.highlight::after{
+  content:"";
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  width: 34px;
+  height: 10px;
+  background:
+    radial-gradient(circle, rgba(255,255,255,.55) 0 3px, transparent 4px) 0 50%/10px 10px,
+    radial-gradient(circle, rgba(127,190,74,.65) 0 3px, transparent 4px) 50% 50%/10px 10px,
+    radial-gradient(circle, rgba(191,245,90,.55) 0 3px, transparent 4px) 100% 50%/10px 10px;
+  opacity: .80;
+  pointer-events: none;
+}
+
+/* Optional code header skin (exists in some Chirpy versions) */
+.code-header,
+div.highlight > .code-header,
+figure.highlight > .code-header{
+  background: rgba(0,0,0,.22) !important;
+  border-bottom: 1px solid rgba(127,190,74,.12) !important;
+  color: rgba(255,255,255,.74) !important;
+}
+.code-header .language,
+.code-header .lang{
+  color: rgba(191,245,90,.70) !important;
+}
+.code-header .clipboard,
+.code-header button{
+  color: rgba(255,255,255,.72) !important;
+}
+.code-header .clipboard:hover,
+.code-header button:hover{
+  color: var(--k-lime) !important;
+}
+
+/* Code font + selection feel */
+.post-content pre code{
+  color: rgba(255,255,255,.86);
+}
+.post-content pre{
+  scrollbar-color: rgba(127,190,74,.28) rgba(0,0,0,.25);
+}
+
+/* ---------- Right panel: "Recently Updated" list identity ---------- */
+#panel-wrapper .panel{
+  overflow: hidden;
+}
+#panel-wrapper .panel .panel-title{
+  position: relative;
+}
+#panel-wrapper .panel .panel-title::after{
+  content:"";
+  display:block;
+  height: 2px;
+  width: 72px;
+  margin-top: .4rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(127,190,74,.55), rgba(191,245,90,.32), transparent);
+  opacity: .65;
+}
+
+#panel-wrapper .panel ul,
+#panel-wrapper .panel ol{
+  padding-left: 1.1rem;
+}
+#panel-wrapper .panel li{
+  position: relative;
+}
+#panel-wrapper .panel li::marker{ color: rgba(127,190,74,.55); }
+#panel-wrapper .panel a:hover{
+  color: var(--k-lime) !important;
+}
+
+/* ---------- About page: make empty pages feel intentional ---------- */
+body:not(.home) #core-wrapper{
+  background:
+    radial-gradient(900px 600px at 10% 0%, rgba(127,190,74,.10), transparent 60%),
+    radial-gradient(900px 600px at 90% 10%, rgba(191,245,90,.08), transparent 60%);
+  border-radius: 22px;
+}
+
