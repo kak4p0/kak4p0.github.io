@@ -1,5 +1,5 @@
 ---
-title: "[Web] narnes-and-bobles"
+title: "[LA CTF 2026][Web] narnes-and-bobles"
 description: Writing about the "narnes-and-bobles" of LA CTF 2026.
 date: 2026-02-10 01:00:00 +0900
 categories: [LA CTF 2026]
