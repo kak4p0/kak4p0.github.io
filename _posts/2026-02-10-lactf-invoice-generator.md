@@ -1,5 +1,5 @@
 ---
-title: "[Web] lactf-invoice-generator"
+title: "[LA CTF 2026][Web] lactf-invoice-generator"
 description: Writing about the "lactf-invoice-generator" of LA CTF 2026.
 date: 2026-02-10 01:00:00 +0900
 categories: [LA CTF 2026]
