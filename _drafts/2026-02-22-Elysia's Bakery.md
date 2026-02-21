@@ -260,4 +260,8 @@ curl -s -X POST 'http://chals.bitskrieg.in:32274/admin/list' \
 BITSCTF{dc10bd7ec1d0dacaf5ca3022aa80b058}
 ```
 
+---
+<img width="604" height="103" alt="image" src="https://github.com/user-attachments/assets/4d3c5733-66dd-4a5d-8305-0194c5a2ff41" />
+
+---
 
