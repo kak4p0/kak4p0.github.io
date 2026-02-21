@@ -1,11 +1,18 @@
 ---
-title: "[Web] ELYSIA'S BAKERY"
-description: Writing about the "ELYSIA'S BAKERY" of BITS CTF 2026.
+title: "[Web] Elysia's Bakery"
+description: Writing about the "Elysia's Bakery" of BITS CTF 2026.
 date: 2026-02-22 01:00:00 +0900
 categories: [CTF, BITS CTF 2026]
 tags: [Web]
 toc: true
 comments: false
+---
+
+---
+- Name : Elysia's Bakery
+- Category : Web
+- Description : Becoming admin shouldn't be too hard?
+- Difficulty : ★☆☆☆☆
 ---
 
 ## TL;DR
