@@ -9,6 +9,8 @@ comments: false
 ---
 
 # safe not safe (BITS CTF 2026)
+<img width="667" height="643" alt="image" src="https://github.com/user-attachments/assets/52208de0-a5c7-4336-ab4d-0a0adfc8b9b2" />
+
 ---
 - Name : safe not safe
 - Category : Rev
