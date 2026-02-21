@@ -8,6 +8,7 @@ toc: true
 comments: false
 ---
 
+# rusty-proxy (BITS CTF 2026)
 ---
 - Name : rusty-proxy
 - Category : Web
