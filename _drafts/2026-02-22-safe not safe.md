@@ -132,8 +132,6 @@ Reset password를 성공하면 프로그램이 `/dev/vda`를 읽어서 **플래�
 
 ---
 
----
-
 ## 3) Exploit
 
 ---
@@ -212,3 +210,7 @@ Reset password에서 얻는 값:
 - `response = challenge ^ ((x*31337 + y) % 1000000) ^ ((x ^ y) % 1000000)`
 
 여기서 `u`는 사라진다.
+
+---
+<img width="700" height="420" alt="image" src="https://github.com/user-attachments/assets/6845ca19-0cdc-4fe5-b5c1-e8d25bfcf5ec" />
+---
