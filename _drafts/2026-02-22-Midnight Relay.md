@@ -9,6 +9,9 @@ comments: false
 ---
 
 # Midnight Relay (BITS CTF 2026)
+<img width="654" height="654" alt="image" src="https://github.com/user-attachments/assets/5207247c-6891-4079-b1a8-829a0e278c64" />
+
+
 ---
 - Name : Midnight Relay
 - Category : Pwn
