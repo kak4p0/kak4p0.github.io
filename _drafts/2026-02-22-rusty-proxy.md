@@ -155,7 +155,7 @@ curl "http://rusty-proxy.chals.bitskrieg.in:25001/%61dmin/flag"
 ```
 
 ```json
-{"flag": "BITSCTF{s0m3_flag_here}"}
+{"flag": "BITSCTF{...}"}
 ```
 
 ---
