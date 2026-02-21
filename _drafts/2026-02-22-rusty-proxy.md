@@ -1,6 +1,6 @@
 ---
-title: "[Web] Rusty proxy"
-description: Writing about the "Rusty proxy" of BITS CTF 2026.
+title: "[Web] rusty-proxy"
+description: Writing about the "rusty-proxy" of BITS CTF 2026.
 date: 2026-02-22 01:00:00 +0900
 categories: [CTF, BITS CTF 2026]
 tags: [Web]
@@ -9,6 +9,12 @@ comments: false
 ---
 
 ---
+- Name : rusty-proxy
+- Category : Web
+- Description : I just vibecoded a highly secure reverse proxy using rust, I hope it works properly.
+- Difficulty : ★☆☆☆☆
+---
+
 ## Rusty Proxy
 <img width="656" height="517" alt="image" src="https://github.com/user-attachments/assets/1112a134-6f70-43ca-b86a-197fdfc56720" />
 
