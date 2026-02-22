@@ -9,11 +9,14 @@ comments: false
 ---
 
 # rusty-proxy (BITS CTF 2026)
+
 ---
+
 - Name : rusty-proxy
 - Category : Web
 - Description : I just vibecoded a highly secure reverse proxy using rust, I hope it works properly.
 - Difficulty : ★☆☆
+
 ---
 
 ## Rusty Proxy
