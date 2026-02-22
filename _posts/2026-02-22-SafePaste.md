@@ -240,6 +240,7 @@ curl -i -X POST http://$TARGET_IP:3000/report \
 ---
 <img width="1706" height="550" alt="스크린샷 2026-02-22 062123" src="https://github.com/user-attachments/assets/618c879e-12fe-4745-87c0-2a9dcfa9af52" />
 <img width="1190" height="302" alt="스크린샷 2026-02-22 171852" src="https://github.com/user-attachments/assets/ac7e7406-2f3c-40e4-96d1-ef75bbfa9c55" />
+
 ---
 
 **Flag:** `BITSCTF{n07_r34lly_4_d0mpur1fy_byp455?_w3b_6uy_51nc3r3ly_4p0l061535_f0r_7h3_pr3v10u5_ch4ll3n635🥀}`
