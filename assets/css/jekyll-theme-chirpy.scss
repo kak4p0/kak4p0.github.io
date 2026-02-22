@@ -2724,18 +2724,51 @@ a.post-tag{
   opacity: .9;
 }
 
-/* 모바일에서는 코드 더 컴팩트하게 + 스크롤 터치 우선 */
+/* =========================================================
+   모바일 코드블록 - 컴팩트 + 가독성 최적화
+   ========================================================= */
 @media (max-width: 768px) {
-  .post-content pre,
-  .post-content .highlight pre,
-  .post-content .highlighter-rouge pre {
-    font-size: .82rem !important;
-    line-height: 1.5 !important;
+
+  /* 코드블록 래퍼: 패딩 줄이고 border-radius 살짝 줄임 */
+  .post-content div.highlighter-rouge,
+  .post-content figure.highlight,
+  .post-content div.highlight {
+    border-radius: 10px !important;
+    margin: .7rem 0 !important;
   }
 
+  /* 헤더(언어명/복사버튼) 높이 줄이기 */
+  .post-content .code-header,
+  .post-content figure.highlight > .code-header,
+  .post-content div.highlight > .code-header,
+  .post-content div.highlighter-rouge > .code-header {
+    min-height: 1.8rem !important;
+    padding: 0 .75rem !important;
+    font-size: .72rem !important;
+  }
+
+  /* pre 폰트 & 줄간격 */
+  .post-content pre,
+  .post-content .highlight pre,
+  .post-content .highlighter-rouge pre,
+  .post-content td.rouge-code pre,
+  .post-content td.code pre {
+    font-size: .72rem !important;    /* 크게 보이던 글자 → 작게 */
+    line-height: 1.45 !important;
+  }
+
+  /* code 태그 폰트 크기도 같이 */
+  .post-content pre code,
+  .post-content td.rouge-code pre code,
+  .post-content td.code pre code {
+    font-size: .72rem !important;
+  }
+
+  /* 패딩 줄이기 */
   .post-content td.rouge-gutter pre,
   .post-content td.gutter pre {
-    padding: .72rem .5rem .78rem .65rem !important;
+    padding: .55rem .4rem .55rem .5rem !important;
+    font-size: .68rem !important;
   }
 
   .post-content td.rouge-code pre,
@@ -2743,16 +2776,22 @@ a.post-tag{
   .post-content > pre,
   .post-content .highlighter-rouge > pre,
   .post-content .highlight > pre {
-    padding: .72rem .8rem .78rem .7rem !important;
+    padding: .55rem .75rem .55rem .6rem !important;
   }
 
-  /* 모바일에서 긴 줄을 확실히 살려서 스와이프 가능하게 */
-  .post-content .highlight,
-  .post-content .highlighter-rouge,
-  .post-content figure.highlight > .highlight,
-  .post-content div.highlighter-rouge > .highlight {
-    max-width: 100%;
-    overflow-x: auto !important;
+  /* 라인번호 열 너비 최소화 */
+  .post-content td.rouge-gutter,
+  .post-content td.gutter {
+    min-width: 0 !important;
+    width: auto !important;
+    padding-right: .3rem !important;
+  }
+
+  /* 인라인 코드 */
+  .post-content code:not(pre code) {
+    font-size: .72rem !important;
+    padding: .1em .35em !important;
+    border-radius: 5px !important;
   }
 }
 
