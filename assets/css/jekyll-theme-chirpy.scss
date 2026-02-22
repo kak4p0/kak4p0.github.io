@@ -2969,3 +2969,63 @@ body.layout-post #core-wrapper .post-content::before {
     white-space: pre !important;
   }
 }
+
+/* =========================================================
+   v18: DESKTOP CODE BLOCK HORIZONTAL SCROLL FIX
+   - pre width max-content !important 강제
+   - code white-space pre 데스크탑 전체 적용
+   - 래퍼 overflow-x: auto 재확인
+   ========================================================= */
+
+/* 데스크탑 포함 전체: 코드 래퍼가 스크롤 컨테이너가 되도록 */
+.post-content div.highlighter-rouge,
+.post-content figure.highlight,
+.post-content div.highlight,
+.post-content .highlight,
+.post-content .highlighter-rouge {
+  overflow-x: auto !important;
+  overflow-y: visible !important;
+  max-width: 100% !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+/* pre 자체는 콘텐츠 너비만큼 늘어나야 함 */
+.post-content pre,
+.post-content .highlight pre,
+.post-content .highlighter-rouge pre {
+  white-space: pre !important;
+  width: max-content !important;
+  min-width: 100% !important;
+  max-width: none !important;
+  overflow: visible !important;
+}
+
+/* code 태그도 줄바꿈 없이 */
+.post-content pre code,
+.post-content .highlight pre code,
+.post-content .highlighter-rouge pre code,
+.post-content td.rouge-code pre code,
+.post-content td.code pre code {
+  white-space: pre !important;
+  display: inline-block !important;
+  min-width: max-content !important;
+  max-width: none !important;
+}
+
+/* Rouge 라인번호 테이블: 데스크탑에서도 콘텐츠 너비 사용 */
+.post-content table.rouge-table {
+  display: table !important;
+  width: max-content !important;
+  min-width: 100% !important;
+  max-width: none !important;
+  table-layout: auto !important;
+}
+
+.post-content td.rouge-code pre,
+.post-content td.code pre {
+  width: max-content !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  overflow: visible !important;
+  white-space: pre !important;
+}
