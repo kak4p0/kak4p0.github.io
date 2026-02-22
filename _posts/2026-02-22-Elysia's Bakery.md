@@ -9,11 +9,14 @@ comments: false
 ---
 
 # Elysia's Bakery (BITS CTF 2026)
+
 ---
+
 - Name : Elysia's Bakery
 - Category : Web
 - Description : Becoming admin shouldn't be too hard?
 - Difficulty : ★☆☆
+- 
 ---
 
 ## TL;DR
