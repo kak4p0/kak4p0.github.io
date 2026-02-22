@@ -9,11 +9,14 @@ comments: false
 ---
 
 # SafePaste (BITS CTF 2026)
+
 ---
+
 - Name : SafePaste
 - Category : Web
 - Description : Yet another paste challenge?
 - Difficulty : ★★★
+
 ---
 
 ## TL;DR
