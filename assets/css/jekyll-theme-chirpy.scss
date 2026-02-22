@@ -125,7 +125,8 @@ div.highlight{
   border: 1px solid rgba(53,227,161,.14) !important;
   border-radius: 16px !important;
   box-shadow: 0 10px 22px rgba(0,0,0,.26) !important;
-  overflow: hidden;
+  overflow-x: auto !important;   /* ← hidden → auto: 가로 스크롤 허용 */
+  overflow-y: hidden !important;
   max-width: 100% !important;
 }
 div.highlighter-rouge pre,
@@ -135,8 +136,11 @@ div.highlight pre{
   border: none !important;
   box-shadow: none !important;
   margin: 0 !important;
-  overflow-x: auto !important;
-  max-width: 100% !important;
+  overflow: visible !important;  /* 스크롤은 부모 div가 담당 */
+  white-space: pre !important;
+  width: max-content !important;
+  min-width: 100% !important;
+  max-width: none !important;
 }
 .post-content table{
   display: block;
@@ -2878,9 +2882,11 @@ body.layout-post #core-wrapper .post-content::before {
   .post-content div.highlight,
   .post-content .highlight,
   .post-content .highlighter-rouge {
-    overflow: visible !important;
+    overflow-x: auto !important;   /* ← visible → auto: 모바일 스크롤 허용 */
+    overflow-y: hidden !important;
     max-width: 100% !important;
-    touch-action: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    touch-action: pan-x pan-y !important;
   }
 
   /* 2) Rouge table layout often causes the 'tail' to be cut off on mobile.
