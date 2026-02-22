@@ -2751,3 +2751,115 @@ a.post-tag{
     overflow-x: auto !important;
   }
 }
+
+/* =========================================================
+   v12: HARD FIX for mobile horizontal scroll in code blocks (Chirpy + Rouge)
+   - Fix cases where long lines are clipped and cannot be panned (especially Step4 / shell payloads)
+   - Handles line-numbered Rouge tables and plain pre blocks
+   ========================================================= */
+
+/* Post panel texture/card should not clip nested horizontal scrollers */
+body.layout-post #core-wrapper .post-content {
+  overflow: visible !important;
+}
+body.layout-post #core-wrapper .post-content::before {
+  border-radius: inherit;
+}
+
+/* Make the actual visible code wrappers horizontal scrollers (not just <pre>) */
+.post-content div.highlighter-rouge,
+.post-content figure.highlight,
+.post-content div.highlight,
+.post-content .highlight,
+.post-content .highlighter-rouge {
+  display: block !important;
+  max-width: 100% !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  -webkit-overflow-scrolling: touch !important;
+  overscroll-behavior-x: contain;
+  touch-action: pan-x pan-y;
+}
+
+/* Plain code blocks (no line numbers): let content define width so parent scroller can move */
+.post-content pre {
+  white-space: pre !important;
+  width: max-content;
+  min-width: 100%;
+  max-width: none !important;
+}
+
+/* Rouge line-number table: force intrinsic width (content width), no shrink-to-fit clipping */
+.post-content table.rouge-table,
+.post-content .highlight table.rouge-table,
+.post-content .highlighter-rouge table.rouge-table {
+  display: table !important;
+  width: max-content !important;
+  min-width: 100% !important;
+  max-width: none !important;
+  table-layout: auto !important;
+}
+
+/* Prevent code column from shrinking and hiding the tail of long lines */
+.post-content td.rouge-code,
+.post-content td.code {
+  width: auto !important;
+  max-width: none !important;
+  overflow: visible !important;
+}
+
+/* In line-number mode, keep gutter fixed-ish and let code pre expand */
+.post-content td.rouge-gutter,
+.post-content td.gutter {
+  white-space: nowrap;
+}
+
+.post-content td.rouge-code pre,
+.post-content td.code pre {
+  display: block !important;
+  width: max-content !important;
+  min-width: 100% !important;
+  max-width: none !important;
+  overflow: visible !important; /* scroll handled by .highlight wrapper */
+  white-space: pre !important;
+}
+
+/* Some themes inject inline-block/relative wrappers inside code cells; keep intrinsic width */
+.post-content td.rouge-code pre code,
+.post-content td.code pre code,
+.post-content .highlight pre code,
+.post-content .highlighter-rouge pre code {
+  display: inline-block !important;
+  min-width: max-content !important;
+  max-width: none !important;
+  white-space: pre !important;
+}
+
+/* iOS Safari: horizontal pan can fail when ancestor has transforms/filters; this helps */
+@supports (-webkit-touch-callout: none) {
+  .post-content div.highlighter-rouge,
+  .post-content figure.highlight,
+  .post-content div.highlight,
+  .post-content .highlight {
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+  }
+}
+
+/* Mobile compactness + reliable pan target */
+@media (max-width: 768px) {
+  .post-content div.highlighter-rouge,
+  .post-content figure.highlight,
+  .post-content div.highlight,
+  .post-content .highlight {
+    cursor: grab;
+  }
+
+  .post-content td.rouge-code pre,
+  .post-content td.code pre,
+  .post-content > pre,
+  .post-content .highlight > pre,
+  .post-content .highlighter-rouge > pre {
+    padding-right: 1rem !important; /* give finger room at the far right edge */
+  }
+}
