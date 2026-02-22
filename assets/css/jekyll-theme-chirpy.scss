@@ -2863,3 +2863,109 @@ body.layout-post #core-wrapper .post-content::before {
     padding-right: 1rem !important; /* give finger room at the far right edge */
   }
 }
+
+/* =========================================================
+   v13: MOBILE ROUGE FALLBACK (force code-cell scroller)
+   - If Rouge line-number table intrinsic width breaks on mobile Safari,
+     hide gutter and make the code cell the scroll container.
+   - Applies to ALL posts.
+   ========================================================= */
+
+@media (max-width: 768px) {
+  /* 1) Code wrappers must not clip the actual scroller */
+  .post-content figure.highlight,
+  .post-content div.highlighter-rouge,
+  .post-content div.highlight,
+  .post-content .highlight,
+  .post-content .highlighter-rouge {
+    overflow: visible !important;
+    max-width: 100% !important;
+    touch-action: auto !important;
+  }
+
+  /* 2) Rouge table layout often causes the 'tail' to be cut off on mobile.
+        Hide the gutter and let the code cell become a normal block scroller. */
+  .post-content table.rouge-table,
+  .post-content .highlight table.rouge-table,
+  .post-content .highlighter-rouge table.rouge-table {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    table-layout: auto !important;
+    overflow: visible !important;
+  }
+
+  .post-content table.rouge-table > tbody,
+  .post-content .highlight table.rouge-table > tbody,
+  .post-content .highlighter-rouge table.rouge-table > tbody,
+  .post-content table.rouge-table > tbody > tr,
+  .post-content .highlight table.rouge-table > tbody > tr,
+  .post-content .highlighter-rouge table.rouge-table > tbody > tr {
+    display: block !important;
+    width: 100% !important;
+  }
+
+  /* Hide line numbers on mobile (readability + robust scroll) */
+  .post-content td.rouge-gutter,
+  .post-content td.gutter {
+    display: none !important;
+  }
+
+  /* Code cell becomes the real horizontal scroller */
+  .post-content td.rouge-code,
+  .post-content td.code {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior-x: contain;
+    touch-action: pan-x pan-y !important;
+  }
+
+  .post-content td.rouge-code pre,
+  .post-content td.code pre {
+    display: block !important;
+    width: max-content !important;
+    min-width: 100% !important;
+    max-width: none !important;
+    overflow: visible !important;
+    white-space: pre !important;
+    margin: 0 !important;
+    padding-right: 1rem !important;
+  }
+
+  .post-content td.rouge-code pre code,
+  .post-content td.code pre code {
+    display: inline-block !important;
+    min-width: max-content !important;
+    white-space: pre !important;
+  }
+
+  /* 3) Plain (no-line-number) code blocks: ensure pre itself scrolls */
+  .post-content > pre,
+  .post-content .highlighter-rouge > pre,
+  .post-content .highlight > pre,
+  .post-content div.highlighter-rouge > pre,
+  .post-content figure.highlight > pre {
+    display: block !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    touch-action: pan-x pan-y !important;
+    width: auto !important;
+    max-width: 100% !important;
+  }
+
+  .post-content > pre code,
+  .post-content .highlighter-rouge > pre code,
+  .post-content .highlight > pre code,
+  .post-content div.highlighter-rouge > pre code,
+  .post-content figure.highlight > pre code {
+    display: inline-block !important;
+    min-width: max-content !important;
+    white-space: pre !important;
+  }
+}
