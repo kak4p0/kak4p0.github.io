@@ -15,7 +15,7 @@ comments: false
 - Name : rusty-proxy
 - Category : Web
 - Description : I just vibecoded a highly secure reverse proxy using rust, I hope it works properly.
-- Difficulty : ★☆☆
+- Difficulty : ★☆☆☆☆
 
 ---
 
