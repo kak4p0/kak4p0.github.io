@@ -2582,3 +2582,172 @@ a.post-tag{
     padding: 0 .18rem;
   }
 }
+
+
+/* =========================================================
+   v11: Code block readability + robust horizontal scroll (mobile)
+   - Step4 긴 코드 라인 가로 스크롤 복구 (Rouge table / pre 모두 대응)
+   - 코드 가독성 개선 (폰트/줄간격/패딩/gutter 대비)
+   ========================================================= */
+
+/* 코드블록 래퍼는 둥근 모서리만 담당, 실제 스크롤은 내부 레이어가 담당 */
+.post-content figure.highlight,
+.post-content div.highlighter-rouge,
+.post-content div.highlight {
+  max-width: 100% !important;
+}
+
+/* ===== 핵심: 스크롤 가능한 레이어를 여러 구조에 모두 부여 ===== */
+.post-content pre,
+.post-content .highlight,
+.post-content .highlighter-rouge,
+.post-content figure.highlight > .highlight,
+.post-content div.highlighter-rouge > .highlight,
+.post-content .highlight pre,
+.post-content .highlighter-rouge pre {
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  touch-action: pan-x pan-y;
+}
+
+/* 코드 내용은 줄바꿈 금지 + 내용 길이만큼 폭 유지 (스크롤이 생기도록) */
+.post-content pre,
+.post-content pre code,
+.post-content .highlight pre,
+.post-content .highlight code,
+.post-content .highlighter-rouge pre,
+.post-content .highlighter-rouge code,
+.post-content .rouge-code pre,
+.post-content .rouge-code code {
+  white-space: pre !important;
+  overflow-wrap: normal !important;
+  word-break: normal !important;
+}
+
+.post-content pre code,
+.post-content .highlight code,
+.post-content .highlighter-rouge code {
+  display: inline-block;      /* 내용 폭 유지 */
+  min-width: max-content;     /* 긴 줄이면 가로 스크롤 유도 */
+}
+
+/* ===== Rouge line-number table 구조 대응 (가장 중요) ===== */
+/* 기존 .post-content table { display:block } 규칙의 부작용 방지 */
+.post-content .highlight table.rouge-table,
+.post-content .highlighter-rouge table.rouge-table,
+.post-content figure.highlight table.rouge-table {
+  display: table !important;
+  width: max-content !important;
+  min-width: 100%;
+  max-width: none !important;
+  table-layout: auto !important;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 0 !important;
+}
+
+/* 테이블 전체가 내용폭을 유지하도록 하고, 스크롤은 부모 .highlight가 담당 */
+.post-content .highlight .rouge-table tbody,
+.post-content .highlight .rouge-table tr {
+  width: auto !important;
+}
+
+.post-content .highlight td,
+.post-content .highlighter-rouge td {
+  vertical-align: top;
+  max-width: none !important;
+}
+
+/* 라인넘버/코드 셀 가독성 개선 */
+.post-content td.rouge-gutter,
+.post-content td.gutter {
+  background: rgba(255,255,255,.02);
+  border-right: 1px solid rgba(127,190,74,.12);
+  user-select: none;
+}
+
+.post-content td.rouge-gutter pre,
+.post-content td.gutter pre {
+  padding: .9rem .65rem 1rem .9rem !important;
+  margin: 0 !important;
+  opacity: .72;
+}
+
+.post-content td.rouge-code pre,
+.post-content td.code pre {
+  padding: .9rem 1rem 1rem .85rem !important;
+  margin: 0 !important;
+}
+
+/* 일반 pre(라인넘버 없는 코드블록)도 패딩/가독성 통일 */
+.post-content > pre,
+.post-content .highlighter-rouge > pre,
+.post-content .highlight > pre {
+  padding: .9rem 1rem 1rem !important;
+}
+
+/* 코드 타이포그래피 */
+.post-content pre,
+.post-content code.highlighter-rouge,
+.post-content .highlight pre {
+  font-size: .92rem;
+  line-height: 1.6;
+  tab-size: 2;
+  -moz-tab-size: 2;
+  text-rendering: optimizeLegibility;
+}
+
+.post-content .lineno {
+  opacity: .85;
+}
+
+/* 헤더(언어명/복사 버튼) 가독성 */
+.post-content .code-header,
+.post-content figure.highlight > .code-header,
+.post-content div.highlight > .code-header,
+.post-content div.highlighter-rouge > .code-header {
+  min-height: 2.2rem;
+  line-height: 1;
+}
+
+.post-content .code-header .language,
+.post-content .code-header .lang {
+  font-size: .82rem;
+  font-weight: 600;
+  letter-spacing: .02em;
+  opacity: .9;
+}
+
+/* 모바일에서는 코드 더 컴팩트하게 + 스크롤 터치 우선 */
+@media (max-width: 768px) {
+  .post-content pre,
+  .post-content .highlight pre,
+  .post-content .highlighter-rouge pre {
+    font-size: .82rem !important;
+    line-height: 1.5 !important;
+  }
+
+  .post-content td.rouge-gutter pre,
+  .post-content td.gutter pre {
+    padding: .72rem .5rem .78rem .65rem !important;
+  }
+
+  .post-content td.rouge-code pre,
+  .post-content td.code pre,
+  .post-content > pre,
+  .post-content .highlighter-rouge > pre,
+  .post-content .highlight > pre {
+    padding: .72rem .8rem .78rem .7rem !important;
+  }
+
+  /* 모바일에서 긴 줄을 확실히 살려서 스와이프 가능하게 */
+  .post-content .highlight,
+  .post-content .highlighter-rouge,
+  .post-content figure.highlight > .highlight,
+  .post-content div.highlighter-rouge > .highlight {
+    max-width: 100%;
+    overflow-x: auto !important;
+  }
+}
