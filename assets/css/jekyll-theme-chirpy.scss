@@ -150,7 +150,13 @@ div.highlight pre{
   height: auto;
 }
 #core-wrapper, .post-content{ min-width: 0 !important; }
-.post-content *{ overflow-wrap: anywhere; }
+.post-content p,
+.post-content li,
+.post-content blockquote,
+.post-content td,
+.post-content th{
+  overflow-wrap: anywhere;
+}
 
 /* ---------- Remove hover effects ---------- */
 .post-preview,
@@ -2401,3 +2407,52 @@ body[data-page="about"] #core-wrapper .post-content > *{
   z-index: 1;
 }
 
+
+
+/* ===== Code block horizontal scroll fix (mobile) ===== */
+/* global overflow-wrap가 코드블록까지 적용되는 것 방지 + 모바일 가로 스크롤 복구 */
+.post-content pre,
+.post-content pre code,
+.post-content .highlight,
+.post-content .highlighter-rouge,
+.post-content .rouge-code,
+.post-content .rouge-code pre,
+.post-content figure.highlight {
+  overflow-wrap: normal !important;
+  word-break: normal !important;
+}
+
+.post-content pre,
+.post-content .highlight,
+.post-content .highlighter-rouge,
+.post-content figure.highlight {
+  max-width: 100%;
+}
+
+/* 실제 스크롤은 pre가 담당 */
+.post-content pre,
+.post-content .highlight pre,
+.post-content figure.highlight pre,
+.post-content .highlighter-rouge pre {
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  -webkit-overflow-scrolling: touch;
+  white-space: pre !important;
+  word-break: normal !important;
+}
+
+.post-content pre code,
+.post-content .highlight code,
+.post-content .highlighter-rouge code {
+  white-space: pre !important;
+  word-break: normal !important;
+  overflow-wrap: normal !important;
+}
+
+/* Rouge line-number table 구조 대응 */
+.post-content .rouge-table,
+.post-content .highlight table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+}
