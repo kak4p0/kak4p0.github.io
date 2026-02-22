@@ -16,7 +16,7 @@ comments: false
 - Category : Web
 - Description : Becoming admin shouldn't be too hard?
 - Difficulty : ★☆☆
-- 
+ 
 ---
 
 ## TL;DR
