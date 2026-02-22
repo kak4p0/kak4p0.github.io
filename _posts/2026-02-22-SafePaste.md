@@ -15,7 +15,7 @@ comments: false
 - Name : SafePaste
 - Category : Web
 - Description : Yet another paste challenge?
-- Difficulty : ★★★
+- Difficulty : ★★★☆☆
 
 ---
 
