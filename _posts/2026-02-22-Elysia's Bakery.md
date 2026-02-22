@@ -59,17 +59,6 @@ comments: false
 소스/엔드포인트 동작을 보면 `/admin/list`는 관리자 전용 API이며,  
 `folder` 값을 받아 해당 경로의 파일 목록을 반환하는 기능이다.
 
-예상 요청 형태:
-```http
-POST /admin/list
-Cookie: session=admin
-Content-Type: application/json
-
-{"folder":"."}
-```
-
-이런 류의 기능은 보통 아래 둘을 먼저 의심한다:
-
 - **인증 로직(session/cookie)**
 - **명령 실행(`ls`, `find`, `cat`) 사용 여부**
 
