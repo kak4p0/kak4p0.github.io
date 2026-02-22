@@ -95,6 +95,20 @@ a:hover, .post-content a:hover{ color: var(--k-lime); }
 .post-content{
   line-height: 1.78;
   letter-spacing: .1px;
+  word-break: keep-all;       /* 한국어: 단어 단위로 자연스럽게 줄바꿈 */
+  overflow-wrap: break-word;  /* 긴 영어 단어/URL도 잘림 없이 줄바꿈 */
+}
+.post-content p,
+.post-content li,
+.post-content h1,
+.post-content h2,
+.post-content h3,
+.post-content h4,
+.post-content h5,
+.post-content h6,
+.post-content blockquote{
+  word-break: keep-all;
+  overflow-wrap: break-word;
 }
 .post-content p{ margin-bottom: 1.05rem; }
 
