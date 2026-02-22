@@ -18,7 +18,8 @@ comments: false
 
 ## TL;DR
 1. **mXSS**: `isomorphic-dompurify`의 네임스페이스 뮤테이션 취약점(`<p id="$`...`)을 이용해 XSS를 트리거  
-2. **Socket Drop & Cookie Path Bypass**: `/hidden` 경로 직접 호출 시 발생하는 소켓 파괴(Socket Destroy) 방어 로직을 피하기 위해,  
+2. **Socket Drop & Cookie Path Bypass**: `/hidden` 경로 직접 호출 시
+   발생하는 소켓 파괴(Socket Destroy) 방어 로직을 피하기 위해,  
    하위 경로인 `/hidden/x` (404 Not Found)를 `iframe`으로 로드하여 `/hidden` 경로의 쿠키를 탈취   
 4. **Unicode Error Bypass**: 플래그에 포함된 이모지(🥀)로 인한 `btoa()` 인코딩 에러(`InvalidCharacterError`)를  
    `encodeURIComponent()`를 사용하여 우회  
@@ -130,10 +131,10 @@ Chrome은 실제 document URL 기준으로 cookie scope를 유지하므로 `docu
 # → id 속성값으로 저장되어 실제로는 무해해 보임
 ```
 
-#### Step 2: `$`` 트릭으로 HTML context 탈출
+#### Step 2: `` $` `` 트릭으로 HTML context 탈출
 
 ```bash
-# id 속성값 안에 `$`` 를 포함시키면:
+# id 속성값 안에 `` $` `` 를 포함시키면:
 # template.replace("{paste}", '<p id="$`<img onerror=XSS>">')
 # → template 앞부분의 첫 " 가 id를 닫고 <img onerror=XSS> 가 HTML로 파싱됨
 ```
