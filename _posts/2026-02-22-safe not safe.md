@@ -16,7 +16,7 @@ comments: false
 - Name : safe not safe
 - Category : Rev
 - Description : I forgot the password to my smart safe :( Luckily, I was able to dump the firmware.
-- Difficulty : ★★☆
+- Difficulty : ★★☆☆☆
 
 ---
 
