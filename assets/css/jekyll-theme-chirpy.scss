@@ -2456,3 +2456,129 @@ body[data-page="about"] #core-wrapper .post-content > *{
   max-width: 100%;
   overflow-x: auto;
 }
+
+/* =========================================================
+   v10: Tags page horizontal layout + smaller count bubble
+   - 정렬감을 위해 tags cloud를 flex row로 고정
+   - 태그 칩 간격 균일화
+   - count 원(sup/badge) 크기 축소
+   ========================================================= */
+
+/* Tags page container: horizontal flow */
+#tags,
+#tag-list,
+#tag-cloud,
+.tags{
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center;
+  gap: .42rem .5rem; /* row / column */
+}
+
+/* Remove per-chip margins (use flex gap instead) for cleaner alignment */
+#tags a,
+#tag-list a,
+#tag-cloud a,
+.tags a,
+.tag,
+.post-tag,
+a.tag,
+a.post-tag{
+  margin: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center;
+  white-space: nowrap;
+  line-height: 1.15;
+  gap: .28rem;
+}
+
+/* Tags page chips only: slightly smaller, more compact */
+#tags a,
+#tag-list a,
+#tag-cloud a,
+.tags a{
+  font-size: .86rem !important;
+  padding: .22rem .56rem !important;
+  border-radius: 999px !important;
+}
+
+/* count bubble / superscript / badge shrink */
+#tags sup,
+#tag-list sup,
+#tag-cloud sup,
+.tags sup,
+#tags .badge,
+#tag-list .badge,
+#tag-cloud .badge,
+.tags .badge,
+#tags .tag-count,
+#tag-list .tag-count,
+#tag-cloud .tag-count,
+.tags .tag-count,
+#tags .size,
+#tag-list .size,
+#tag-cloud .size,
+.tags .size{
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.05rem;
+  height: 1.05rem;
+  padding: 0 .22rem;
+  margin-left: .18rem !important;
+  border-radius: 999px;
+  font-size: .64rem !important;
+  line-height: 1 !important;
+  vertical-align: middle;
+}
+
+/* If theme applies superscript offset, flatten it for chip alignment */
+#tags sup,
+#tag-list sup,
+#tag-cloud sup,
+.tags sup{
+  top: 0 !important;
+  position: relative;
+}
+
+/* Mobile: extra compact chip + bubble */
+@media (max-width: 768px){
+  #tags,
+  #tag-list,
+  #tag-cloud,
+  .tags{
+    gap: .34rem .4rem;
+    padding: .9rem .9rem .8rem;
+  }
+
+  #tags a,
+  #tag-list a,
+  #tag-cloud a,
+  .tags a{
+    font-size: .81rem !important;
+    padding: .18rem .48rem !important;
+  }
+
+  #tags sup,
+  #tag-list sup,
+  #tag-cloud sup,
+  .tags sup,
+  #tags .badge,
+  #tag-list .badge,
+  #tag-cloud .badge,
+  .tags .badge,
+  #tags .tag-count,
+  #tag-list .tag-count,
+  #tag-cloud .tag-count,
+  .tags .tag-count,
+  #tags .size,
+  #tag-list .size,
+  #tag-cloud .size,
+  .tags .size{
+    min-width: .96rem;
+    height: .96rem;
+    font-size: .60rem !important;
+    padding: 0 .18rem;
+  }
+}
