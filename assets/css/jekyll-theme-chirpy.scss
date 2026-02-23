@@ -2743,7 +2743,7 @@ a.post-tag{
    ========================================================= */
 @media (max-width: 768px) {
 
-  /* 코드블록 래퍼: 패딩 줄이고 border-radius 살짝 줄임 */
+  /* 코드블록 래퍼 */
   .post-content div.highlighter-rouge,
   .post-content figure.highlight,
   .post-content div.highlight {
@@ -2758,39 +2758,40 @@ a.post-tag{
   .post-content div.highlighter-rouge > .code-header {
     min-height: 1.8rem !important;
     padding: 0 .75rem !important;
-    font-size: .72rem !important;
+    font-size: 11px !important;
   }
 
-  /* pre 폰트 & 줄간격 */
+  /* pre 폰트 & 줄간격 - px로 직접 지정해야 rem 스케일에 영향 안 받음 */
   .post-content pre,
   .post-content .highlight pre,
   .post-content .highlighter-rouge pre,
   .post-content td.rouge-code pre,
   .post-content td.code pre {
-    font-size: .72rem !important;    /* 크게 보이던 글자 → 작게 */
-    line-height: 1.45 !important;
+    font-size: 12px !important;
+    line-height: 1.5 !important;
   }
 
   /* code 태그 폰트 크기도 같이 */
   .post-content pre code,
   .post-content td.rouge-code pre code,
   .post-content td.code pre code {
-    font-size: .72rem !important;
+    font-size: 12px !important;
   }
 
-  /* 패딩 줄이기 */
+  /* 라인번호 */
   .post-content td.rouge-gutter pre,
   .post-content td.gutter pre {
-    padding: .55rem .4rem .55rem .5rem !important;
-    font-size: .68rem !important;
+    padding: .5rem .35rem .5rem .45rem !important;
+    font-size: 11px !important;
   }
 
+  /* 코드 영역 패딩 */
   .post-content td.rouge-code pre,
   .post-content td.code pre,
   .post-content > pre,
   .post-content .highlighter-rouge > pre,
   .post-content .highlight > pre {
-    padding: .55rem .75rem .55rem .6rem !important;
+    padding: .5rem .75rem .5rem .55rem !important;
   }
 
   /* 라인번호 열 너비 최소화 */
@@ -2803,7 +2804,7 @@ a.post-tag{
 
   /* 인라인 코드 */
   .post-content code:not(pre code) {
-    font-size: .72rem !important;
+    font-size: 12px !important;
     padding: .1em .35em !important;
     border-radius: 5px !important;
   }
