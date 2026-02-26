@@ -13,11 +13,11 @@
 /* ---------- Palette ---------- */
 :root{
   /* Noir dark palette (black base + cool silver-blue) */
-  --k-mint: #a8b2d8;   /* cool slate-blue accent */
-  --k-lime: #cdd6f4;   /* pale lavender-white highlight */
+  --k-mint: #b0bcd8;   /* soft silver-blue */
+  --k-lime: #dce3f5;   /* light periwinkle white */
   --k-olive: #8892b0;  /* muted slate */
-  --k-ink:  #0a0a12;
-  --k-ink2: #0c0c1a;
+  --k-ink:  #111114;
+  --k-ink2: #1a1a1f;
 
   /* Dark glass surfaces */
   --k-surface:  rgba(12,12,20,.64);
@@ -37,10 +37,9 @@ html {
 }
 body{
   background:
-    radial-gradient(1000px 700px at 12% -10%, rgba(60,70,140,.08), transparent 60%),
-    radial-gradient(950px 680px  at 88%  10%, rgba(90,80,150,.05), transparent 60%),
-    radial-gradient(1200px 900px at 50% 120%, rgba(40,40,80,.07), transparent 55%),
-    linear-gradient(180deg, var(--k-ink), var(--k-ink2));
+    radial-gradient(ellipse 120% 60% at 50% 0%, rgba(60,62,75,.55), transparent 70%),
+    radial-gradient(ellipse 80% 40% at 20% 100%, rgba(30,32,40,.40), transparent 60%),
+    linear-gradient(180deg, #16161c 0%, #111114 40%, #0e0e12 100%);
 }
 
 /* Subtle "feather speckle" + scanlines (no images) */
@@ -67,8 +66,8 @@ body::before{
 #core-wrapper .page,
 #core-wrapper .home{
   background:
-    linear-gradient(180deg, rgba(22,22,34,.92), rgba(16,16,28,.86)) padding-box,
-    linear-gradient(135deg, rgba(168,178,216,.35), rgba(200,210,255,.25), rgba(140,150,200,.16)) border-box !important;
+    linear-gradient(160deg, rgba(38,38,46,.98), rgba(28,28,34,.95)) padding-box,
+    linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,.03), rgba(255,255,255,.06)) border-box !important;
   border: 1px solid transparent !important;
   border-radius: 18px !important;
   box-shadow:
@@ -168,7 +167,7 @@ a:hover, .post-content a:hover{ color: var(--k-lime); }
   width:.32rem;
   height: 1.1em;
   border-radius: 999px;
-  background: linear-gradient(180deg, rgba(168,178,216,.80), rgba(210,220,255,.60));
+  background: linear-gradient(180deg, rgba(220,225,240,.90), rgba(160,168,195,.65));
   box-shadow: 0 0 12px rgba(168,178,216,.12), 0 0 18px rgba(200,210,255,.06);
 }
 
@@ -240,7 +239,7 @@ div.highlight pre{
   background:
     radial-gradient(900px 650px at 30% 0%, rgba(80,90,160,.09), transparent 55%),
     radial-gradient(900px 650px at 70% 15%, rgba(120,110,180,.06), transparent 55%),
-    linear-gradient(180deg, rgba(0,0,0,.30), rgba(0,0,0,.65));
+    linear-gradient(180deg, rgba(10,10,12,.50), rgba(8,8,10,.80));
   border-right: 1px solid rgba(255,255,255,.06);
   display: flex !important;
   flex-direction: column !important;
