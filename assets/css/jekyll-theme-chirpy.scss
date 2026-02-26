@@ -3297,3 +3297,26 @@ body.layout-post #core-wrapper .post-content::before {
 #sidebar a img:hover {
   opacity: .85;
 }
+
+/* =========================================================
+   사이드바 카드 테두리 완전 제거 (파일 최하단 - 최우선 적용)
+   gradient border-box background가 핵심 원인
+   ========================================================= */
+html body #sidebar .profile-wrapper,
+html body #sidebar .card,
+html body #sidebar .card-wrapper,
+html body #sidebar .avatar,
+html body #sidebar > * > .card,
+html body #sidebar > * > .profile-wrapper {
+  background: transparent !important;
+  background-image: none !important;
+  border: 0 none !important;
+  border-width: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  outline: 0 !important;
+  /* gradient border-box trick 무력화 */
+  -webkit-mask: none !important;
+  mask: none !important;
+}
