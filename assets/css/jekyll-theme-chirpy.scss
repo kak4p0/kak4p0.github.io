@@ -60,8 +60,8 @@ body::before{
 
 ::selection{ background: rgba(168,178,216,.22); }
 /* ---------- Cards / Panels ---------- */
-.card,
-.card-wrapper,
+.card:not(#sidebar .card):not(#sidebar *),
+.card-wrapper:not(#sidebar .card-wrapper):not(#sidebar *),
 #panel-wrapper .panel,
 #core-wrapper .post,
 #core-wrapper .page,
@@ -76,6 +76,16 @@ body::before{
     0 14px 34px rgba(0,0,0,.38),
     0 0 0 1px rgba(168,178,216,.04) inset;
   backdrop-filter: blur(10px);
+}
+
+/* 사이드바 내부 카드/래퍼는 테두리 없이 */
+#sidebar .card,
+#sidebar .card-wrapper,
+#sidebar .profile-wrapper {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
 }
 
 /* Hover = glow only (no movement) */
