@@ -3320,3 +3320,23 @@ html body #sidebar > * > .profile-wrapper {
   -webkit-mask: none !important;
   mask: none !important;
 }
+
+/* =========================================================
+   아바타 테두리 진짜 원인: a#avatar.rounded-circle
+   ========================================================= */
+a#avatar,
+a.rounded-circle,
+#sidebar a#avatar,
+#sidebar a.rounded-circle,
+header.profile-wrapper a {
+  border: 0 !important;
+  border-width: 0 !important;
+  border-style: none !important;
+  border-color: transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  background-image: none !important;
+  /* gradient border-box 무력화 */
+  padding: 0 !important;
+}
