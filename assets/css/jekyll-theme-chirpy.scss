@@ -3226,18 +3226,12 @@ body.layout-post #core-wrapper .post-content::before {
 /* ── 아바타: 테두리/글로우 완전 제거 ── */
 
 /* Chirpy 기본 border를 모든 선택자 조합으로 강제 제거 */
-#sidebar img,
 #sidebar img.rounded-circle,
 #sidebar img[class*="avatar"],
 #sidebar .avatar img,
-#sidebar a img,
-#sidebar a > img,
 #sidebar .profile-wrapper img,
-#sidebar .site-overview img,
-#sidebar .sidebar-brand img,
-.sidebar img,
-img.rounded-circle,
-[id="sidebar"] img {
+#sidebar .site-overview > a img,
+.sidebar img.rounded-circle {
   border: 0 none transparent !important;
   border-width: 0 !important;
   border-style: none !important;
@@ -3261,7 +3255,6 @@ img.rounded-circle,
   border: 0 !important;
   box-shadow: none !important;
   outline: 0 !important;
-  padding: 0 !important;
 }
 
 #sidebar img:hover,
