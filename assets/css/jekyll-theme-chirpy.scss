@@ -60,13 +60,12 @@ body::before{
 
 ::selection{ background: rgba(168,178,216,.22); }
 /* ---------- Cards / Panels ---------- */
-.card:not(#sidebar .card):not(#sidebar *),
-.card-wrapper:not(#sidebar .card-wrapper):not(#sidebar *),
+.card,
+.card-wrapper,
 #panel-wrapper .panel,
 #core-wrapper .post,
 #core-wrapper .page,
 #core-wrapper .home{
-  /* Glass + gradient border (makes the theme look less "default Chirpy") */
   background:
     linear-gradient(180deg, rgba(22,22,34,.92), rgba(16,16,28,.86)) padding-box,
     linear-gradient(135deg, rgba(168,178,216,.35), rgba(200,210,255,.25), rgba(140,150,200,.16)) border-box !important;
@@ -78,23 +77,31 @@ body::before{
   backdrop-filter: blur(10px);
 }
 
-/* 사이드바 내부 카드/래퍼는 테두리 없이 */
+/* 사이드바 내부 - 카드 스타일 전부 덮어쓰기 (specificity 높게) */
 #sidebar .card,
 #sidebar .card-wrapper,
-#sidebar .profile-wrapper {
+#sidebar .profile-wrapper,
+#sidebar > .card,
+#sidebar > .card-wrapper,
+#sidebar div.profile-wrapper,
+body #sidebar .profile-wrapper,
+body #sidebar .card {
   background: transparent !important;
-  border: none !important;
+  background-image: none !important;
+  border: 0 !important;
+  border-width: 0 !important;
+  border-style: none !important;
+  border-color: transparent !important;
   box-shadow: none !important;
   backdrop-filter: none !important;
+  outline: none !important;
 }
 
-/* 아바타 이미지 border 완전 제거 - @layer로 specificity 우선순위 최상위 */
-#sidebar img,
+/* 아바타 이미지 border 완전 제거 */
 #sidebar img.rounded-circle,
 #sidebar .profile-wrapper img,
 #sidebar .site-overview img,
 #sidebar a img {
-  all: revert;
   border: 0 !important;
   border-width: 0 !important;
   border-style: none !important;
@@ -102,11 +109,6 @@ body::before{
   outline: none !important;
   box-shadow: none !important;
   -webkit-box-shadow: none !important;
-  filter: none !important;
-  max-width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 50%;
   --tw-ring-shadow: none !important;
   --tw-ring-offset-shadow: none !important;
   --tw-ring-color: transparent !important;
