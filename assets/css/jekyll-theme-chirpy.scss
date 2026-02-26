@@ -16,8 +16,8 @@
   --k-mint: #a8b2d8;   /* cool slate-blue accent */
   --k-lime: #cdd6f4;   /* pale lavender-white highlight */
   --k-olive: #8892b0;  /* muted slate */
-  --k-ink:  #060608;
-  --k-ink2: #080810;
+  --k-ink:  #0a0a12;
+  --k-ink2: #0c0c1a;
 
   /* Dark glass surfaces */
   --k-surface:  rgba(12,12,20,.64);
@@ -68,8 +68,8 @@ body::before{
 #core-wrapper .home{
   /* Glass + gradient border (makes the theme look less "default Chirpy") */
   background:
-    linear-gradient(180deg, rgba(10,10,18,.88), rgba(7,7,14,.80)) padding-box,
-    linear-gradient(135deg, rgba(168,178,216,.28), rgba(200,210,255,.18), rgba(140,150,200,.10)) border-box !important;
+    linear-gradient(180deg, rgba(22,22,34,.92), rgba(16,16,28,.86)) padding-box,
+    linear-gradient(135deg, rgba(168,178,216,.35), rgba(200,210,255,.25), rgba(140,150,200,.16)) border-box !important;
   border: 1px solid transparent !important;
   border-radius: 18px !important;
   box-shadow:
@@ -283,7 +283,7 @@ div.highlight pre{
   padding: 1rem 1.2rem !important;
   margin: 1.5rem 1rem 0 1rem !important;
   background:
-    linear-gradient(180deg, rgba(10,10,18,.88), rgba(7,7,14,.80)) padding-box,
+    linear-gradient(180deg, rgba(22,22,34,.92), rgba(16,16,28,.86)) padding-box,
     linear-gradient(135deg, rgba(168,178,216,.18), rgba(200,210,255,.14)) border-box !important;
   border: 1px solid transparent !important;
   border-radius: 12px !important;
@@ -2721,7 +2721,7 @@ a.post-tag{
   text-rendering: optimizeLegibility;
 }
 
-/* 인라인 코드: 한국어 텍스트 흐름에 자연스럽게 */
+/* 인라인 코드: 배지 내부는 안 잘리고, 배지 앞뒤에서만 줄바꿈 */
 .post-content p code,
 .post-content li code,
 .post-content h1 code,
@@ -2730,12 +2730,13 @@ a.post-tag{
 .post-content h4 code,
 .post-content blockquote code,
 .post-content code.highlighter-rouge {
-  display: inline !important;        /* inline: 텍스트 흐름에 완전히 녹아듦 */
-  white-space: normal;               /* 긴 배지도 줄바꿈 허용 */
-  word-break: break-all;             /* 긴 코드가 화면 밖 안 나가도록 */
-  vertical-align: baseline;
-  line-height: 1.6;
-  overflow-wrap: break-word;
+  display: inline-block !important;  /* 배지 앞뒤에서 줄바꿈 허용 */
+  white-space: nowrap !important;    /* 배지 안은 절대 안 잘림 */
+  vertical-align: middle;
+  line-height: 1.5;
+  max-width: 100%;                   /* 배지가 화면보다 길면 넘치지 않게 */
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .post-content .lineno {
@@ -2845,14 +2846,16 @@ a.post-tag{
   .post-content li code,
   .post-content h2 code,
   .post-content h3 code {
-    display: inline !important;        /* 텍스트 흐름에 자연스럽게 */
+    display: inline-block !important;  /* 배지 앞뒤에서만 줄바꿈 */
     font-size: 10px !important;
     padding: .12em .38em !important;
     border-radius: 4px !important;
-    white-space: normal;               /* 긴 배지 줄바꿈 허용 */
-    word-break: break-all;
-    vertical-align: baseline;
-    line-height: 1.6;
+    white-space: nowrap !important;    /* 배지 안은 안 잘림 */
+    vertical-align: middle;
+    line-height: 1.5;
+    max-width: 92vw;                   /* 화면 넘치면 말줄임 */
+    overflow: hidden;
+    text-overflow: ellipsis;
     -webkit-text-size-adjust: none !important;
   }
 }
