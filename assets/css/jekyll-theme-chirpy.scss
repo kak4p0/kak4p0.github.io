@@ -3223,41 +3223,48 @@ body.layout-post #core-wrapper .post-content::before {
    아바타 - 다크 배경에 자연스럽게 블렌딩
    ========================================================= */
 
-/* 사이드바 프로필 이미지 영역 */
-#sidebar .site-overview,
-#sidebar .profile-wrapper,
-#sidebar a[href*="about"] img,
-#sidebar img.rounded-circle,
-#sidebar img[class*="avatar"],
-#sidebar .avatar,
-.sidebar .avatar,
-#avatar {
-  position: relative;
-}
+/* ── 아바타: 테두리/글로우 완전 제거 ── */
 
-/* 아바타 이미지 자체 - 검은 배경 버전 쓸 때 테두리/글로우 없애고 자연스럽게 */
+/* Chirpy 기본 border를 모든 선택자 조합으로 강제 제거 */
+#sidebar img,
 #sidebar img.rounded-circle,
 #sidebar img[class*="avatar"],
 #sidebar .avatar img,
-.sidebar img.rounded-circle {
-  border: none !important;
+#sidebar a img,
+#sidebar a > img,
+#sidebar .profile-wrapper img,
+#sidebar .site-overview img,
+#sidebar .sidebar-brand img,
+.sidebar img,
+img.rounded-circle,
+[id="sidebar"] img {
+  border: 0 none transparent !important;
+  border-width: 0 !important;
+  border-style: none !important;
+  border-color: transparent !important;
+  outline: 0 !important;
+  outline-width: 0 !important;
   box-shadow: none !important;
-  border-radius: 50% !important;
-  /* mix-blend-mode: lighten 으로 검은 배경이 사이드바에 녹아듦 */
-  mix-blend-mode: lighten !important;
+  -webkit-box-shadow: none !important;
+  --tw-ring-shadow: 0 0 #0000 !important;
+  --tw-ring-offset-shadow: 0 0 #0000 !important;
   background: transparent !important;
   transition: opacity .2s ease;
 }
 
-#sidebar img.rounded-circle:hover,
-#sidebar .avatar img:hover {
-  opacity: .88;
+/* 래퍼도 전부 초기화 */
+#sidebar .profile-wrapper,
+#sidebar .avatar,
+#sidebar .site-overview,
+.sidebar .avatar {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  outline: 0 !important;
+  padding: 0 !important;
 }
 
-/* 혹시 래퍼에 배경/테두리가 있다면 제거 */
-#sidebar .avatar,
-#sidebar .profile-wrapper {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
+#sidebar img:hover,
+#sidebar a img:hover {
+  opacity: .85;
 }
