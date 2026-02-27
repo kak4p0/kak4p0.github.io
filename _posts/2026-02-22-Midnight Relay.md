@@ -1,6 +1,6 @@
 ---
 title: "[Pwn] Midnight Relay"
-description: Writing about the "Midnight Relay" of BITS CTF 2026.
+description: Writeup for "Midnight Relay" from BITS CTF 2026.
 date: 2026-02-22 01:00:00 +0900
 categories: [CTF, BITS CTF 2026]
 tags: [Pwn]
@@ -9,51 +9,47 @@ comments: false
 ---
 
 # Midnight Relay (BITS CTF 2026)
-<img width="654" height="654" alt="image" src="https://github.com/user-attachments/assets/5207247c-6891-4079-b1a8-829a0e278c64" />
-
 
 ---
 
-- Name : Midnight Relay
-- Category : Pwn
-- Description : A fallback relay was brought online during a midnight outage. 
-- Difficulty : ★☆☆☆☆
+- **Name:** Midnight Relay
+- **Category:** Pwn
+- **Description:** A fallback relay was brought online during a midnight outage.
+- **Difficulty:** ★☆☆☆☆
 
 ---
 
 ## TL;DR
 
-`midnight_relay`는 **힙 기반 UAF + 내부 트레일러(out-of-bounds) read/write**를 이용해,   
-최종적으로 `fire()`가 호출하는 **함수 포인터를 `system`으로 바꿔** 쉘을 얻는 문제다.
+`midnight_relay` is solved by chaining a heap UAF and an out-of-bounds read/write on an internal trailer structure, ultimately replacing a function pointer with `system` to get a shell.
 
-핵심 체인:
+**Attack chain:**
 
-- `observe/tune`가 `size + 0x20`까지 허용 → **트레일러 leak/overwrite**
-- `shred`가 `free()` 후 포인터 초기화 안 함 → **UAF**
-- 트레일러에서 **cookie/PIE leak**
-- UAF로 **libc leak**
-- 위조 트레일러 + `sync` 토큰 계산 후 `fire` → `system("/bin/sh")`
+1. `observe`/`tune` allow access up to `size + 0x20` → read/write the internal **trailer**
+2. `shred` frees a chunk but doesn't null the pointer → **UAF**
+3. Trailer leak → recover `cookie` and `PIE base`
+4. UAF on a large freed chunk → **libc leak**
+5. Forge a fake trailer + compute `sync` token → call `fire()` → `system("/bin/sh")`
 
-최종 플래그:
-- `BITSCTF{m1dn1ght_r3l4y_m00nb3ll_st4t3_p1v0t}`
+**Flag:** `BITSCTF{m1dn1ght_r3l4y_m00nb3ll_st4t3_p1v0t}`
 
 ---
 
 ## Overview
 
-문제는 커스텀 바이너리 프로토콜(`op/key/len/payload`)을 사용하고, 내부적으로 `slot[]`에 shard를 저장한다.
+The binary uses a custom packet protocol (`op / key / len / payload`) and stores "shards" in `slot[]`.
 
-주요 명령:
+**Commands:**
 
-- `forge` : shard 생성
-- `tune` : shard에 쓰기
-- `observe` : shard 읽기
-- `shred` : shard 해제
-- `sync` : 토큰 검증 후 arm
-- `fire` : 내부 트레일러를 기반으로 함수 호출
+- `forge` — allocate a shard
+- `tune` — write to a shard
+- `observe` — read from a shard
+- `shred` — free a shard
+- `sync` — verify a token, then arm
+- `fire` — call a function based on the shard's internal trailer
 
-보호기법은 켜져 있음 (PIE/NX/RELRO/Canary).  
-따라서 정석은 **메모리 취약점 + 로직 악용**이다.
+All standard protections are enabled (PIE / NX / RELRO / Canary),
+so the goal is to exploit memory bugs and corrupt internal state.
 
 ---
 
@@ -61,135 +57,154 @@ comments: false
 
 ### 1) Recon
 
-#### ① 프로토콜 분석
-패킷 형식:
-- `op (1B)`
-- `key (1B)` : checksum
-- `len (2B, little-endian)`
-- `payload`
+#### Protocol
 
-`key`는 payload와 epoch 기반으로 계산됨.  
-epoch는 성공한 패킷마다 갱신됨 → **패킷 순서/동기화 중요**.
+Each packet has the format:
 
-#### ② 메모리 구조 파악
-`forge()`에서 실제로는 `size + 0x20`만큼 할당하고, 뒤 `0x20`에 **내부 트레일러(메타데이터)** 를 저장함.
-
-개념적 구조:
-```c
-[data (size bytes)] [trailer (0x20 bytes)]
+```
+op (1B) | key (1B) | len (2B LE) | payload
 ```
 
-즉, 트레일러를 읽거나 쓰면 내부 검증값/함수 호출 로직에 개입 가능.
+`key` is a checksum based on the payload and an internal epoch value.
+The epoch updates after every successful packet, so **packet order matters**.
+
+#### Memory Layout
+
+`forge()` allocates `size + 0x20` bytes. The last `0x20` bytes hold an **internal trailer** with metadata used by `fire()`.
+
+```
+[ data (size bytes) ][ trailer (0x20 bytes) ]
+```
+
+Reading or writing past `size` lets us access the trailer directly.
 
 ---
 
-### 2) Root cause
+### 2) Root Cause
 
-#### 취약점 A — `observe` / `tune` 경계 검사 오류 (OOB on trailer)
-`observe`와 `tune`가 원래 `size`까지만 접근해야 하는데, 실제로는 `size + 0x20`까지 허용함.
+#### Bug A — OOB on trailer (`observe` / `tune`)
 
-결과:
-- `observe`로 트레일러 leak 가능
-- `tune`로 트레일러 overwrite 가능
+`observe` and `tune` should only access up to `size` bytes,
+but they actually allow access up to `size + 0x20`.
 
-#### 취약점 B — `shred` Use-After-Free
-`shred`는 `free(ptr)`만 하고 `slot->ptr = NULL`을 하지 않음.
+- `observe` → **leak the trailer**
+- `tune` → **overwrite the trailer**
 
-결과:
-- `observe`/`tune`로 **free된 청크에 계속 접근 가능 (UAF)**
+#### Bug B — Use-After-Free (`shred`)
 
-이걸 이용하면 큰 청크 free 후 unsorted bin 관련 포인터를 읽어서 **libc 주소 leak** 가능.
+`shred` calls `free(ptr)` but never sets `slot->ptr = NULL`.
+
+So after freeing, we can still call `observe` or `tune` on the same slot.
+On a large freed chunk, the **unsorted bin pointers** left behind can be read to **leak a libc address**.
 
 ---
 
 ### 3) Exploit
 
-#### Step 1. `/bin/sh` shard 생성
-slot0에 `/bin/sh\x00`를 넣고 생성한다.
+#### Step 1 — Create `/bin/sh` shard (slot0)
 
-- 나중에 `fire()`가 호출할 함수를 `system`으로 바꾸면
-- `rdi = shard ptr` 형태라서 `system("/bin/sh")`가 됨
+Forge slot0 with the content `/bin/sh\x00`.
 
-#### Step 2. trailer leak → cookie + PIE leak
-`observe(slot0, off=size0, n=0x20)`로 트레일러 0x20 바이트를 읽는다.
+When `fire(slot0)` is called and the function pointer is replaced with `system`,
+it will call `system(ptr_to_shard)` = `system("/bin/sh")`.
 
-트레일러 값들(`a,b,base,rnd`)로부터:
+#### Step 2 — Trailer leak → cookie + PIE
 
-- `cookie`
-- `idle` 함수 주소
-- `PIE base`
+```
+observe(slot0, offset=size0, len=0x20)
+```
 
-를 복원할 수 있다.
+This reads the trailer. From the trailer values, we can recover:
 
-즉, 이후 `fire()`가 기대하는 내부 무결성 값을 맞춰서 위조할 준비가 됨.
+- `cookie` (internal integrity value)
+- `idle` function address → `PIE base`
 
-#### Step 3. UAF로 libc leak
-큰 청크(slot1)를 만들고, top consolidation 방지를 위해 가드 청크(slot2)를 하나 더 만든다.
+These are needed later to forge a valid trailer.
 
-- `forge(slot1, big)`
-- `forge(slot2, small)` ← guard
-- `shred(slot1)`
-- `observe(slot1, ...)` ← UAF read
+#### Step 3 — UAF → libc leak
 
-free된 큰 청크 내부에 남아 있는 unsorted bin 포인터를 읽어서 `libc base`를 구한다.
+```
+forge(slot1, big_size)   # large chunk
+forge(slot2, small_size) # guard chunk (prevents top consolidation)
+shred(slot1)             # free slot1 (UAF: pointer not cleared)
+observe(slot1, 0, 0x40)  # read freed memory
+```
 
-#### Step 4. trailer 위조 (target = system)
-slot0의 트레일러를 `tune()`으로 덮어써서, `fire()`가 복원하는 함수 포인터가 `system`이 되게 만든다.
+The freed large chunk retains **unsorted bin fd/bk pointers**.
+Reading them gives us `libc base`, from which we calculate `system`.
 
-핵심은:
-- 검증식/복원식에 맞는 형태로 `f0, f1, f2, f3`를 구성하는 것
-- `f2`는 `base_ptr` (slot0의 데이터 시작 주소)
-- 결과적으로 `fire(slot0)`가 `system(base_ptr)` 호출
+#### Step 4 — Forge fake trailer (slot0)
 
-#### Step 5. `sync` 토큰 계산 후 `fire`
-`sync()`는 토큰 검증을 통과해야 `fire()` 가능하다.
+Use `tune(slot0, offset=size0, fake_trailer)` to overwrite the trailer.
 
-토큰은 현재 epoch와 트레일러 일부 하위 dword를 조합해서 계산됨.  
-정확히 계산한 토큰으로 `sync(slot0, token)` → `fire(slot0)` 호출.
+The fake trailer is constructed so that when `fire()` reads it and restores the function pointer, it gets `system` instead of the original function.
 
-그 뒤 쉘에서 플래그 읽기:
+Key fields:
+- `f2` = `base_ptr` (address of slot0's data = `"/bin/sh"`)
+- Other fields computed to satisfy `fire()`'s internal checks using the leaked `cookie` and `PIE base`
+
+#### Step 5 — `sync` token → `fire`
+
+`sync()` requires a valid token before `fire()` is allowed.
+
+The token is computed from the current epoch and a field in the trailer.
+After computing the correct token:
+
+```
+sync(slot0, token)
+fire(slot0)
+```
+
+`fire()` calls `system("/bin/sh")` → interactive shell.
+
+Then read the flag:
+
 ```sh
-/bin/cat /srv/app/flag.txt
+cat /srv/app/flag.txt
 ```
 
 ---
 
 ### 4) Why it works
 
-이 익스가 성립하는 이유는 **검증 로직 자체를 깨는 게 아니라,   
-검증 로직이 믿는 데이터(트레일러)를 우리가 조작**하기 때문
+The key idea is: **we don't break the verification logic — we control the data it trusts.**
 
-정리하면:
+- `observe`/`tune` bugs give us access to the trailer
+- Trailer leak gives us the secret values (`cookie`, PIE) needed to forge valid data
+- UAF gives us `libc base` → `system` address
+- Forged trailer passes `fire()`'s checks and redirects execution to `system`
+- Correct `sync` token satisfies the final gate
 
-1. `observe/tune` 버그로 트레일러 접근 가능  
-2. 트레일러 leak으로 `cookie`, PIE 등 **검증에 필요한 비밀값** 확보  
-3. `shred` UAF로 libc leak → `system` 주소 확보  
-4. 트레일러를 유효한 형태로 위조 → `fire()` 검증 통과  
-5. `fire()`가 최종적으로 `system("/bin/sh")` 실행
-
-즉, **메모리 안전성 붕괴(UAF/OOB) + 로직 신뢰 붕괴(위조된 트레일러)** 가 결합
+In short: **memory safety bugs (UAF + OOB) combine with logic trust abuse (forged trailer)** to achieve full RCE.
 
 ---
 
 ## Solver
 
 ```python
-# 1) connect
-# 2) forge slot0 with "/bin/sh\x00"
-# 3) observe(slot0, size0, 0x20) -> trailer leak
-#    -> recover cookie / pie
-# 4) forge big slot1 + guard slot2
-# 5) shred(slot1), observe(slot1, 0, 0x40) -> libc leak
-#    -> recover libc_base, system
-# 6) craft fake trailer for slot0 so fire() resolves to system(base0)
-# 7) tune(slot0, size0, fake_trailer)
-# 8) compute sync token from current epoch + fake trailer fields
-# 9) sync(slot0, token)
-# 10) fire(slot0)
-# 11) send "cat /srv/app/flag.txt"
+# 1)  Connect to target
+# 2)  forge(slot0, "/bin/sh\x00")
+# 3)  observe(slot0, size0, 0x20)
+#       -> leak trailer
+#       -> recover cookie, PIE base
+# 4)  forge(slot1, big) + forge(slot2, small_guard)
+# 5)  shred(slot1)
+#     observe(slot1, 0, 0x40)  # UAF
+#       -> leak libc base, compute system()
+# 6)  build fake_trailer:
+#       f2 = base_ptr(slot0)
+#       other fields satisfy fire() checks
+# 7)  tune(slot0, size0, fake_trailer)
+# 8)  token = compute(epoch, trailer_field)
+#     sync(slot0, token)
+# 9)  fire(slot0)  ->  system("/bin/sh")
+# 10) cat /srv/app/flag.txt
 ```
 
 ---
-<img width="810" height="356" alt="image" src="https://github.com/user-attachments/assets/a77aae79-bc5f-446f-b1c2-abcff9eb821e" />
----
 
+## Flag
+
+```
+BITSCTF{m1dn1ght_r3l4y_m00nb3ll_st4t3_p1v0t}
+```
