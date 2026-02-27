@@ -1,6 +1,6 @@
 ---
 title: "[Rev] Pathfinder"
-description: Writeup for "name" from EHAX CTF 2026.
+description: Writeup for "Pathfinder" from EHAX CTF 2026.
 date: 2026-03-01 09:00:00 +0900
 categories: [CTF, EHAX CTF 2026]
 tags: [Rev]
