@@ -1,10 +1,22 @@
 ---
-title: "[web/rev] title"
-date: 2026-02-15 01:00:00 +0900
-categories: [CTF, ctf title]
-tags: [web]
+title: "[ㅇ] name"
+description: Writeup for "name" from ??? CTF 2026.
+date: 2026-02-22 01:00:00 +0900
+categories: [CTF, dd CTF 2026]
+tags: [Web]
 toc: true
 comments: false
+---
+
+# name (dd CTF 2026)
+
+---
+
+- **Name:** name
+- **Category:** Web
+- **Description:** ddd
+- **Difficulty:** ★★★☆☆
+
 ---
 
 ## TL;DR
