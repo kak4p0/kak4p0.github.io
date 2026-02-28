@@ -19,10 +19,6 @@ comments: false
 
 ---
 
-# EHAX CTF 2026 — Borderline
-
-**Category:** Web | **Difficulty:** Easy~Medium
-
 **Flag 1:** `EHAX{7H3R3_3XI$7$_ILL3G4L_W4Y$_T0_4CC3SS_UNR3$7RIS$3D_$7UFF}`  
 **Flag 2:** `EH4X{BYP4SSING_R3QU3S7S_7HR0UGH_SMUGGLING__IS_H4RD}`
 
