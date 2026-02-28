@@ -33,16 +33,7 @@ EH4X{0n3_tr4ck_m1nd_tw0_tr4ck_f1les}
 
 ## Overview
 
-| Field | Info |
-|---|---|
-| Challenge | LET-THE-PENGUIN-LIVE |
-| Category | Audio Steganography |
-| Points | 408 |
-| Author | mahekfr |
-| Flag | `EH4X{0n3_tr4ck_m1nd_tw0_tr4ck_f1les}` |
-
 **Challenge description:**
-
 > "In a colony of many, one penguin's path is an anomaly.
 > Silence the crowd to hear the individual."
 
