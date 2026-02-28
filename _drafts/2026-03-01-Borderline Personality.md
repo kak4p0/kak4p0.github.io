@@ -8,7 +8,7 @@ toc: true
 comments: false
 ---
 
-# painter (EHAX CTF 2026)
+# Borderline Personality (EHAX CTF 2026)
 
 ---
 
