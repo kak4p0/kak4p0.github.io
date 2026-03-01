@@ -3342,13 +3342,9 @@ header.profile-wrapper a {
 
 
 /* =========================================================
-   v25 DARK-GRAY — CONSERVATIVE MOBILE FIX
-   ★ No offcanvas-backdrop hiding
-   ★ No panel-wrapper display:none
-   ★ Only safe overrides
+   v27 DARK-GRAY + ALL FIXES
    ========================================================= */
 
-/* PALETTE */
 :root {
   --k-mint:  #a8acb4;
   --k-lime:  #d5d9e0;
@@ -3356,7 +3352,6 @@ header.profile-wrapper a {
   --k-topbar-h: 3rem;
 }
 
-/* BACKGROUND */
 body {
   background:
     radial-gradient(ellipse 120% 60% at 50% 0%, rgba(50,50,56,.42), transparent 70%),
@@ -3372,14 +3367,12 @@ body::before {
 }
 ::selection { background: rgba(160,160,175,.24) !important; }
 
-/* Text */
 .post-content { color: rgba(255,255,255,.88) !important; }
 .post-content p, .post-content li, .post-content td, .post-content th { color: rgba(255,255,255,.86) !important; }
 .post-content h1, .post-content h2, .post-content h3, .post-content h4, .post-content h5, .post-content h6 { color: rgba(255,255,255,.94) !important; }
 .post-meta, .post-meta span, .post-meta time, .text-muted, .small, small { color: rgba(255,255,255,.58) !important; }
 .post-content pre code { color: rgba(255,255,255,.88) !important; }
 
-/* SIDEBAR */
 #sidebar {
   background: #18181b !important;
   border-right: 1px solid rgba(255,255,255,.06) !important;
@@ -3396,9 +3389,7 @@ body::before {
   box-shadow: 0 0 10px rgba(170,170,180,.15) !important;
 }
 
-/* ══════════════════════════════════════════════════════════
-   MOBILE: FIXED TOPBAR ONLY (safe, no offcanvas interference)
-   ══════════════════════════════════════════════════════════ */
+/* ── MOBILE ── */
 @media (max-width: 991px) {
   #topbar-wrapper {
     position: fixed !important;
@@ -3436,18 +3427,61 @@ body::before {
     font-size: 0.9rem !important; color: rgba(255,255,255,.72) !important; margin: 0 !important; padding: 0 !important;
   }
   #topbar-wrapper #topbar #search-cancel { display: none !important; }
-
-  /* Push content below fixed topbar */
   #wrapper, body > #wrapper, #main-wrapper { padding-top: var(--k-topbar-h) !important; }
-
-  /* Horizontal scroll prevention */
   html { overflow-x: hidden !important; }
   #wrapper, body > #wrapper { overflow-x: hidden !important; }
+  #sidebar { top: 0 !important; }
+
+  /* Hide TOC trigger buttons only */
+  #topbar #toc-trigger,
+  #topbar .toc-trigger,
+  #topbar button[data-bs-target="#panel-wrapper"],
+  #topbar a[data-bs-target="#panel-wrapper"],
+  #topbar [data-bs-toggle="offcanvas"][data-bs-target="#panel-wrapper"] {
+    display: none !important;
+  }
+  #panel-wrapper > .offcanvas-header,
+  aside#panel-wrapper > .offcanvas-header,
+  #panel-wrapper .offcanvas-header,
+  .access > summary,
+  details.access > summary,
+  #panel-wrapper summary {
+    display: none !important;
+  }
+
+  /* ── Mobile: post-nav STACK vertically ── */
+  .post-navigation, .post-nav-wrapper, nav.post-navigation, .pagination-post,
+  .post-tail-wrapper {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.6rem !important;
+    width: 100% !important;
+    margin: 1.2rem 0 !important;
+  }
+  .post-navigation a, .post-navigation > div, nav.post-navigation a, .pagination-post a,
+  .post-tail-wrapper .btn, .post-tail-wrapper .btn.btn-outline-primary {
+    flex: 1 1 100% !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    padding: 0.7rem 1rem !important;
+    background: rgba(24,24,28,.55) !important;
+    border: 1px solid rgba(160,160,175,.12) !important;
+    border-radius: 12px !important;
+    color: rgba(255,255,255,.82) !important;
+    text-decoration: none !important;
+    overflow: hidden !important;
+  }
+  .post-navigation a p, .post-navigation a span,
+  .post-tail-wrapper .btn p, .post-tail-wrapper .btn span {
+    overflow: hidden !important; text-overflow: ellipsis !important;
+    white-space: nowrap !important; margin: 0 !important;
+  }
 }
 
-/* ══════════════════════════════════════════════════════════
-   JS-generated inline TOC styles (#k-inline-toc)
-   ══════════════════════════════════════════════════════════ */
+/* ── Inline TOC (JS) ── */
 #k-inline-toc {
   background: rgba(22,22,26,.65);
   border: 1px solid rgba(160,160,175,.14);
@@ -3457,39 +3491,63 @@ body::before {
 }
 #k-inline-toc summary {
   display: flex; align-items: center; gap: 0.5rem;
-  padding: 0.75rem 1rem;
-  font-size: 0.9rem; font-weight: 600;
-  color: var(--k-lime, #d5d9e0);
-  cursor: pointer; list-style: none;
+  padding: 0.75rem 1rem; font-size: 0.9rem; font-weight: 600;
+  color: var(--k-lime, #d5d9e0); cursor: pointer; list-style: none;
   user-select: none; -webkit-user-select: none;
 }
 #k-inline-toc summary::-webkit-details-marker { display: none; }
 #k-inline-toc summary::before {
-  content: '▸'; font-size: 0.8rem;
-  transition: transform 0.2s ease; color: rgba(255,255,255,.5);
+  content: '▸'; font-size: 0.8rem; transition: transform 0.2s ease; color: rgba(255,255,255,.5);
 }
 #k-inline-toc[open] summary::before { transform: rotate(90deg); }
-#k-inline-toc .k-toc-list {
-  list-style: none; margin: 0; padding: 0 1rem 0.75rem 1rem;
-}
+#k-inline-toc .k-toc-list { list-style: none; margin: 0; padding: 0 1rem 0.75rem 1rem; }
 #k-inline-toc .k-toc-list a {
-  display: block; padding: 0.3rem 0.5rem;
-  font-size: 0.84rem; color: rgba(255,255,255,.72) !important;
-  text-decoration: none; border-radius: 8px; line-height: 1.45;
+  display: block; padding: 0.3rem 0.5rem; font-size: 0.84rem;
+  color: rgba(255,255,255,.72) !important; text-decoration: none; border-radius: 8px; line-height: 1.45;
 }
-#k-inline-toc .k-toc-list a:hover {
-  color: var(--k-lime, #d5d9e0) !important;
-  background: rgba(160,160,175,.07);
-}
+#k-inline-toc .k-toc-list a:hover { color: var(--k-lime, #d5d9e0) !important; background: rgba(160,160,175,.07); }
 #k-inline-toc .k-toc-list .k-toc-h3 { padding-left: 1.2rem; }
 #k-inline-toc .k-toc-list .k-toc-h4 { padding-left: 2rem; }
+@media (min-width: 992px) { #k-inline-toc { display: none !important; } }
+
+/* ── PC: post-nav side by side ── */
 @media (min-width: 992px) {
-  #k-inline-toc { display: none !important; }
+  .post-navigation, .post-nav-wrapper, nav.post-navigation, .pagination-post,
+  .post-tail-wrapper {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    gap: 1rem !important;
+    width: 100% !important;
+    margin: 1.5rem 0 !important;
+  }
+  .post-navigation a, .post-navigation > div, nav.post-navigation a, .pagination-post a,
+  .post-tail-wrapper .btn, .post-tail-wrapper .btn.btn-outline-primary {
+    flex: 0 0 calc(50% - 0.5rem) !important;
+    max-width: calc(50% - 0.5rem) !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    padding: 0.75rem 1rem !important;
+    background: rgba(24,24,28,.55) !important;
+    border: 1px solid rgba(160,160,175,.12) !important;
+    border-radius: 14px !important;
+    color: rgba(255,255,255,.82) !important;
+    text-decoration: none !important;
+    overflow: hidden !important;
+  }
+  .post-tail-wrapper .btn:hover {
+    border-color: rgba(185,185,195,.20) !important;
+    background: rgba(34,34,38,.65) !important;
+  }
+  .post-navigation a p, .post-navigation a span,
+  .post-tail-wrapper .btn p, .post-tail-wrapper .btn span {
+    overflow: hidden !important; text-overflow: ellipsis !important;
+    white-space: nowrap !important; margin: 0 !important; min-width: 0 !important;
+  }
 }
 
-/* ══════════════════════════════════════════════════════════
-   THEME STYLES (neutral gray)
-   ══════════════════════════════════════════════════════════ */
+/* ── Theme styles ── */
 .card, .card-wrapper, #core-wrapper .post, #core-wrapper .page, #core-wrapper .home {
   background: linear-gradient(160deg, rgba(36,36,40,.98), rgba(28,28,32,.95)) padding-box,
     linear-gradient(135deg, rgba(255,255,255,.07), rgba(255,255,255,.03), rgba(255,255,255,.06)) border-box !important;
@@ -3498,17 +3556,14 @@ body::before {
 .card:hover, .card-wrapper:hover {
   box-shadow: 0 16px 38px rgba(0,0,0,.36), 0 0 0 1px rgba(180,180,195,.07) inset, 0 0 20px rgba(140,140,155,.09) !important;
 }
-
 a, .post-content a { color: var(--k-mint) !important; }
 a:hover, .post-content a:hover { color: var(--k-lime) !important; }
-
 .post-content h2::before, .post-content h3::before {
   background: linear-gradient(180deg, rgba(210,210,220,.82), rgba(150,150,165,.58)) !important;
 }
 .dynamic-title::after, #page-title::after, .page-title::after {
   background: linear-gradient(90deg, rgba(160,160,175,.44), rgba(185,185,195,.32), transparent) !important;
 }
-
 #post-list .post-preview::before, .post-list .post-preview::before,
 #search-results .post-preview::before, #related-posts .post-preview::before {
   background: linear-gradient(180deg, rgba(140,140,155,.18), rgba(155,155,170,.48), rgba(175,175,185,.38)) !important;
@@ -3517,10 +3572,8 @@ a:hover, .post-content a:hover { color: var(--k-lime) !important; }
   border-color: rgba(175,175,185,.20) !important;
   box-shadow: 0 18px 40px rgba(0,0,0,.38), 0 0 0 1px rgba(175,175,185,.09) inset !important;
 }
-
 figure.highlight, div.highlight {
   border-color: rgba(140,140,155,.17) !important;
-  box-shadow: 0 14px 28px rgba(0,0,0,.26), 0 0 0 1px rgba(140,140,155,.06) inset !important;
 }
 figure.highlight > .code-header::before, div.highlight > .code-header::before,
 div.highlighter-rouge > .code-header::before {
@@ -3532,22 +3585,18 @@ div.highlighter-rouge > .code-header::before {
   background: rgba(0,0,0,.18) !important; border-bottom: 1px solid rgba(140,140,155,.11) !important;
   color: rgba(255,255,255,.72) !important;
 }
-
 #topbar-wrapper #topbar #search-input {
   background: rgba(0,0,0,.28) !important; border: 1px solid rgba(160,160,175,.20) !important;
 }
-
 .post-tags a, a.tag, .tag, .badge { background: rgba(160,160,175,.05) !important; border: 1px solid rgba(160,160,175,.13) !important; }
 .tag, .post-tag, a.tag, a.post-tag, #tags a, #tag-list a {
   background: linear-gradient(180deg, rgba(24,24,28,.48), rgba(14,14,16,.20)) !important;
   border: 1px solid rgba(150,150,165,.18) !important;
 }
-
 #toc-wrapper a.nav-link.active, #toc-wrapper a.nav-link:hover,
 #toc a.nav-link.active, #toc a.nav-link:hover {
   color: var(--k-lime) !important; background: rgba(185,185,195,.06) !important;
 }
-
 .post-content blockquote {
   background: rgba(160,160,175,.04) !important;
   border-image: linear-gradient(180deg, rgba(160,160,175,.38), rgba(185,185,195,.22)) 1 !important;
@@ -3556,7 +3605,6 @@ div.highlighter-rouge > .code-header::before {
 .post-content :not(pre) > code {
   background: rgba(160,160,175,.05) !important; border: 1px solid rgba(160,160,175,.10) !important;
 }
-
 .pagination, ul.pagination, nav .pagination {
   display: flex !important; flex-direction: row !important; flex-wrap: wrap !important;
   justify-content: center !important; align-items: center !important;
@@ -3573,43 +3621,11 @@ div.highlighter-rouge > .code-header::before {
   background: rgba(185,185,195,.09) !important; border-color: rgba(185,185,195,.18) !important;
   color: var(--k-lime) !important;
 }
-
-.post-navigation, .post-nav, #post-navigation, .pagination-post {
-  display: flex !important; flex-direction: row !important; flex-wrap: wrap !important;
-  gap: 0.75rem !important; width: 100% !important; overflow: visible !important; margin: 1.5rem 0 1rem !important;
-}
-.post-navigation a, .post-nav a, #post-navigation a, .pagination-post a {
-  display: flex !important; align-items: center !important; gap: 0.5rem !important;
-  flex: 1 1 0% !important; min-width: 0 !important;
-  padding: 0.75rem 1rem !important; background: rgba(24,24,28,.60) !important;
-  border: 1px solid rgba(160,160,175,.13) !important; border-radius: 14px !important;
-  color: rgba(255,255,255,.84) !important; text-decoration: none !important; overflow: hidden !important;
-}
-.post-navigation a:hover, .post-nav a:hover { border-color: rgba(185,185,195,.20) !important; background: rgba(34,34,38,.72) !important; }
-.post-navigation a p, .post-navigation a span, .post-nav a p, .post-nav a span {
-  overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; margin: 0 !important;
-}
-.post-tail-wrapper .btn, .post-tail-wrapper .btn.btn-outline-primary {
-  display: inline-flex !important; align-items: center !important; gap: 0.4rem !important;
-  padding: 0.65rem 0.9rem !important; background: rgba(24,24,28,.55) !important;
-  border: 1px solid rgba(160,160,175,.13) !important; border-radius: 12px !important;
-  color: rgba(255,255,255,.84) !important; overflow: hidden !important; max-width: 48% !important;
-}
-.post-tail-wrapper .btn p, .post-tail-wrapper .btn span {
-  overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; margin: 0 !important;
-}
-@media (max-width: 575px) {
-  .post-navigation, .post-nav, #post-navigation, .pagination-post { flex-direction: column !important; }
-  .post-navigation a, .post-nav a, .pagination-post a { max-width: 100% !important; width: 100% !important; }
-  .post-tail-wrapper .btn { max-width: 100% !important; width: 100% !important; }
-}
-
 .prompt, .prompt-tip, .prompt-info, .prompt-warning, .prompt-danger {
   background: linear-gradient(180deg, rgba(22,22,26,.72), rgba(18,18,20,.60)) padding-box,
     linear-gradient(135deg, rgba(150,150,165,.24), rgba(175,175,185,.20), rgba(140,140,155,.12)) border-box !important;
   color: rgba(255,255,255,.88) !important;
 }
-
 #categories .list-group-item, #categories .category, #categories li,
 .categories .list-group-item, .categories .category, .categories li {
   background: linear-gradient(180deg, rgba(22,22,26,.70), rgba(18,18,20,.58)) padding-box,
@@ -3620,11 +3636,9 @@ div.highlighter-rouge > .code-header::before {
 #archives .list-group-item, .archives .list-group-item, #archives li, .archives li {
   box-shadow: inset 3px 0 0 rgba(160,160,175,.15) !important;
 }
-
 #related-posts ul > li, #related-posts .post-preview, #related-posts .card {
   background: rgba(160,160,175,.04) !important; border: 1px solid rgba(160,160,175,.13) !important;
 }
-
 body:not(.home) #core-wrapper {
   background: radial-gradient(900px 600px at 10% 0%, rgba(140,140,155,.08), transparent 60%),
     radial-gradient(900px 600px at 90% 10%, rgba(165,165,175,.06), transparent 60%) !important;
@@ -3633,7 +3647,6 @@ body.layout-post #core-wrapper .post-content {
   background: rgba(0,0,0,.12) !important; border: 1px solid rgba(140,140,155,.14) !important;
   box-shadow: 0 18px 44px rgba(0,0,0,.28) !important;
 }
-
 ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, rgba(160,160,175,.22), rgba(185,185,195,.16)) !important; }
 hr { border-color: rgba(160,160,175,.12) !important; }
 .breadcrumb a { color: rgba(160,160,175,.90) !important; }
