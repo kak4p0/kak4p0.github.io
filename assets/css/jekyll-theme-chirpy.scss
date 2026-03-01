@@ -3342,82 +3342,105 @@ header.profile-wrapper a {
 
 
 /* =========================================================
-   v20 DARK-GRAY + MOBILE MEGA-FIX
-   1) Dark gray palette (neutral, no blue)
-   2) Mobile topbar: FIXED (always visible while scrolling)
-   3) Sidebar: opaque, proper z-index, mask tap-to-close
-   4) Duplicate TOC removal on mobile
-   5) Pagination horizontal
-   6) Post navigation (이전글/다음글) fix
+   v21 DARK-GRAY + MOBILE UX FINAL FIX
    ========================================================= */
 
 /* ══════════════════════════════════════════════════════════
-   1) PALETTE — Neutral Dark Gray
+   1) PALETTE — Neutral Dark Gray (BRIGHTER variant)
    ══════════════════════════════════════════════════════════ */
 :root {
-  --k-mint:  #9ea2a8;
-  --k-lime:  #cdd1d8;
-  --k-olive: #6b6f76;
-  --k-ink:   #101012;
-  --k-ink2:  #151517;
-  --k-surface:  rgba(18,18,21,.68);
-  --k-surface2: rgba(14,14,16,.60);
-  --k-border:  rgba(150,150,160,.11);
-  --k-border2: rgba(120,120,130,.13);
-  --k-glow:    rgba(160,160,170,.14);
-  --k-glow2:   rgba(130,130,140,.10);
-
-  /* Fixed topbar height for padding calculations */
+  --k-mint:  #a8acb4;   /* slightly brighter silver */
+  --k-lime:  #d5d9e0;   /* brighter platinum */
+  --k-olive: #787c84;   /* brighter zinc */
+  --k-ink:   #141416;
+  --k-ink2:  #1a1a1d;
+  --k-surface:  rgba(22,22,26,.68);
+  --k-surface2: rgba(18,18,20,.60);
+  --k-border:  rgba(160,160,170,.12);
+  --k-border2: rgba(130,130,140,.14);
+  --k-glow:    rgba(170,170,180,.15);
+  --k-glow2:   rgba(140,140,150,.11);
   --k-topbar-h: 3rem;
 }
 
 /* ══════════════════════════════════════════════════════════
-   2) BACKGROUND
+   2) BACKGROUND — slightly lifted charcoal (less crushed black)
    ══════════════════════════════════════════════════════════ */
 body {
   background:
-    radial-gradient(ellipse 120% 60% at 50% 0%, rgba(42,42,48,.40), transparent 70%),
-    radial-gradient(ellipse 80% 40% at 20% 100%, rgba(28,28,32,.30), transparent 60%),
-    linear-gradient(180deg, #131315 0%, #101012 40%, #0c0c0e 100%) !important;
+    radial-gradient(ellipse 120% 60% at 50% 0%, rgba(50,50,56,.42), transparent 70%),
+    radial-gradient(ellipse 80% 40% at 20% 100%, rgba(35,35,40,.32), transparent 60%),
+    linear-gradient(180deg, #18181b 0%, #141416 40%, #111113 100%) !important;
 }
 body::before {
   background:
-    radial-gradient(circle at 14px 12px, rgba(180,180,190,.04) 0 1.6px, transparent 2.4px) 0 0/48px 48px,
-    radial-gradient(circle at 34px 30px, rgba(160,160,170,.03) 0 1.2px, transparent 2.2px) 0 0/64px 64px,
-    repeating-linear-gradient(0deg, rgba(255,255,255,.014), rgba(255,255,255,.014) 1px, transparent 1px, transparent 7px),
-    repeating-linear-gradient(90deg, rgba(0,0,0,.025), rgba(0,0,0,.025) 1px, transparent 1px, transparent 10px) !important;
-  opacity: .14 !important;
+    radial-gradient(circle at 14px 12px, rgba(190,190,200,.04) 0 1.6px, transparent 2.4px) 0 0/48px 48px,
+    radial-gradient(circle at 34px 30px, rgba(170,170,180,.03) 0 1.2px, transparent 2.2px) 0 0/64px 64px,
+    repeating-linear-gradient(0deg, rgba(255,255,255,.015), rgba(255,255,255,.015) 1px, transparent 1px, transparent 7px),
+    repeating-linear-gradient(90deg, rgba(0,0,0,.02), rgba(0,0,0,.02) 1px, transparent 1px, transparent 10px) !important;
+  opacity: .12 !important;
 }
-::selection { background: rgba(150,150,165,.22) !important; }
+::selection { background: rgba(160,160,175,.24) !important; }
 
 /* ══════════════════════════════════════════════════════════
-   3) SIDEBAR — fully opaque dark, high z-index
+   3) TEXT — boost readability on mobile
+   ══════════════════════════════════════════════════════════ */
+body {
+  color: rgba(255,255,255,.88) !important;
+}
+.post-content {
+  color: rgba(255,255,255,.88) !important;
+}
+.post-content p,
+.post-content li,
+.post-content td,
+.post-content th {
+  color: rgba(255,255,255,.86) !important;
+}
+/* Headings brighter */
+.post-content h1, .post-content h2, .post-content h3,
+.post-content h4, .post-content h5, .post-content h6 {
+  color: rgba(255,255,255,.94) !important;
+}
+/* Meta text slightly brighter */
+.post-meta, .post-meta span, .post-meta time,
+.text-muted, .small, small {
+  color: rgba(255,255,255,.58) !important;
+}
+
+/* ══════════════════════════════════════════════════════════
+   4) SIDEBAR — bright enough, fully opaque
    ══════════════════════════════════════════════════════════ */
 #sidebar {
-  background: #121214 !important;
-  border-right: 1px solid rgba(255,255,255,.05) !important;
+  background: #18181b !important;
+  border-right: 1px solid rgba(255,255,255,.06) !important;
 }
-#sidebar .nav-link::before { background: rgba(255,255,255,.18) !important; }
+#sidebar .nav-link::before { background: rgba(255,255,255,.20) !important; }
 #sidebar .nav-link:hover {
-  background: rgba(150,150,165,.06) !important;
-  border-color: rgba(150,150,165,.12) !important;
+  background: rgba(160,160,175,.07) !important;
+  border-color: rgba(160,160,175,.13) !important;
 }
 #sidebar .nav-link.active {
-  background: linear-gradient(90deg, rgba(150,150,165,.14), rgba(130,130,145,.07) 60%, transparent) !important;
-  border: 1px solid rgba(150,150,165,.16) !important;
-  box-shadow: 0 0 0 1px rgba(150,150,165,.06) inset, 0 12px 28px rgba(0,0,0,.30) !important;
+  background: linear-gradient(90deg, rgba(160,160,175,.15), rgba(140,140,155,.08) 60%, transparent) !important;
+  border: 1px solid rgba(160,160,175,.18) !important;
+  box-shadow: 0 0 0 1px rgba(160,160,175,.07) inset, 0 12px 28px rgba(0,0,0,.28) !important;
 }
 #sidebar .nav-link.active::before {
   background: var(--k-lime) !important;
   box-shadow: 0 0 10px var(--k-glow), 0 0 18px var(--k-glow2) !important;
 }
+/* Sidebar text brighter */
+#sidebar .site-title,
+#sidebar .site-subtitle,
+#sidebar .nav-link {
+  color: rgba(255,255,255,.82) !important;
+}
 
 /* ══════════════════════════════════════════════════════════
-   4) MOBILE: FIXED TOPBAR (always visible on scroll)
+   5) MOBILE: FIXED TOPBAR (always visible)
    ══════════════════════════════════════════════════════════ */
 @media (max-width: 991px) {
 
-  /* ── Topbar: position FIXED (not sticky — sticky breaks with overflow-x:hidden) ── */
   #topbar-wrapper {
     position: fixed !important;
     top: 0 !important;
@@ -3425,15 +3448,14 @@ body::before {
     right: 0 !important;
     z-index: 1030 !important;
     height: var(--k-topbar-h) !important;
-    background: rgba(16,16,18,.97) !important;
+    background: rgba(20,20,23,.97) !important;
     backdrop-filter: blur(16px) saturate(1.1) !important;
     -webkit-backdrop-filter: blur(16px) saturate(1.1) !important;
-    border-bottom: 1px solid rgba(150,150,160,.08) !important;
+    border-bottom: 1px solid rgba(160,160,170,.08) !important;
     transform: none !important;
     margin: 0 !important;
   }
 
-  /* Inner topbar layout */
   #topbar-wrapper #topbar {
     display: flex !important;
     align-items: center !important;
@@ -3443,34 +3465,33 @@ body::before {
     gap: 0.5rem !important;
   }
 
-  /* Hamburger always visible */
   #topbar-wrapper #topbar #sidebar-trigger {
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    min-width: 2.4rem !important;
-    min-height: 2.4rem !important;
-    color: rgba(255,255,255,.85) !important;
+    min-width: 2.6rem !important;
+    min-height: 2.6rem !important;
+    color: rgba(255,255,255,.88) !important;
     flex-shrink: 0 !important;
     order: -1 !important;
     touch-action: manipulation !important;
     -webkit-tap-highlight-color: transparent !important;
+    cursor: pointer !important;
   }
 
-  /* Search trigger */
   #topbar-wrapper #topbar #search-trigger {
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
     min-width: 2.4rem !important;
     min-height: 2.4rem !important;
-    color: rgba(255,255,255,.80) !important;
+    color: rgba(255,255,255,.82) !important;
     flex-shrink: 0 !important;
     margin-left: auto !important;
     touch-action: manipulation !important;
+    cursor: pointer !important;
   }
 
-  /* Breadcrumb / title in middle */
   #topbar-wrapper #topbar #topbar-title,
   #topbar-wrapper #topbar .topbar-title,
   #topbar-wrapper #topbar nav[aria-label="Breadcrumb"],
@@ -3482,88 +3503,110 @@ body::before {
     text-overflow: ellipsis !important;
     white-space: nowrap !important;
     font-size: 0.9rem !important;
-    color: rgba(255,255,255,.70) !important;
+    color: rgba(255,255,255,.72) !important;
     margin: 0 !important;
     padding: 0 !important;
   }
+  #topbar-wrapper #topbar #search-cancel { display: none !important; }
 
-  #topbar-wrapper #topbar #search-cancel {
-    display: none !important;
-  }
-
-  /* ── Push ALL content below the fixed topbar ── */
+  /* Push content below fixed topbar */
   #wrapper,
   body > #wrapper,
   #main-wrapper {
     padding-top: var(--k-topbar-h) !important;
   }
+}
 
-  /* ── Sidebar z-index (must be above fixed topbar) ── */
+/* ══════════════════════════════════════════════════════════
+   6) MOBILE SIDEBAR: proper z-index + MASK FIX
+   ══════════════════════════════════════════════════════════ */
+@media (max-width: 991px) {
+
+  /* Sidebar above everything including fixed topbar */
   #sidebar {
     z-index: 2000 !important;
     position: fixed !important;
   }
 
-  /* ── Mask: tap to close sidebar ── */
+  /* ── MASK FIX: Chirpy toggles this element to close sidebar ── */
+  /* The mask MUST be:
+     - positioned correctly (fixed, full screen)
+     - above content but below sidebar
+     - fully pointer-interactive (NO touch-action restrictions)
+     - visible with semi-transparent background */
   #mask,
   .mask,
   #sidebar-mask {
     z-index: 1999 !important;
     position: fixed !important;
-    inset: 0 !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
     background: rgba(0,0,0,.50) !important;
-    /* DO NOT use touch-action:none — allow tap to close */
-    -webkit-tap-highlight-color: transparent !important;
+    /* CRITICAL: DO NOT set touch-action, pointer-events, or user-select restrictions.
+       Chirpy JS attaches a click handler to close the sidebar.
+       Any restriction will break it. */
     cursor: pointer !important;
+    -webkit-tap-highlight-color: rgba(0,0,0,.1) !important;
   }
 
-  /* ── Prevent horizontal body scroll (but don't block sidebar gestures) ── */
+  /* Prevent horizontal overscroll on body/wrapper only */
   html {
     overflow-x: hidden !important;
   }
-  /* Only lock the wrapper, not the sidebar itself */
   #wrapper,
   body > #wrapper {
     overflow-x: hidden !important;
     overscroll-behavior-x: none !important;
   }
-  /* Sidebar itself should NOT have overflow restrictions that prevent swipe-back */
-  #sidebar {
-    overscroll-behavior: auto !important;
-  }
+  /* Do NOT restrict sidebar or mask scrolling/interaction */
 }
 
 /* ══════════════════════════════════════════════════════════
-   5) MOBILE: Remove duplicate TOC
-   Chirpy shows TWO on mobile:
-   - Inline "Contents >" collapsible (inside #panel-wrapper moved to top on mobile)
-   - A second TOC section from the right panel
-   Keep only the collapsible "Contents" one, hide the panel-based TOC wrapper
+   7) MOBILE: Duplicate TOC — remove "Contents >" collapsible
+   Keep only the title-bar TOC toggle (≡ icon next to post title)
    ══════════════════════════════════════════════════════════ */
 @media (max-width: 991px) {
-  /* Hide the panel-wrapper TOC section that gets inlined above post content.
-     Chirpy moves #toc-wrapper from the right panel into the flow on mobile.
-     The post already has its own "Contents >" collapsible. */
+  /* Chirpy mobile layout moves #toc-wrapper inline.
+     It creates a "Contents >" button AND the title bar has a TOC icon.
+     Hide the "Contents >" collapsible block. */
+
+  /* Target the panel-wrapper's TOC that gets moved inline on mobile */
+  #panel-wrapper,
+  aside#panel-wrapper,
   #panel-wrapper #toc-wrapper,
   aside#panel-wrapper section#toc-wrapper,
   #panel-wrapper > section#toc-wrapper,
-  #panel-wrapper .toc-wrapper {
+  #panel-wrapper .toc-wrapper,
+  /* Chirpy 7.x: uses a details/summary for "Contents" */
+  #toc-wrapper,
+  section#toc-wrapper,
+  .toc-wrapper {
     display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
-  /* If there's a separate inline TOC that duplicates, hide it too.
-     Chirpy may render a second #toc or .post-toc-content */
-
-  /* Make sure the remaining Contents button looks clean */
-  .post-content .table-of-contents,
-  #post-content > .toc,
-  .post .toc {
-    margin-bottom: 1rem !important;
+  /* But keep the title-bar TOC button (≡ icon) always visible */
+  #topbar-wrapper #topbar .toc-trigger,
+  #topbar-wrapper #topbar #toc-trigger,
+  #topbar-wrapper #topbar button[data-bs-toggle],
+  .post-header .toc-trigger {
+    display: inline-flex !important;
+    visibility: visible !important;
+    height: auto !important;
+    overflow: visible !important;
   }
 }
 
 /* ══════════════════════════════════════════════════════════
-   6) CARDS / PANELS — neutral glass
+   8) CARDS / PANELS — neutral glass (brighter)
    ══════════════════════════════════════════════════════════ */
 .card,
 .card-wrapper,
@@ -3572,125 +3615,126 @@ body::before {
 #core-wrapper .page,
 #core-wrapper .home {
   background:
-    linear-gradient(160deg, rgba(32,32,36,.98), rgba(24,24,28,.95)) padding-box,
-    linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,.02), rgba(255,255,255,.05)) border-box !important;
-  box-shadow: 0 14px 34px rgba(0,0,0,.34), 0 0 0 1px rgba(150,150,165,.03) inset !important;
+    linear-gradient(160deg, rgba(36,36,40,.98), rgba(28,28,32,.95)) padding-box,
+    linear-gradient(135deg, rgba(255,255,255,.07), rgba(255,255,255,.03), rgba(255,255,255,.06)) border-box !important;
+  box-shadow: 0 14px 34px rgba(0,0,0,.30), 0 0 0 1px rgba(160,160,175,.04) inset !important;
 }
 .card:hover, .card-wrapper:hover, #panel-wrapper .panel:hover {
-  box-shadow: 0 16px 38px rgba(0,0,0,.40), 0 0 0 1px rgba(180,180,190,.06) inset, 0 0 20px rgba(130,130,145,.08) !important;
+  box-shadow: 0 16px 38px rgba(0,0,0,.36), 0 0 0 1px rgba(180,180,195,.07) inset, 0 0 20px rgba(140,140,155,.09) !important;
 }
 
 /* ══════════════════════════════════════════════════════════
-   7) LINKS
+   9) LINKS
    ══════════════════════════════════════════════════════════ */
 a, .post-content a { color: var(--k-mint) !important; }
 a:hover, .post-content a:hover { color: var(--k-lime) !important; }
 
 /* ══════════════════════════════════════════════════════════
-   8) HEADINGS — neutral
+   10) HEADINGS — neutral
    ══════════════════════════════════════════════════════════ */
-.post-content h2::before,
-.post-content h3::before {
-  background: linear-gradient(180deg, rgba(200,200,210,.80), rgba(140,140,155,.55)) !important;
-  box-shadow: 0 0 10px rgba(150,150,165,.10), 0 0 16px rgba(130,130,145,.05) !important;
+.post-content h2::before, .post-content h3::before {
+  background: linear-gradient(180deg, rgba(210,210,220,.82), rgba(150,150,165,.58)) !important;
+  box-shadow: 0 0 10px rgba(160,160,175,.12), 0 0 16px rgba(140,140,155,.06) !important;
 }
 .dynamic-title::after, #page-title::after, .page-title::after {
-  background: linear-gradient(90deg, rgba(150,150,165,.42), rgba(180,180,190,.30), transparent) !important;
+  background: linear-gradient(90deg, rgba(160,160,175,.44), rgba(185,185,195,.32), transparent) !important;
 }
 #post-list .post-preview .card-title::after,
 .post-list .post-preview .card-title::after,
 #search-results .post-preview .card-title::after {
-  background: linear-gradient(90deg, rgba(130,130,145,.55), rgba(160,160,170,.35), transparent) !important;
+  background: linear-gradient(90deg, rgba(140,140,155,.58), rgba(165,165,175,.38), transparent) !important;
 }
 
 /* ══════════════════════════════════════════════════════════
-   9) POST LIST — neutral lightbar
+   11) POST LIST — neutral lightbar
    ══════════════════════════════════════════════════════════ */
 #post-list .post-preview::before, .post-list .post-preview::before,
 #search-results .post-preview::before, #related-posts .post-preview::before {
-  background: linear-gradient(180deg, rgba(130,130,145,.16), rgba(150,150,165,.45), rgba(170,170,180,.35)) !important;
+  background: linear-gradient(180deg, rgba(140,140,155,.18), rgba(155,155,170,.48), rgba(175,175,185,.38)) !important;
 }
 #post-list .post-preview::after, .post-list .post-preview::after,
 #search-results .post-preview::after, #related-posts .post-preview::after {
-  background: radial-gradient(500px 260px at 20% 0%, rgba(130,130,145,.08), transparent 55%),
-    radial-gradient(520px 300px at 85% 20%, rgba(160,160,170,.06), transparent 60%) !important;
+  background: radial-gradient(500px 260px at 20% 0%, rgba(140,140,155,.09), transparent 55%),
+    radial-gradient(520px 300px at 85% 20%, rgba(165,165,175,.07), transparent 60%) !important;
 }
-#post-list .post-preview:hover, .post-list .post-preview:hover,
-#search-results .post-preview:hover {
-  border-color: rgba(170,170,180,.18) !important;
-  box-shadow: 0 18px 40px rgba(0,0,0,.42), 0 0 0 1px rgba(170,170,180,.08) inset, 0 0 20px rgba(130,130,145,.12) !important;
+#post-list .post-preview:hover, .post-list .post-preview:hover, #search-results .post-preview:hover {
+  border-color: rgba(175,175,185,.20) !important;
+  box-shadow: 0 18px 40px rgba(0,0,0,.38), 0 0 0 1px rgba(175,175,185,.09) inset, 0 0 20px rgba(140,140,155,.13) !important;
 }
 
 /* ══════════════════════════════════════════════════════════
-   10) CODE BLOCKS — neutral
+   12) CODE BLOCKS
    ══════════════════════════════════════════════════════════ */
 figure.highlight, div.highlight {
-  border-color: rgba(130,130,145,.16) !important;
-  box-shadow: 0 14px 28px rgba(0,0,0,.28), 0 0 0 1px rgba(130,130,145,.05) inset !important;
+  border-color: rgba(140,140,155,.17) !important;
+  box-shadow: 0 14px 28px rgba(0,0,0,.26), 0 0 0 1px rgba(140,140,155,.06) inset !important;
 }
 figure.highlight::before, div.highlight::before {
-  background: linear-gradient(90deg, rgba(140,140,155,.50), rgba(160,160,170,.35), rgba(130,130,145,.18), transparent) !important;
+  background: linear-gradient(90deg, rgba(150,150,165,.52), rgba(165,165,175,.38), rgba(140,140,155,.20), transparent) !important;
 }
 figure.highlight > .code-header::before, div.highlight > .code-header::before,
 div.highlighter-rouge > .code-header::before {
-  background: radial-gradient(circle, rgba(255,255,255,.45) 0 3px, transparent 4px) 0 50%/10px 10px,
-    radial-gradient(circle, rgba(150,150,165,.55) 0 3px, transparent 4px) 50% 50%/10px 10px,
-    radial-gradient(circle, rgba(180,180,190,.45) 0 3px, transparent 4px) 100% 50%/10px 10px !important;
+  background: radial-gradient(circle, rgba(255,255,255,.48) 0 3px, transparent 4px) 0 50%/10px 10px,
+    radial-gradient(circle, rgba(160,160,175,.58) 0 3px, transparent 4px) 50% 50%/10px 10px,
+    radial-gradient(circle, rgba(185,185,195,.48) 0 3px, transparent 4px) 100% 50%/10px 10px !important;
 }
 .code-header, div.highlight > .code-header, figure.highlight > .code-header {
-  background: rgba(0,0,0,.20) !important;
-  border-bottom: 1px solid rgba(130,130,145,.10) !important;
-  color: rgba(255,255,255,.70) !important;
+  background: rgba(0,0,0,.18) !important;
+  border-bottom: 1px solid rgba(140,140,155,.11) !important;
+  color: rgba(255,255,255,.72) !important;
 }
-.code-header .language, .code-header .lang { color: rgba(180,180,190,.65) !important; }
+.code-header .language, .code-header .lang { color: rgba(185,185,195,.68) !important; }
+
+/* Code text brighter */
+.post-content pre code { color: rgba(255,255,255,.88) !important; }
 
 /* ══════════════════════════════════════════════════════════
-   11) SEARCH INPUT
+   13) SEARCH INPUT
    ══════════════════════════════════════════════════════════ */
 #topbar-wrapper #topbar #search-input {
-  background: rgba(0,0,0,.32) !important;
-  border: 1px solid rgba(150,150,165,.18) !important;
+  background: rgba(0,0,0,.28) !important;
+  border: 1px solid rgba(160,160,175,.20) !important;
 }
 #topbar-wrapper #topbar #search-input:focus {
-  border-color: rgba(180,180,190,.28) !important;
-  box-shadow: 0 0 0 3px rgba(180,180,190,.10), 0 0 14px rgba(150,150,165,.08) !important;
+  border-color: rgba(185,185,195,.30) !important;
+  box-shadow: 0 0 0 3px rgba(185,185,195,.10), 0 0 14px rgba(160,160,175,.09) !important;
 }
 
 /* ══════════════════════════════════════════════════════════
-   12) TAGS / CHIPS
+   14) TAGS / CHIPS
    ══════════════════════════════════════════════════════════ */
-.post-tags a, a.tag, .tag, .badge { background: rgba(150,150,165,.04) !important; border: 1px solid rgba(150,150,165,.12) !important; }
-.post-tags a:hover, a.tag:hover, .tag:hover, .badge:hover { background: rgba(180,180,190,.08) !important; border-color: rgba(180,180,190,.16) !important; box-shadow: 0 0 10px rgba(180,180,190,.06) !important; }
+.post-tags a, a.tag, .tag, .badge { background: rgba(160,160,175,.05) !important; border: 1px solid rgba(160,160,175,.13) !important; }
+.post-tags a:hover, a.tag:hover, .tag:hover, .badge:hover { background: rgba(185,185,195,.09) !important; border-color: rgba(185,185,195,.18) !important; }
 .tag, .post-tag, a.tag, a.post-tag, #tags a, #tag-list a {
-  background: linear-gradient(180deg, rgba(20,20,22,.46), rgba(10,10,12,.18)) !important;
-  border: 1px solid rgba(140,140,155,.16) !important;
-  box-shadow: inset 0 1px 0 rgba(180,180,190,.06), 0 8px 18px rgba(0,0,0,.20) !important;
+  background: linear-gradient(180deg, rgba(24,24,28,.48), rgba(14,14,16,.20)) !important;
+  border: 1px solid rgba(150,150,165,.18) !important;
+  box-shadow: inset 0 1px 0 rgba(185,185,195,.07), 0 8px 18px rgba(0,0,0,.18) !important;
 }
-.tag:hover, .post-tag:hover, a.tag:hover, a.post-tag:hover, #tags a:hover, #tag-list a:hover { border-color: rgba(180,180,190,.24) !important; }
 
 /* ══════════════════════════════════════════════════════════
-   13) TOC
+   15) TOC
    ══════════════════════════════════════════════════════════ */
 #toc-wrapper a.nav-link.active, #toc-wrapper a.nav-link:hover,
 #toc a.nav-link.active, #toc a.nav-link:hover {
-  color: var(--k-lime) !important; background: rgba(180,180,190,.05) !important;
+  color: var(--k-lime) !important; background: rgba(185,185,195,.06) !important;
 }
-#toc-wrapper a.nav-link.active { box-shadow: 0 0 0 1px rgba(180,180,190,.08) inset !important; }
+#toc-wrapper a.nav-link.active { box-shadow: 0 0 0 1px rgba(185,185,195,.09) inset !important; }
 
 /* ══════════════════════════════════════════════════════════
-   14) BLOCKQUOTE / INLINE CODE
+   16) BLOCKQUOTE / INLINE CODE
    ══════════════════════════════════════════════════════════ */
 .post-content blockquote {
-  background: rgba(150,150,165,.03) !important;
-  border-image: linear-gradient(180deg, rgba(150,150,165,.35), rgba(180,180,190,.20)) 1 !important;
+  background: rgba(160,160,175,.04) !important;
+  border-image: linear-gradient(180deg, rgba(160,160,175,.38), rgba(185,185,195,.22)) 1 !important;
+  color: rgba(255,255,255,.86) !important;
 }
 .post-content :not(pre) > code {
-  background: rgba(150,150,165,.04) !important;
-  border: 1px solid rgba(150,150,165,.09) !important;
+  background: rgba(160,160,175,.05) !important;
+  border: 1px solid rgba(160,160,175,.10) !important;
 }
 
 /* ══════════════════════════════════════════════════════════
-   15) PAGINATION — horizontal
+   17) PAGINATION — horizontal
    ══════════════════════════════════════════════════════════ */
 .pagination, ul.pagination, nav .pagination {
   display: flex !important; flex-direction: row !important; flex-wrap: wrap !important;
@@ -3701,175 +3745,141 @@ div.highlighter-rouge > .code-header::before {
 .pagination .page-link, .pagination > li > a, .pagination > li > span {
   display: inline-flex !important; align-items: center !important; justify-content: center !important;
   min-width: 2.2rem !important; height: 2.2rem !important; padding: 0 0.55rem !important;
-  background: rgba(150,150,165,.04) !important; border: 1px solid rgba(150,150,165,.10) !important;
-  color: rgba(255,255,255,.82) !important; border-radius: 10px !important; font-size: 0.92rem !important;
+  background: rgba(160,160,175,.05) !important; border: 1px solid rgba(160,160,175,.11) !important;
+  color: rgba(255,255,255,.84) !important; border-radius: 10px !important; font-size: 0.92rem !important;
 }
 .pagination .page-link:hover, .pagination .page-item.active .page-link {
-  background: rgba(180,180,190,.08) !important; border-color: rgba(180,180,190,.16) !important;
-  color: var(--k-lime) !important; box-shadow: 0 0 10px rgba(180,180,190,.06) !important;
+  background: rgba(185,185,195,.09) !important; border-color: rgba(185,185,195,.18) !important;
+  color: var(--k-lime) !important; box-shadow: 0 0 10px rgba(185,185,195,.07) !important;
 }
 .pagination .page-item.disabled .page-link { opacity: 0.35 !important; pointer-events: none !important; }
 
 /* ══════════════════════════════════════════════════════════
-   16) POST NAVIGATION (이전글/다음글)
+   18) POST NAVIGATION (이전글/다음글)
    ══════════════════════════════════════════════════════════ */
-.post-navigation, .post-nav, #post-navigation, .pagination-post,
-.post-tail-wrapper .post-navigation {
+.post-navigation, .post-nav, #post-navigation, .pagination-post {
   display: flex !important; flex-direction: row !important; flex-wrap: wrap !important;
-  gap: 0.75rem !important; width: 100% !important; overflow: visible !important;
-  margin: 1.5rem 0 1rem !important;
+  gap: 0.75rem !important; width: 100% !important; overflow: visible !important; margin: 1.5rem 0 1rem !important;
 }
 .post-navigation a, .post-nav a, #post-navigation a, .pagination-post a {
   display: flex !important; align-items: center !important; gap: 0.5rem !important;
   flex: 1 1 0% !important; min-width: 0 !important;
-  padding: 0.75rem 1rem !important; background: rgba(20,20,24,.60) !important;
-  border: 1px solid rgba(150,150,165,.12) !important; border-radius: 14px !important;
-  color: rgba(255,255,255,.82) !important; text-decoration: none !important;
-  overflow: hidden !important;
+  padding: 0.75rem 1rem !important; background: rgba(24,24,28,.60) !important;
+  border: 1px solid rgba(160,160,175,.13) !important; border-radius: 14px !important;
+  color: rgba(255,255,255,.84) !important; text-decoration: none !important; overflow: hidden !important;
 }
 .post-navigation a:hover, .post-nav a:hover, #post-navigation a:hover {
-  border-color: rgba(180,180,190,.18) !important; background: rgba(30,30,34,.70) !important;
-  box-shadow: 0 8px 20px rgba(0,0,0,.22) !important;
+  border-color: rgba(185,185,195,.20) !important; background: rgba(34,34,38,.72) !important;
+  box-shadow: 0 8px 20px rgba(0,0,0,.20) !important;
 }
-.post-navigation a p, .post-navigation a span, .post-nav a p, .post-nav a span,
-#post-navigation a p, #post-navigation a span, .pagination-post a p, .pagination-post a span {
-  overflow: hidden !important; text-overflow: ellipsis !important;
-  white-space: nowrap !important; margin: 0 !important; max-width: 100% !important;
+.post-navigation a p, .post-navigation a span, .post-nav a p, .post-nav a span {
+  overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; margin: 0 !important;
 }
-/* Chirpy btn for prev/next */
 .post-tail-wrapper .btn, .post-tail-wrapper .btn.btn-outline-primary {
   display: inline-flex !important; align-items: center !important; gap: 0.4rem !important;
-  padding: 0.65rem 0.9rem !important; background: rgba(20,20,24,.55) !important;
-  border: 1px solid rgba(150,150,165,.12) !important; border-radius: 12px !important;
-  color: rgba(255,255,255,.82) !important; overflow: hidden !important; max-width: 48% !important;
+  padding: 0.65rem 0.9rem !important; background: rgba(24,24,28,.55) !important;
+  border: 1px solid rgba(160,160,175,.13) !important; border-radius: 12px !important;
+  color: rgba(255,255,255,.84) !important; overflow: hidden !important; max-width: 48% !important;
 }
-.post-tail-wrapper .btn:hover { background: rgba(30,30,34,.65) !important; border-color: rgba(180,180,190,.18) !important; }
 .post-tail-wrapper .btn p, .post-tail-wrapper .btn span {
   overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; margin: 0 !important;
 }
 @media (max-width: 575px) {
-  .post-navigation, .post-nav, #post-navigation, .pagination-post { flex-direction: column !important; gap: 0.5rem !important; }
-  .post-navigation a, .post-nav a, #post-navigation a, .pagination-post a { max-width: 100% !important; width: 100% !important; }
+  .post-navigation, .post-nav, #post-navigation, .pagination-post { flex-direction: column !important; }
+  .post-navigation a, .post-nav a, .pagination-post a { max-width: 100% !important; width: 100% !important; }
   .post-tail-wrapper .btn { max-width: 100% !important; width: 100% !important; }
 }
 
 /* ══════════════════════════════════════════════════════════
-   17) CALLOUTS
+   19) CALLOUTS
    ══════════════════════════════════════════════════════════ */
 .prompt, .prompt-tip, .prompt-info, .prompt-warning, .prompt-danger {
-  background: linear-gradient(180deg, rgba(18,18,20,.70), rgba(14,14,16,.58)) padding-box,
-    linear-gradient(135deg, rgba(140,140,155,.22), rgba(170,170,180,.18), rgba(130,130,145,.10)) border-box !important;
-  box-shadow: 0 14px 30px rgba(0,0,0,.30), 0 0 0 1px rgba(130,130,145,.05) inset !important;
+  background: linear-gradient(180deg, rgba(22,22,26,.72), rgba(18,18,20,.60)) padding-box,
+    linear-gradient(135deg, rgba(150,150,165,.24), rgba(175,175,185,.20), rgba(140,140,155,.12)) border-box !important;
+  box-shadow: 0 14px 30px rgba(0,0,0,.26), 0 0 0 1px rgba(140,140,155,.06) inset !important;
+  color: rgba(255,255,255,.88) !important;
 }
-.prompt-tip::before { background: rgba(140,140,155,.55) !important; }
-.prompt-info::before { background: rgba(110,180,160,.50) !important; }
+.prompt-tip::before { background: rgba(150,150,165,.58) !important; }
+.prompt-info::before { background: rgba(120,185,165,.52) !important; }
 
 /* ══════════════════════════════════════════════════════════
-   18) CATEGORIES / ARCHIVES / TAGS — neutral
+   20) CATEGORIES / ARCHIVES / TAGS
    ══════════════════════════════════════════════════════════ */
 #categories .list-group-item, #categories .category, #categories li,
 .categories .list-group-item, .categories .category, .categories li {
-  background: linear-gradient(180deg, rgba(18,18,20,.68), rgba(14,14,16,.56)) padding-box,
-    linear-gradient(135deg, rgba(140,140,155,.24), rgba(170,170,180,.20), rgba(130,130,145,.12)) border-box !important;
-  box-shadow: 0 12px 28px rgba(0,0,0,.26) !important;
+  background: linear-gradient(180deg, rgba(22,22,26,.70), rgba(18,18,20,.58)) padding-box,
+    linear-gradient(135deg, rgba(150,150,165,.26), rgba(175,175,185,.22), rgba(140,140,155,.14)) border-box !important;
+  box-shadow: 0 12px 28px rgba(0,0,0,.24) !important;
 }
-#categories .list-group-item:hover, #categories .category:hover, #categories li:hover,
-.categories .list-group-item:hover, .categories .category:hover, .categories li:hover {
-  box-shadow: 0 14px 32px rgba(0,0,0,.30), 0 0 18px rgba(150,150,165,.10) !important;
+#categories .list-group-item:hover, #categories .category:hover, #categories li:hover {
+  box-shadow: 0 14px 32px rgba(0,0,0,.28), 0 0 18px rgba(160,160,175,.11) !important;
 }
-#categories svg, .categories svg { color: rgba(180,180,190,.50) !important; }
-#tags { background: rgba(0,0,0,.12) !important; border: 1px solid rgba(140,140,155,.12) !important; }
-#tags::before {
-  background: radial-gradient(780px 360px at 16% 18%, rgba(110,180,160,.06), transparent 62%),
-    radial-gradient(820px 380px at 86% 22%, rgba(130,130,145,.07), transparent 64%),
-    linear-gradient(180deg, rgba(18,18,20,.26), rgba(0,0,0,.12)) !important;
-}
+#categories svg, .categories svg { color: rgba(185,185,195,.52) !important; }
+#tags { background: rgba(0,0,0,.10) !important; border: 1px solid rgba(150,150,165,.13) !important; }
 #archives .list-group-item, .archives .list-group-item, #archives li, .archives li {
-  box-shadow: inset 3px 0 0 rgba(150,150,165,.14) !important;
-}
-#archives .list-group-item:hover, .archives .list-group-item:hover, #archives li:hover, .archives li:hover {
-  box-shadow: inset 3px 0 0 rgba(180,180,190,.16), 0 0 0 1px rgba(180,180,190,.06) inset !important;
+  box-shadow: inset 3px 0 0 rgba(160,160,175,.15) !important;
 }
 
 /* ══════════════════════════════════════════════════════════
-   19) RELATED POSTS
+   21) RELATED POSTS
    ══════════════════════════════════════════════════════════ */
 #related-posts ul > li, #related-posts .post-list > li, #related-posts .post-preview,
 #related-posts .card, #related-posts .row > * > .card {
-  background: rgba(150,150,165,.035) !important; border: 1px solid rgba(150,150,165,.12) !important;
-  box-shadow: 0 8px 24px rgba(0,0,0,.26), 0 0 0 1px rgba(150,150,165,.04) inset !important;
+  background: rgba(160,160,175,.04) !important; border: 1px solid rgba(160,160,175,.13) !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,.24), 0 0 0 1px rgba(160,160,175,.04) inset !important;
 }
 #related-posts ul > li:hover, #related-posts .post-preview:hover, #related-posts .card:hover {
-  background: rgba(180,180,190,.05) !important; border-color: rgba(180,180,190,.22) !important;
-  box-shadow: 0 12px 32px rgba(0,0,0,.36), 0 0 18px rgba(180,180,190,.10) !important;
+  background: rgba(185,185,195,.06) !important; border-color: rgba(185,185,195,.24) !important;
 }
 
 /* ══════════════════════════════════════════════════════════
-   20) INNER PAGE VIGNETTES
+   22) INNER PAGE VIGNETTES
    ══════════════════════════════════════════════════════════ */
 body:not(.home) #core-wrapper {
-  background: radial-gradient(900px 600px at 10% 0%, rgba(130,130,145,.07), transparent 60%),
-    radial-gradient(900px 600px at 90% 10%, rgba(160,160,170,.05), transparent 60%) !important;
-}
-body.layout-post #core-wrapper::before, body.layout-page #core-wrapper::before {
-  background: radial-gradient(900px 480px at 20% 10%, rgba(130,130,145,.08), transparent 65%),
-    radial-gradient(720px 420px at 78% 18%, rgba(160,160,170,.06), transparent 62%),
-    radial-gradient(900px 560px at 60% 88%, rgba(110,180,160,.04), transparent 70%),
-    linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.14)) !important;
+  background: radial-gradient(900px 600px at 10% 0%, rgba(140,140,155,.08), transparent 60%),
+    radial-gradient(900px 600px at 90% 10%, rgba(165,165,175,.06), transparent 60%) !important;
 }
 body.layout-post #core-wrapper .post-content {
-  background: rgba(0,0,0,.14) !important; border: 1px solid rgba(130,130,145,.13) !important;
-  box-shadow: 0 18px 44px rgba(0,0,0,.32) !important;
+  background: rgba(0,0,0,.12) !important; border: 1px solid rgba(140,140,155,.14) !important;
+  box-shadow: 0 18px 44px rgba(0,0,0,.28) !important;
 }
 body.layout-post #core-wrapper .post-content::before {
-  background: radial-gradient(900px 420px at 18% 12%, rgba(130,130,145,.07), transparent 65%),
-    radial-gradient(700px 360px at 82% 18%, rgba(160,160,170,.05), transparent 62%),
-    linear-gradient(180deg, rgba(18,18,20,.34), rgba(0,0,0,.14)),
-    repeating-linear-gradient(135deg, rgba(170,170,180,.02) 0 1px, transparent 1px 7px) !important;
+  background: radial-gradient(900px 420px at 18% 12%, rgba(140,140,155,.08), transparent 65%),
+    radial-gradient(700px 360px at 82% 18%, rgba(165,165,175,.06), transparent 62%),
+    linear-gradient(180deg, rgba(22,22,26,.32), rgba(0,0,0,.12)),
+    repeating-linear-gradient(135deg, rgba(175,175,185,.022) 0 1px, transparent 1px 7px) !important;
 }
 
 /* ══════════════════════════════════════════════════════════
-   21) MISC — scrollbar, hr, breadcrumb, schedule, panel, logo, about
+   23) MISC
    ══════════════════════════════════════════════════════════ */
-::-webkit-scrollbar-thumb { background: linear-gradient(180deg, rgba(150,150,165,.20), rgba(180,180,190,.14)) !important; }
-hr { border-color: rgba(150,150,165,.10) !important; }
-.breadcrumb a { color: rgba(150,150,165,.88) !important; }
+::-webkit-scrollbar-thumb { background: linear-gradient(180deg, rgba(160,160,175,.22), rgba(185,185,195,.16)) !important; }
+hr { border-color: rgba(160,160,175,.12) !important; }
+.breadcrumb a { color: rgba(160,160,175,.90) !important; }
 .breadcrumb a:hover { color: var(--k-lime) !important; }
-.breadcrumb-item + .breadcrumb-item::before { color: rgba(150,150,165,.30) !important; }
 
 .sidebar-schedule {
-  background: linear-gradient(180deg, rgba(20,20,24,.92), rgba(16,16,18,.86)) padding-box,
-    linear-gradient(135deg, rgba(150,150,165,.16), rgba(170,170,180,.12)) border-box !important;
-  box-shadow: 0 10px 22px rgba(0,0,0,.26), 0 0 0 1px rgba(150,150,165,.04) inset !important;
+  background: linear-gradient(180deg, rgba(24,24,28,.92), rgba(20,20,23,.86)) padding-box,
+    linear-gradient(135deg, rgba(160,160,175,.18), rgba(175,175,185,.14)) border-box !important;
 }
 .sidebar-schedule h4 { color: var(--k-lime) !important; }
 .sidebar-schedule .schedule-date { color: var(--k-mint) !important; }
 
 #panel-wrapper .panel .panel-title::after {
-  background: linear-gradient(90deg, rgba(130,130,145,.45), rgba(160,160,170,.26), transparent) !important;
+  background: linear-gradient(90deg, rgba(140,140,155,.48), rgba(165,165,175,.28), transparent) !important;
 }
-#panel-wrapper .panel li::marker { color: rgba(130,130,145,.45) !important; }
 
 .home-logo img {
-  border: 3px solid rgba(150,150,165,.25) !important;
-  box-shadow: 0 8px 24px rgba(150,150,165,.15), 0 0 26px rgba(180,180,190,.08) !important;
-}
-.home-logo img:hover {
-  box-shadow: 0 12px 32px rgba(150,150,165,.22), 0 0 36px rgba(180,180,190,.14) !important;
+  border: 3px solid rgba(160,160,175,.28) !important;
+  box-shadow: 0 8px 24px rgba(160,160,175,.16), 0 0 26px rgba(185,185,195,.09) !important;
 }
 
+/* About page */
 body.page #core-wrapper .post-content, body.layout-page #core-wrapper .post-content,
 body.about #core-wrapper .post-content, body[data-page="about"] #core-wrapper .post-content {
-  border: 1px solid rgba(130,130,145,.12) !important; box-shadow: 0 14px 30px rgba(0,0,0,.24) !important;
-}
-body.page #core-wrapper .post-content::before, body.layout-page #core-wrapper .post-content::before,
-body.about #core-wrapper .post-content::before, body[data-page="about"] #core-wrapper .post-content::before {
-  background: radial-gradient(840px 360px at 14% 18%, rgba(110,180,160,.05), transparent 62%),
-    radial-gradient(760px 360px at 86% 18%, rgba(130,130,145,.06), transparent 64%),
-    linear-gradient(180deg, rgba(18,18,20,.22), rgba(0,0,0,.12)),
-    repeating-linear-gradient(135deg, rgba(170,170,180,.018) 0 1px, transparent 1px 8px) !important;
+  border: 1px solid rgba(140,140,155,.14) !important; box-shadow: 0 14px 30px rgba(0,0,0,.22) !important;
 }
 body.page #core-wrapper .post-content blockquote, body.layout-page #core-wrapper .post-content blockquote,
 body.about #core-wrapper .post-content blockquote, body[data-page="about"] #core-wrapper .post-content blockquote {
-  background: linear-gradient(90deg, rgba(130,130,145,.08), rgba(160,160,170,.04), transparent) !important;
+  background: linear-gradient(90deg, rgba(140,140,155,.09), rgba(165,165,175,.05), transparent) !important;
 }
