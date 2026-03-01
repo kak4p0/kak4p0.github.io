@@ -3342,7 +3342,10 @@ header.profile-wrapper a {
 
 
 /* =========================================================
-   v24 DARK-GRAY + MOBILE UX
+   v25 DARK-GRAY — CONSERVATIVE MOBILE FIX
+   ★ No offcanvas-backdrop hiding
+   ★ No panel-wrapper display:none
+   ★ Only safe overrides
    ========================================================= */
 
 /* PALETTE */
@@ -3394,10 +3397,9 @@ body::before {
 }
 
 /* ══════════════════════════════════════════════════════════
-   MOBILE FIXES
+   MOBILE: FIXED TOPBAR ONLY (safe, no offcanvas interference)
    ══════════════════════════════════════════════════════════ */
 @media (max-width: 991px) {
-  /* Fixed topbar */
   #topbar-wrapper {
     position: fixed !important;
     top: 0 !important; left: 0 !important; right: 0 !important;
@@ -3438,31 +3440,13 @@ body::before {
   /* Push content below fixed topbar */
   #wrapper, body > #wrapper, #main-wrapper { padding-top: var(--k-topbar-h) !important; }
 
-  /* Sidebar / Mask */
-  #sidebar { z-index: 2000 !important; position: fixed !important; }
-  #mask, .mask, #sidebar-mask {
-    z-index: 1999 !important; position: fixed !important;
-    top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
-    width: 100% !important; height: 100% !important;
-    background: rgba(0,0,0,.50) !important; cursor: pointer !important;
-  }
+  /* Horizontal scroll prevention */
   html { overflow-x: hidden !important; }
-  #wrapper, body > #wrapper { overflow-x: hidden !important; overscroll-behavior-x: none !important; }
-
-  /* ── Hide Chirpy's TOC triggers (both open sidebar, not real TOC) ── */
-  #panel-wrapper, aside#panel-wrapper,
-  aside#panel-wrapper.offcanvas, aside#panel-wrapper.offcanvas-end,
-  #panel-wrapper.offcanvas, #panel-wrapper.offcanvas-end {
-    display: none !important; visibility: hidden !important;
-    position: absolute !important; left: -9999px !important;
-    width: 0 !important; height: 0 !important;
-    overflow: hidden !important; pointer-events: none !important;
-  }
-  .offcanvas-backdrop { display: none !important; }
+  #wrapper, body > #wrapper { overflow-x: hidden !important; }
 }
 
 /* ══════════════════════════════════════════════════════════
-   JS-generated inline TOC (#k-inline-toc) styles
+   JS-generated inline TOC styles (#k-inline-toc)
    ══════════════════════════════════════════════════════════ */
 #k-inline-toc {
   background: rgba(22,22,26,.65);
@@ -3492,7 +3476,6 @@ body::before {
   display: block; padding: 0.3rem 0.5rem;
   font-size: 0.84rem; color: rgba(255,255,255,.72) !important;
   text-decoration: none; border-radius: 8px; line-height: 1.45;
-  transition: background 0.15s, color 0.15s;
 }
 #k-inline-toc .k-toc-list a:hover {
   color: var(--k-lime, #d5d9e0) !important;
@@ -3505,10 +3488,8 @@ body::before {
 }
 
 /* ══════════════════════════════════════════════════════════
-   REMAINING THEME STYLES (neutral gray)
+   THEME STYLES (neutral gray)
    ══════════════════════════════════════════════════════════ */
-
-/* Cards */
 .card, .card-wrapper, #core-wrapper .post, #core-wrapper .page, #core-wrapper .home {
   background: linear-gradient(160deg, rgba(36,36,40,.98), rgba(28,28,32,.95)) padding-box,
     linear-gradient(135deg, rgba(255,255,255,.07), rgba(255,255,255,.03), rgba(255,255,255,.06)) border-box !important;
@@ -3518,11 +3499,9 @@ body::before {
   box-shadow: 0 16px 38px rgba(0,0,0,.36), 0 0 0 1px rgba(180,180,195,.07) inset, 0 0 20px rgba(140,140,155,.09) !important;
 }
 
-/* Links */
 a, .post-content a { color: var(--k-mint) !important; }
 a:hover, .post-content a:hover { color: var(--k-lime) !important; }
 
-/* Headings */
 .post-content h2::before, .post-content h3::before {
   background: linear-gradient(180deg, rgba(210,210,220,.82), rgba(150,150,165,.58)) !important;
 }
@@ -3530,7 +3509,6 @@ a:hover, .post-content a:hover { color: var(--k-lime) !important; }
   background: linear-gradient(90deg, rgba(160,160,175,.44), rgba(185,185,195,.32), transparent) !important;
 }
 
-/* Post list */
 #post-list .post-preview::before, .post-list .post-preview::before,
 #search-results .post-preview::before, #related-posts .post-preview::before {
   background: linear-gradient(180deg, rgba(140,140,155,.18), rgba(155,155,170,.48), rgba(175,175,185,.38)) !important;
@@ -3540,7 +3518,6 @@ a:hover, .post-content a:hover { color: var(--k-lime) !important; }
   box-shadow: 0 18px 40px rgba(0,0,0,.38), 0 0 0 1px rgba(175,175,185,.09) inset !important;
 }
 
-/* Code */
 figure.highlight, div.highlight {
   border-color: rgba(140,140,155,.17) !important;
   box-shadow: 0 14px 28px rgba(0,0,0,.26), 0 0 0 1px rgba(140,140,155,.06) inset !important;
@@ -3556,25 +3533,21 @@ div.highlighter-rouge > .code-header::before {
   color: rgba(255,255,255,.72) !important;
 }
 
-/* Search */
 #topbar-wrapper #topbar #search-input {
   background: rgba(0,0,0,.28) !important; border: 1px solid rgba(160,160,175,.20) !important;
 }
 
-/* Tags */
 .post-tags a, a.tag, .tag, .badge { background: rgba(160,160,175,.05) !important; border: 1px solid rgba(160,160,175,.13) !important; }
 .tag, .post-tag, a.tag, a.post-tag, #tags a, #tag-list a {
   background: linear-gradient(180deg, rgba(24,24,28,.48), rgba(14,14,16,.20)) !important;
   border: 1px solid rgba(150,150,165,.18) !important;
 }
 
-/* TOC desktop */
 #toc-wrapper a.nav-link.active, #toc-wrapper a.nav-link:hover,
 #toc a.nav-link.active, #toc a.nav-link:hover {
   color: var(--k-lime) !important; background: rgba(185,185,195,.06) !important;
 }
 
-/* Blockquote / inline code */
 .post-content blockquote {
   background: rgba(160,160,175,.04) !important;
   border-image: linear-gradient(180deg, rgba(160,160,175,.38), rgba(185,185,195,.22)) 1 !important;
@@ -3584,7 +3557,6 @@ div.highlighter-rouge > .code-header::before {
   background: rgba(160,160,175,.05) !important; border: 1px solid rgba(160,160,175,.10) !important;
 }
 
-/* Pagination */
 .pagination, ul.pagination, nav .pagination {
   display: flex !important; flex-direction: row !important; flex-wrap: wrap !important;
   justify-content: center !important; align-items: center !important;
@@ -3602,7 +3574,6 @@ div.highlighter-rouge > .code-header::before {
   color: var(--k-lime) !important;
 }
 
-/* Post nav */
 .post-navigation, .post-nav, #post-navigation, .pagination-post {
   display: flex !important; flex-direction: row !important; flex-wrap: wrap !important;
   gap: 0.75rem !important; width: 100% !important; overflow: visible !important; margin: 1.5rem 0 1rem !important;
@@ -3633,14 +3604,12 @@ div.highlighter-rouge > .code-header::before {
   .post-tail-wrapper .btn { max-width: 100% !important; width: 100% !important; }
 }
 
-/* Callouts */
 .prompt, .prompt-tip, .prompt-info, .prompt-warning, .prompt-danger {
   background: linear-gradient(180deg, rgba(22,22,26,.72), rgba(18,18,20,.60)) padding-box,
     linear-gradient(135deg, rgba(150,150,165,.24), rgba(175,175,185,.20), rgba(140,140,155,.12)) border-box !important;
   color: rgba(255,255,255,.88) !important;
 }
 
-/* Categories */
 #categories .list-group-item, #categories .category, #categories li,
 .categories .list-group-item, .categories .category, .categories li {
   background: linear-gradient(180deg, rgba(22,22,26,.70), rgba(18,18,20,.58)) padding-box,
@@ -3652,12 +3621,10 @@ div.highlighter-rouge > .code-header::before {
   box-shadow: inset 3px 0 0 rgba(160,160,175,.15) !important;
 }
 
-/* Related posts */
 #related-posts ul > li, #related-posts .post-preview, #related-posts .card {
   background: rgba(160,160,175,.04) !important; border: 1px solid rgba(160,160,175,.13) !important;
 }
 
-/* Inner page */
 body:not(.home) #core-wrapper {
   background: radial-gradient(900px 600px at 10% 0%, rgba(140,140,155,.08), transparent 60%),
     radial-gradient(900px 600px at 90% 10%, rgba(165,165,175,.06), transparent 60%) !important;
@@ -3667,7 +3634,6 @@ body.layout-post #core-wrapper .post-content {
   box-shadow: 0 18px 44px rgba(0,0,0,.28) !important;
 }
 
-/* Misc */
 ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, rgba(160,160,175,.22), rgba(185,185,195,.16)) !important; }
 hr { border-color: rgba(160,160,175,.12) !important; }
 .breadcrumb a { color: rgba(160,160,175,.90) !important; }
