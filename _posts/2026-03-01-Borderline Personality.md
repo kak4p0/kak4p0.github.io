@@ -105,10 +105,11 @@ print(requests.get(base + "/%61dmin/flag").text)      # v2
 
 ---
 v1
-<img width="1069" height="511" alt="스크린샷 2026-02-28 035557" src="https://github.com/user-attachments/assets/3c18b458-ace5-4df0-a568-8b43f2baccd0" />
+<img width="1069" height="511" alt="스크린샷 2026-02-28 035557" src="https://github.com/user-attachments/assets/5af5970f-d147-4fb7-b9d0-086ef2019299" />
 
 v2
-<img width="697" height="310" alt="image" src="https://github.com/user-attachments/assets/3faf21b1-dc58-471b-8f63-ce25a5e65cdc" />
+<img width="1069" height="511" alt="image" src="https://github.com/user-attachments/assets/728735a9-b54b-4041-8242-36bdc4da7044" />
+
 ---
 
 
