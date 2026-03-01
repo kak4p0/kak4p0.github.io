@@ -41,7 +41,7 @@ The key phrase is **"break the protocol"** — this tells us the goal is not to 
 
 ---
 
-<img width="2028" height="1647" alt="스크린샷 2026-03-01 063657" src="https://github.com/user-attachments/assets/86e559f4-d257-4a81-9c8c-97e49ca8158e" />
+<img width="725" height="530" alt="image" src="https://github.com/user-attachments/assets/6fbb02d7-cead-43c0-b1fe-fcffea11f057" />
 
 ---
 
