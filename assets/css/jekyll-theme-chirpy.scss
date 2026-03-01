@@ -3342,335 +3342,208 @@ header.profile-wrapper a {
 
 
 /* =========================================================
-   v21 DARK-GRAY + MOBILE UX FINAL FIX
+   v24 DARK-GRAY + MOBILE UX
    ========================================================= */
 
-/* ══════════════════════════════════════════════════════════
-   1) PALETTE — Neutral Dark Gray (BRIGHTER variant)
-   ══════════════════════════════════════════════════════════ */
+/* PALETTE */
 :root {
-  --k-mint:  #a8acb4;   /* slightly brighter silver */
-  --k-lime:  #d5d9e0;   /* brighter platinum */
-  --k-olive: #787c84;   /* brighter zinc */
-  --k-ink:   #141416;
-  --k-ink2:  #1a1a1d;
-  --k-surface:  rgba(22,22,26,.68);
-  --k-surface2: rgba(18,18,20,.60);
-  --k-border:  rgba(160,160,170,.12);
-  --k-border2: rgba(130,130,140,.14);
-  --k-glow:    rgba(170,170,180,.15);
-  --k-glow2:   rgba(140,140,150,.11);
+  --k-mint:  #a8acb4;
+  --k-lime:  #d5d9e0;
+  --k-olive: #787c84;
   --k-topbar-h: 3rem;
 }
 
-/* ══════════════════════════════════════════════════════════
-   2) BACKGROUND — slightly lifted charcoal (less crushed black)
-   ══════════════════════════════════════════════════════════ */
+/* BACKGROUND */
 body {
   background:
     radial-gradient(ellipse 120% 60% at 50% 0%, rgba(50,50,56,.42), transparent 70%),
     radial-gradient(ellipse 80% 40% at 20% 100%, rgba(35,35,40,.32), transparent 60%),
     linear-gradient(180deg, #18181b 0%, #141416 40%, #111113 100%) !important;
+  color: rgba(255,255,255,.88) !important;
 }
 body::before {
   background:
     radial-gradient(circle at 14px 12px, rgba(190,190,200,.04) 0 1.6px, transparent 2.4px) 0 0/48px 48px,
-    radial-gradient(circle at 34px 30px, rgba(170,170,180,.03) 0 1.2px, transparent 2.2px) 0 0/64px 64px,
-    repeating-linear-gradient(0deg, rgba(255,255,255,.015), rgba(255,255,255,.015) 1px, transparent 1px, transparent 7px),
-    repeating-linear-gradient(90deg, rgba(0,0,0,.02), rgba(0,0,0,.02) 1px, transparent 1px, transparent 10px) !important;
+    radial-gradient(circle at 34px 30px, rgba(170,170,180,.03) 0 1.2px, transparent 2.2px) 0 0/64px 64px !important;
   opacity: .12 !important;
 }
 ::selection { background: rgba(160,160,175,.24) !important; }
 
-/* ══════════════════════════════════════════════════════════
-   3) TEXT — boost readability on mobile
-   ══════════════════════════════════════════════════════════ */
-body {
-  color: rgba(255,255,255,.88) !important;
-}
-.post-content {
-  color: rgba(255,255,255,.88) !important;
-}
-.post-content p,
-.post-content li,
-.post-content td,
-.post-content th {
-  color: rgba(255,255,255,.86) !important;
-}
-/* Headings brighter */
-.post-content h1, .post-content h2, .post-content h3,
-.post-content h4, .post-content h5, .post-content h6 {
-  color: rgba(255,255,255,.94) !important;
-}
-/* Meta text slightly brighter */
-.post-meta, .post-meta span, .post-meta time,
-.text-muted, .small, small {
-  color: rgba(255,255,255,.58) !important;
-}
+/* Text */
+.post-content { color: rgba(255,255,255,.88) !important; }
+.post-content p, .post-content li, .post-content td, .post-content th { color: rgba(255,255,255,.86) !important; }
+.post-content h1, .post-content h2, .post-content h3, .post-content h4, .post-content h5, .post-content h6 { color: rgba(255,255,255,.94) !important; }
+.post-meta, .post-meta span, .post-meta time, .text-muted, .small, small { color: rgba(255,255,255,.58) !important; }
+.post-content pre code { color: rgba(255,255,255,.88) !important; }
 
-/* ══════════════════════════════════════════════════════════
-   4) SIDEBAR — bright enough, fully opaque
-   ══════════════════════════════════════════════════════════ */
+/* SIDEBAR */
 #sidebar {
   background: #18181b !important;
   border-right: 1px solid rgba(255,255,255,.06) !important;
 }
+#sidebar .site-title, #sidebar .site-subtitle, #sidebar .nav-link { color: rgba(255,255,255,.82) !important; }
 #sidebar .nav-link::before { background: rgba(255,255,255,.20) !important; }
-#sidebar .nav-link:hover {
-  background: rgba(160,160,175,.07) !important;
-  border-color: rgba(160,160,175,.13) !important;
-}
+#sidebar .nav-link:hover { background: rgba(160,160,175,.07) !important; }
 #sidebar .nav-link.active {
   background: linear-gradient(90deg, rgba(160,160,175,.15), rgba(140,140,155,.08) 60%, transparent) !important;
   border: 1px solid rgba(160,160,175,.18) !important;
-  box-shadow: 0 0 0 1px rgba(160,160,175,.07) inset, 0 12px 28px rgba(0,0,0,.28) !important;
 }
 #sidebar .nav-link.active::before {
   background: var(--k-lime) !important;
-  box-shadow: 0 0 10px var(--k-glow), 0 0 18px var(--k-glow2) !important;
-}
-/* Sidebar text brighter */
-#sidebar .site-title,
-#sidebar .site-subtitle,
-#sidebar .nav-link {
-  color: rgba(255,255,255,.82) !important;
+  box-shadow: 0 0 10px rgba(170,170,180,.15) !important;
 }
 
 /* ══════════════════════════════════════════════════════════
-   5) MOBILE: FIXED TOPBAR (always visible)
+   MOBILE FIXES
    ══════════════════════════════════════════════════════════ */
 @media (max-width: 991px) {
-
+  /* Fixed topbar */
   #topbar-wrapper {
     position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
+    top: 0 !important; left: 0 !important; right: 0 !important;
     z-index: 1030 !important;
     height: var(--k-topbar-h) !important;
     background: rgba(20,20,23,.97) !important;
-    backdrop-filter: blur(16px) saturate(1.1) !important;
-    -webkit-backdrop-filter: blur(16px) saturate(1.1) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
     border-bottom: 1px solid rgba(160,160,170,.08) !important;
-    transform: none !important;
-    margin: 0 !important;
+    transform: none !important; margin: 0 !important;
   }
-
   #topbar-wrapper #topbar {
-    display: flex !important;
-    align-items: center !important;
+    display: flex !important; align-items: center !important;
     justify-content: space-between !important;
-    height: 100% !important;
-    padding: 0 0.75rem !important;
-    gap: 0.5rem !important;
+    height: 100% !important; padding: 0 0.75rem !important; gap: 0.5rem !important;
   }
-
   #topbar-wrapper #topbar #sidebar-trigger {
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    min-width: 2.6rem !important;
-    min-height: 2.6rem !important;
-    color: rgba(255,255,255,.88) !important;
-    flex-shrink: 0 !important;
-    order: -1 !important;
-    touch-action: manipulation !important;
-    -webkit-tap-highlight-color: transparent !important;
+    display: inline-flex !important; align-items: center !important; justify-content: center !important;
+    min-width: 2.6rem !important; min-height: 2.6rem !important;
+    color: rgba(255,255,255,.88) !important; flex-shrink: 0 !important; order: -1 !important;
     cursor: pointer !important;
   }
-
   #topbar-wrapper #topbar #search-trigger {
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    min-width: 2.4rem !important;
-    min-height: 2.4rem !important;
-    color: rgba(255,255,255,.82) !important;
-    flex-shrink: 0 !important;
-    margin-left: auto !important;
-    touch-action: manipulation !important;
-    cursor: pointer !important;
+    display: inline-flex !important; align-items: center !important; justify-content: center !important;
+    min-width: 2.4rem !important; min-height: 2.4rem !important;
+    color: rgba(255,255,255,.82) !important; flex-shrink: 0 !important;
+    margin-left: auto !important; cursor: pointer !important;
   }
-
-  #topbar-wrapper #topbar #topbar-title,
-  #topbar-wrapper #topbar .topbar-title,
-  #topbar-wrapper #topbar nav[aria-label="Breadcrumb"],
-  #topbar-wrapper #topbar #breadcrumb,
+  #topbar-wrapper #topbar #topbar-title, #topbar-wrapper #topbar .topbar-title,
+  #topbar-wrapper #topbar nav[aria-label="Breadcrumb"], #topbar-wrapper #topbar #breadcrumb,
   #topbar-wrapper #topbar .breadcrumb {
-    flex: 1 1 auto !important;
-    min-width: 0 !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    white-space: nowrap !important;
-    font-size: 0.9rem !important;
-    color: rgba(255,255,255,.72) !important;
-    margin: 0 !important;
-    padding: 0 !important;
+    flex: 1 1 auto !important; min-width: 0 !important;
+    overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important;
+    font-size: 0.9rem !important; color: rgba(255,255,255,.72) !important; margin: 0 !important; padding: 0 !important;
   }
   #topbar-wrapper #topbar #search-cancel { display: none !important; }
 
   /* Push content below fixed topbar */
-  #wrapper,
-  body > #wrapper,
-  #main-wrapper {
-    padding-top: var(--k-topbar-h) !important;
+  #wrapper, body > #wrapper, #main-wrapper { padding-top: var(--k-topbar-h) !important; }
+
+  /* Sidebar / Mask */
+  #sidebar { z-index: 2000 !important; position: fixed !important; }
+  #mask, .mask, #sidebar-mask {
+    z-index: 1999 !important; position: fixed !important;
+    top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
+    width: 100% !important; height: 100% !important;
+    background: rgba(0,0,0,.50) !important; cursor: pointer !important;
   }
+  html { overflow-x: hidden !important; }
+  #wrapper, body > #wrapper { overflow-x: hidden !important; overscroll-behavior-x: none !important; }
+
+  /* ── Hide Chirpy's TOC triggers (both open sidebar, not real TOC) ── */
+  #panel-wrapper, aside#panel-wrapper,
+  aside#panel-wrapper.offcanvas, aside#panel-wrapper.offcanvas-end,
+  #panel-wrapper.offcanvas, #panel-wrapper.offcanvas-end {
+    display: none !important; visibility: hidden !important;
+    position: absolute !important; left: -9999px !important;
+    width: 0 !important; height: 0 !important;
+    overflow: hidden !important; pointer-events: none !important;
+  }
+  .offcanvas-backdrop { display: none !important; }
 }
 
 /* ══════════════════════════════════════════════════════════
-   6) MOBILE SIDEBAR: proper z-index + MASK FIX
+   JS-generated inline TOC (#k-inline-toc) styles
    ══════════════════════════════════════════════════════════ */
-@media (max-width: 991px) {
-
-  /* Sidebar above everything including fixed topbar */
-  #sidebar {
-    z-index: 2000 !important;
-    position: fixed !important;
-  }
-
-  /* ── MASK FIX: Chirpy toggles this element to close sidebar ── */
-  /* The mask MUST be:
-     - positioned correctly (fixed, full screen)
-     - above content but below sidebar
-     - fully pointer-interactive (NO touch-action restrictions)
-     - visible with semi-transparent background */
-  #mask,
-  .mask,
-  #sidebar-mask {
-    z-index: 1999 !important;
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    background: rgba(0,0,0,.50) !important;
-    /* CRITICAL: DO NOT set touch-action, pointer-events, or user-select restrictions.
-       Chirpy JS attaches a click handler to close the sidebar.
-       Any restriction will break it. */
-    cursor: pointer !important;
-    -webkit-tap-highlight-color: rgba(0,0,0,.1) !important;
-  }
-
-  /* Prevent horizontal overscroll on body/wrapper only */
-  html {
-    overflow-x: hidden !important;
-  }
-  #wrapper,
-  body > #wrapper {
-    overflow-x: hidden !important;
-    overscroll-behavior-x: none !important;
-  }
-  /* Do NOT restrict sidebar or mask scrolling/interaction */
+#k-inline-toc {
+  background: rgba(22,22,26,.65);
+  border: 1px solid rgba(160,160,175,.14);
+  border-radius: 14px;
+  margin: 0.5rem 0 1.5rem 0;
+  overflow: hidden;
+}
+#k-inline-toc summary {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem; font-weight: 600;
+  color: var(--k-lime, #d5d9e0);
+  cursor: pointer; list-style: none;
+  user-select: none; -webkit-user-select: none;
+}
+#k-inline-toc summary::-webkit-details-marker { display: none; }
+#k-inline-toc summary::before {
+  content: '▸'; font-size: 0.8rem;
+  transition: transform 0.2s ease; color: rgba(255,255,255,.5);
+}
+#k-inline-toc[open] summary::before { transform: rotate(90deg); }
+#k-inline-toc .k-toc-list {
+  list-style: none; margin: 0; padding: 0 1rem 0.75rem 1rem;
+}
+#k-inline-toc .k-toc-list a {
+  display: block; padding: 0.3rem 0.5rem;
+  font-size: 0.84rem; color: rgba(255,255,255,.72) !important;
+  text-decoration: none; border-radius: 8px; line-height: 1.45;
+  transition: background 0.15s, color 0.15s;
+}
+#k-inline-toc .k-toc-list a:hover {
+  color: var(--k-lime, #d5d9e0) !important;
+  background: rgba(160,160,175,.07);
+}
+#k-inline-toc .k-toc-list .k-toc-h3 { padding-left: 1.2rem; }
+#k-inline-toc .k-toc-list .k-toc-h4 { padding-left: 2rem; }
+@media (min-width: 992px) {
+  #k-inline-toc { display: none !important; }
 }
 
 /* ══════════════════════════════════════════════════════════
-   7) MOBILE: Duplicate TOC — remove "Contents >" collapsible
-   Keep only the title-bar TOC toggle (≡ icon next to post title)
+   REMAINING THEME STYLES (neutral gray)
    ══════════════════════════════════════════════════════════ */
-@media (max-width: 991px) {
-  /* Chirpy mobile layout moves #toc-wrapper inline.
-     It creates a "Contents >" button AND the title bar has a TOC icon.
-     Hide the "Contents >" collapsible block. */
 
-  /* Target the panel-wrapper's TOC that gets moved inline on mobile */
-  #panel-wrapper,
-  aside#panel-wrapper,
-  #panel-wrapper #toc-wrapper,
-  aside#panel-wrapper section#toc-wrapper,
-  #panel-wrapper > section#toc-wrapper,
-  #panel-wrapper .toc-wrapper,
-  /* Chirpy 7.x: uses a details/summary for "Contents" */
-  #toc-wrapper,
-  section#toc-wrapper,
-  .toc-wrapper {
-    display: none !important;
-    visibility: hidden !important;
-    height: 0 !important;
-    overflow: hidden !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-
-  /* But keep the title-bar TOC button (≡ icon) always visible */
-  #topbar-wrapper #topbar .toc-trigger,
-  #topbar-wrapper #topbar #toc-trigger,
-  #topbar-wrapper #topbar button[data-bs-toggle],
-  .post-header .toc-trigger {
-    display: inline-flex !important;
-    visibility: visible !important;
-    height: auto !important;
-    overflow: visible !important;
-  }
-}
-
-/* ══════════════════════════════════════════════════════════
-   8) CARDS / PANELS — neutral glass (brighter)
-   ══════════════════════════════════════════════════════════ */
-.card,
-.card-wrapper,
-#panel-wrapper .panel,
-#core-wrapper .post,
-#core-wrapper .page,
-#core-wrapper .home {
-  background:
-    linear-gradient(160deg, rgba(36,36,40,.98), rgba(28,28,32,.95)) padding-box,
+/* Cards */
+.card, .card-wrapper, #core-wrapper .post, #core-wrapper .page, #core-wrapper .home {
+  background: linear-gradient(160deg, rgba(36,36,40,.98), rgba(28,28,32,.95)) padding-box,
     linear-gradient(135deg, rgba(255,255,255,.07), rgba(255,255,255,.03), rgba(255,255,255,.06)) border-box !important;
   box-shadow: 0 14px 34px rgba(0,0,0,.30), 0 0 0 1px rgba(160,160,175,.04) inset !important;
 }
-.card:hover, .card-wrapper:hover, #panel-wrapper .panel:hover {
+.card:hover, .card-wrapper:hover {
   box-shadow: 0 16px 38px rgba(0,0,0,.36), 0 0 0 1px rgba(180,180,195,.07) inset, 0 0 20px rgba(140,140,155,.09) !important;
 }
 
-/* ══════════════════════════════════════════════════════════
-   9) LINKS
-   ══════════════════════════════════════════════════════════ */
+/* Links */
 a, .post-content a { color: var(--k-mint) !important; }
 a:hover, .post-content a:hover { color: var(--k-lime) !important; }
 
-/* ══════════════════════════════════════════════════════════
-   10) HEADINGS — neutral
-   ══════════════════════════════════════════════════════════ */
+/* Headings */
 .post-content h2::before, .post-content h3::before {
   background: linear-gradient(180deg, rgba(210,210,220,.82), rgba(150,150,165,.58)) !important;
-  box-shadow: 0 0 10px rgba(160,160,175,.12), 0 0 16px rgba(140,140,155,.06) !important;
 }
 .dynamic-title::after, #page-title::after, .page-title::after {
   background: linear-gradient(90deg, rgba(160,160,175,.44), rgba(185,185,195,.32), transparent) !important;
 }
-#post-list .post-preview .card-title::after,
-.post-list .post-preview .card-title::after,
-#search-results .post-preview .card-title::after {
-  background: linear-gradient(90deg, rgba(140,140,155,.58), rgba(165,165,175,.38), transparent) !important;
-}
 
-/* ══════════════════════════════════════════════════════════
-   11) POST LIST — neutral lightbar
-   ══════════════════════════════════════════════════════════ */
+/* Post list */
 #post-list .post-preview::before, .post-list .post-preview::before,
 #search-results .post-preview::before, #related-posts .post-preview::before {
   background: linear-gradient(180deg, rgba(140,140,155,.18), rgba(155,155,170,.48), rgba(175,175,185,.38)) !important;
 }
-#post-list .post-preview::after, .post-list .post-preview::after,
-#search-results .post-preview::after, #related-posts .post-preview::after {
-  background: radial-gradient(500px 260px at 20% 0%, rgba(140,140,155,.09), transparent 55%),
-    radial-gradient(520px 300px at 85% 20%, rgba(165,165,175,.07), transparent 60%) !important;
-}
 #post-list .post-preview:hover, .post-list .post-preview:hover, #search-results .post-preview:hover {
   border-color: rgba(175,175,185,.20) !important;
-  box-shadow: 0 18px 40px rgba(0,0,0,.38), 0 0 0 1px rgba(175,175,185,.09) inset, 0 0 20px rgba(140,140,155,.13) !important;
+  box-shadow: 0 18px 40px rgba(0,0,0,.38), 0 0 0 1px rgba(175,175,185,.09) inset !important;
 }
 
-/* ══════════════════════════════════════════════════════════
-   12) CODE BLOCKS
-   ══════════════════════════════════════════════════════════ */
+/* Code */
 figure.highlight, div.highlight {
   border-color: rgba(140,140,155,.17) !important;
   box-shadow: 0 14px 28px rgba(0,0,0,.26), 0 0 0 1px rgba(140,140,155,.06) inset !important;
-}
-figure.highlight::before, div.highlight::before {
-  background: linear-gradient(90deg, rgba(150,150,165,.52), rgba(165,165,175,.38), rgba(140,140,155,.20), transparent) !important;
 }
 figure.highlight > .code-header::before, div.highlight > .code-header::before,
 div.highlighter-rouge > .code-header::before {
@@ -3679,63 +3552,39 @@ div.highlighter-rouge > .code-header::before {
     radial-gradient(circle, rgba(185,185,195,.48) 0 3px, transparent 4px) 100% 50%/10px 10px !important;
 }
 .code-header, div.highlight > .code-header, figure.highlight > .code-header {
-  background: rgba(0,0,0,.18) !important;
-  border-bottom: 1px solid rgba(140,140,155,.11) !important;
+  background: rgba(0,0,0,.18) !important; border-bottom: 1px solid rgba(140,140,155,.11) !important;
   color: rgba(255,255,255,.72) !important;
 }
-.code-header .language, .code-header .lang { color: rgba(185,185,195,.68) !important; }
 
-/* Code text brighter */
-.post-content pre code { color: rgba(255,255,255,.88) !important; }
-
-/* ══════════════════════════════════════════════════════════
-   13) SEARCH INPUT
-   ══════════════════════════════════════════════════════════ */
+/* Search */
 #topbar-wrapper #topbar #search-input {
-  background: rgba(0,0,0,.28) !important;
-  border: 1px solid rgba(160,160,175,.20) !important;
-}
-#topbar-wrapper #topbar #search-input:focus {
-  border-color: rgba(185,185,195,.30) !important;
-  box-shadow: 0 0 0 3px rgba(185,185,195,.10), 0 0 14px rgba(160,160,175,.09) !important;
+  background: rgba(0,0,0,.28) !important; border: 1px solid rgba(160,160,175,.20) !important;
 }
 
-/* ══════════════════════════════════════════════════════════
-   14) TAGS / CHIPS
-   ══════════════════════════════════════════════════════════ */
+/* Tags */
 .post-tags a, a.tag, .tag, .badge { background: rgba(160,160,175,.05) !important; border: 1px solid rgba(160,160,175,.13) !important; }
-.post-tags a:hover, a.tag:hover, .tag:hover, .badge:hover { background: rgba(185,185,195,.09) !important; border-color: rgba(185,185,195,.18) !important; }
 .tag, .post-tag, a.tag, a.post-tag, #tags a, #tag-list a {
   background: linear-gradient(180deg, rgba(24,24,28,.48), rgba(14,14,16,.20)) !important;
   border: 1px solid rgba(150,150,165,.18) !important;
-  box-shadow: inset 0 1px 0 rgba(185,185,195,.07), 0 8px 18px rgba(0,0,0,.18) !important;
 }
 
-/* ══════════════════════════════════════════════════════════
-   15) TOC
-   ══════════════════════════════════════════════════════════ */
+/* TOC desktop */
 #toc-wrapper a.nav-link.active, #toc-wrapper a.nav-link:hover,
 #toc a.nav-link.active, #toc a.nav-link:hover {
   color: var(--k-lime) !important; background: rgba(185,185,195,.06) !important;
 }
-#toc-wrapper a.nav-link.active { box-shadow: 0 0 0 1px rgba(185,185,195,.09) inset !important; }
 
-/* ══════════════════════════════════════════════════════════
-   16) BLOCKQUOTE / INLINE CODE
-   ══════════════════════════════════════════════════════════ */
+/* Blockquote / inline code */
 .post-content blockquote {
   background: rgba(160,160,175,.04) !important;
   border-image: linear-gradient(180deg, rgba(160,160,175,.38), rgba(185,185,195,.22)) 1 !important;
   color: rgba(255,255,255,.86) !important;
 }
 .post-content :not(pre) > code {
-  background: rgba(160,160,175,.05) !important;
-  border: 1px solid rgba(160,160,175,.10) !important;
+  background: rgba(160,160,175,.05) !important; border: 1px solid rgba(160,160,175,.10) !important;
 }
 
-/* ══════════════════════════════════════════════════════════
-   17) PAGINATION — horizontal
-   ══════════════════════════════════════════════════════════ */
+/* Pagination */
 .pagination, ul.pagination, nav .pagination {
   display: flex !important; flex-direction: row !important; flex-wrap: wrap !important;
   justify-content: center !important; align-items: center !important;
@@ -3746,17 +3595,14 @@ div.highlighter-rouge > .code-header::before {
   display: inline-flex !important; align-items: center !important; justify-content: center !important;
   min-width: 2.2rem !important; height: 2.2rem !important; padding: 0 0.55rem !important;
   background: rgba(160,160,175,.05) !important; border: 1px solid rgba(160,160,175,.11) !important;
-  color: rgba(255,255,255,.84) !important; border-radius: 10px !important; font-size: 0.92rem !important;
+  color: rgba(255,255,255,.84) !important; border-radius: 10px !important;
 }
 .pagination .page-link:hover, .pagination .page-item.active .page-link {
   background: rgba(185,185,195,.09) !important; border-color: rgba(185,185,195,.18) !important;
-  color: var(--k-lime) !important; box-shadow: 0 0 10px rgba(185,185,195,.07) !important;
+  color: var(--k-lime) !important;
 }
-.pagination .page-item.disabled .page-link { opacity: 0.35 !important; pointer-events: none !important; }
 
-/* ══════════════════════════════════════════════════════════
-   18) POST NAVIGATION (이전글/다음글)
-   ══════════════════════════════════════════════════════════ */
+/* Post nav */
 .post-navigation, .post-nav, #post-navigation, .pagination-post {
   display: flex !important; flex-direction: row !important; flex-wrap: wrap !important;
   gap: 0.75rem !important; width: 100% !important; overflow: visible !important; margin: 1.5rem 0 1rem !important;
@@ -3768,10 +3614,7 @@ div.highlighter-rouge > .code-header::before {
   border: 1px solid rgba(160,160,175,.13) !important; border-radius: 14px !important;
   color: rgba(255,255,255,.84) !important; text-decoration: none !important; overflow: hidden !important;
 }
-.post-navigation a:hover, .post-nav a:hover, #post-navigation a:hover {
-  border-color: rgba(185,185,195,.20) !important; background: rgba(34,34,38,.72) !important;
-  box-shadow: 0 8px 20px rgba(0,0,0,.20) !important;
-}
+.post-navigation a:hover, .post-nav a:hover { border-color: rgba(185,185,195,.20) !important; background: rgba(34,34,38,.72) !important; }
 .post-navigation a p, .post-navigation a span, .post-nav a p, .post-nav a span {
   overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; margin: 0 !important;
 }
@@ -3790,51 +3633,31 @@ div.highlighter-rouge > .code-header::before {
   .post-tail-wrapper .btn { max-width: 100% !important; width: 100% !important; }
 }
 
-/* ══════════════════════════════════════════════════════════
-   19) CALLOUTS
-   ══════════════════════════════════════════════════════════ */
+/* Callouts */
 .prompt, .prompt-tip, .prompt-info, .prompt-warning, .prompt-danger {
   background: linear-gradient(180deg, rgba(22,22,26,.72), rgba(18,18,20,.60)) padding-box,
     linear-gradient(135deg, rgba(150,150,165,.24), rgba(175,175,185,.20), rgba(140,140,155,.12)) border-box !important;
-  box-shadow: 0 14px 30px rgba(0,0,0,.26), 0 0 0 1px rgba(140,140,155,.06) inset !important;
   color: rgba(255,255,255,.88) !important;
 }
-.prompt-tip::before { background: rgba(150,150,165,.58) !important; }
-.prompt-info::before { background: rgba(120,185,165,.52) !important; }
 
-/* ══════════════════════════════════════════════════════════
-   20) CATEGORIES / ARCHIVES / TAGS
-   ══════════════════════════════════════════════════════════ */
+/* Categories */
 #categories .list-group-item, #categories .category, #categories li,
 .categories .list-group-item, .categories .category, .categories li {
   background: linear-gradient(180deg, rgba(22,22,26,.70), rgba(18,18,20,.58)) padding-box,
     linear-gradient(135deg, rgba(150,150,165,.26), rgba(175,175,185,.22), rgba(140,140,155,.14)) border-box !important;
   box-shadow: 0 12px 28px rgba(0,0,0,.24) !important;
 }
-#categories .list-group-item:hover, #categories .category:hover, #categories li:hover {
-  box-shadow: 0 14px 32px rgba(0,0,0,.28), 0 0 18px rgba(160,160,175,.11) !important;
-}
-#categories svg, .categories svg { color: rgba(185,185,195,.52) !important; }
 #tags { background: rgba(0,0,0,.10) !important; border: 1px solid rgba(150,150,165,.13) !important; }
 #archives .list-group-item, .archives .list-group-item, #archives li, .archives li {
   box-shadow: inset 3px 0 0 rgba(160,160,175,.15) !important;
 }
 
-/* ══════════════════════════════════════════════════════════
-   21) RELATED POSTS
-   ══════════════════════════════════════════════════════════ */
-#related-posts ul > li, #related-posts .post-list > li, #related-posts .post-preview,
-#related-posts .card, #related-posts .row > * > .card {
+/* Related posts */
+#related-posts ul > li, #related-posts .post-preview, #related-posts .card {
   background: rgba(160,160,175,.04) !important; border: 1px solid rgba(160,160,175,.13) !important;
-  box-shadow: 0 8px 24px rgba(0,0,0,.24), 0 0 0 1px rgba(160,160,175,.04) inset !important;
-}
-#related-posts ul > li:hover, #related-posts .post-preview:hover, #related-posts .card:hover {
-  background: rgba(185,185,195,.06) !important; border-color: rgba(185,185,195,.24) !important;
 }
 
-/* ══════════════════════════════════════════════════════════
-   22) INNER PAGE VIGNETTES
-   ══════════════════════════════════════════════════════════ */
+/* Inner page */
 body:not(.home) #core-wrapper {
   background: radial-gradient(900px 600px at 10% 0%, rgba(140,140,155,.08), transparent 60%),
     radial-gradient(900px 600px at 90% 10%, rgba(165,165,175,.06), transparent 60%) !important;
@@ -3843,43 +3666,21 @@ body.layout-post #core-wrapper .post-content {
   background: rgba(0,0,0,.12) !important; border: 1px solid rgba(140,140,155,.14) !important;
   box-shadow: 0 18px 44px rgba(0,0,0,.28) !important;
 }
-body.layout-post #core-wrapper .post-content::before {
-  background: radial-gradient(900px 420px at 18% 12%, rgba(140,140,155,.08), transparent 65%),
-    radial-gradient(700px 360px at 82% 18%, rgba(165,165,175,.06), transparent 62%),
-    linear-gradient(180deg, rgba(22,22,26,.32), rgba(0,0,0,.12)),
-    repeating-linear-gradient(135deg, rgba(175,175,185,.022) 0 1px, transparent 1px 7px) !important;
-}
 
-/* ══════════════════════════════════════════════════════════
-   23) MISC
-   ══════════════════════════════════════════════════════════ */
+/* Misc */
 ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, rgba(160,160,175,.22), rgba(185,185,195,.16)) !important; }
 hr { border-color: rgba(160,160,175,.12) !important; }
 .breadcrumb a { color: rgba(160,160,175,.90) !important; }
 .breadcrumb a:hover { color: var(--k-lime) !important; }
-
 .sidebar-schedule {
   background: linear-gradient(180deg, rgba(24,24,28,.92), rgba(20,20,23,.86)) padding-box,
     linear-gradient(135deg, rgba(160,160,175,.18), rgba(175,175,185,.14)) border-box !important;
 }
 .sidebar-schedule h4 { color: var(--k-lime) !important; }
-.sidebar-schedule .schedule-date { color: var(--k-mint) !important; }
-
-#panel-wrapper .panel .panel-title::after {
-  background: linear-gradient(90deg, rgba(140,140,155,.48), rgba(165,165,175,.28), transparent) !important;
-}
-
 .home-logo img {
   border: 3px solid rgba(160,160,175,.28) !important;
-  box-shadow: 0 8px 24px rgba(160,160,175,.16), 0 0 26px rgba(185,185,195,.09) !important;
+  box-shadow: 0 8px 24px rgba(160,160,175,.16) !important;
 }
-
-/* About page */
-body.page #core-wrapper .post-content, body.layout-page #core-wrapper .post-content,
-body.about #core-wrapper .post-content, body[data-page="about"] #core-wrapper .post-content {
-  border: 1px solid rgba(140,140,155,.14) !important; box-shadow: 0 14px 30px rgba(0,0,0,.22) !important;
-}
-body.page #core-wrapper .post-content blockquote, body.layout-page #core-wrapper .post-content blockquote,
-body.about #core-wrapper .post-content blockquote, body[data-page="about"] #core-wrapper .post-content blockquote {
-  background: linear-gradient(90deg, rgba(140,140,155,.09), rgba(165,165,175,.05), transparent) !important;
+body.page #core-wrapper .post-content, body.layout-page #core-wrapper .post-content {
+  border: 1px solid rgba(140,140,155,.14) !important;
 }
