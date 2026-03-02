@@ -1,0 +1,75 @@
+---
+layout: page
+# Categories sorted by most recent post date (newest first)
+# Place this file at: _layouts/categories.html
+---
+
+{% comment %}
+  Build [YYYYMMDD|category_name] pairs and sort descending
+{% endcomment %}
+
+{% assign cat_pairs = "" | split: "" %}
+
+{% for cat in site.categories %}
+  {% assign cat_name = cat[0] %}
+  {% assign cat_posts = cat[1] | sort: "date" | reverse %}
+  {% assign latest = cat_posts | first %}
+  {% assign pair = latest.date | date: "%Y%m%d" | append: "|" | append: cat_name %}
+  {% assign cat_pairs = cat_pairs | push: pair %}
+{% endfor %}
+
+{% assign cat_pairs = cat_pairs | sort | reverse %}
+
+<!-- Category chips -->
+<div id="categories" class="mb-3">
+  <div class="d-flex flex-wrap gap-2">
+    {% for pair in cat_pairs %}
+      {% assign cat_name = pair | split: "|" | last %}
+      {% assign cat_size = site.categories[cat_name] | size %}
+      <a href="{{ site.baseurl }}/categories/{{ cat_name | slugify | url_encode }}/"
+         class="badge rounded-pill text-decoration-none fs-6 px-3 py-2"
+         style="background:rgba(160,160,175,.08);border:1px solid rgba(160,160,175,.15);color:rgba(255,255,255,.82);">
+        {{ cat_name }}
+        <span class="ms-1" style="color:rgba(255,255,255,.45);">{{ cat_size }}</span>
+      </a>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- Category sections with posts -->
+{% for pair in cat_pairs %}
+  {% assign cat_name = pair | split: "|" | last %}
+  {% assign cat_posts = site.categories[cat_name] | sort: "date" | reverse %}
+
+  <div id="{{ cat_name | slugify }}" class="card mb-4"
+       style="background:rgba(24,24,28,.55);border:1px solid rgba(160,160,175,.12);border-radius:12px;">
+    <div class="card-header d-flex justify-content-between align-items-center py-3"
+         style="background:rgba(0,0,0,.15);border-bottom:1px solid rgba(160,160,175,.08);border-radius:12px 12px 0 0;">
+      <h2 class="mb-0 fs-5" style="color:rgba(255,255,255,.90);">
+        <i class="far fa-folder-open me-2" style="color:rgba(160,160,175,.60);"></i>
+        <a href="{{ site.baseurl }}/categories/{{ cat_name | slugify | url_encode }}/"
+           style="color:rgba(255,255,255,.90);text-decoration:none;">
+          {{ cat_name }}
+        </a>
+      </h2>
+      <span style="color:rgba(255,255,255,.40);font-size:.82rem;">
+        {{ cat_posts | size }} posts
+      </span>
+    </div>
+
+    <ul class="list-group list-group-flush">
+      {% for post in cat_posts %}
+        <li class="list-group-item d-flex justify-content-between align-items-center py-2 px-3"
+            style="background:transparent;border-bottom:1px solid rgba(160,160,175,.06);">
+          <a href="{{ post.url | relative_url }}"
+             style="color:rgba(255,255,255,.80);text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+            {{ post.title }}
+          </a>
+          <time style="color:rgba(255,255,255,.38);font-size:.78rem;white-space:nowrap;margin-left:.75rem;">
+            {{ post.date | date: "%b %d, %Y" }}
+          </time>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endfor %}
