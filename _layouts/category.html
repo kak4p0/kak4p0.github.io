@@ -1,0 +1,43 @@
+---
+layout: page
+# Individual category page (e.g. /categories/ehax-ctf-2026/)
+# Posts shown automatically, sorted by date
+# Place at: _layouts/category.html
+---
+
+{% assign cat_name = page.title %}
+{% assign cat_posts = site.categories[cat_name] | sort: "date" | reverse %}
+
+<!-- Category header -->
+<div style="display:flex;align-items:center;gap:.6rem;padding:.6rem 0;border-bottom:2px solid rgba(160,160,175,.15);margin-bottom:1rem;">
+  <i class="far fa-folder-open" style="color:rgba(160,160,175,.50);font-size:1.1rem;"></i>
+  <span style="color:rgba(255,255,255,.92);font-size:1.2rem;font-weight:700;">{{ cat_name }}</span>
+  <span style="color:rgba(255,255,255,.30);font-size:.8rem;">{{ cat_posts | size }} posts</span>
+</div>
+
+<!-- Post list (always visible) -->
+<div>
+  {% for post in cat_posts %}
+    <a href="{{ post.url | relative_url }}"
+       style="display:flex;justify-content:space-between;align-items:center;padding:.7rem 1rem;margin-bottom:.35rem;background:rgba(24,24,28,.50);border:1px solid rgba(160,160,175,.08);border-radius:10px;text-decoration:none;transition:border-color .2s,background .2s;">
+      <span style="display:flex;align-items:center;gap:.5rem;overflow:hidden;min-width:0;">
+        <i class="far fa-file-alt" style="color:rgba(160,160,175,.35);font-size:.82rem;flex-shrink:0;"></i>
+        <span style="color:rgba(255,255,255,.82);font-size:.92rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+          {{ post.title }}
+        </span>
+      </span>
+      <time style="color:rgba(255,255,255,.30);font-size:.76rem;white-space:nowrap;margin-left:.75rem;flex-shrink:0;">
+        {{ post.date | date: "%b %d, %Y" }}
+      </time>
+    </a>
+  {% endfor %}
+</div>
+
+<!-- Back to categories -->
+<div style="margin-top:1.5rem;padding-top:1rem;border-top:1px solid rgba(160,160,175,.08);">
+  <a href="{{ site.baseurl }}/categories/"
+     style="display:inline-flex;align-items:center;gap:.4rem;color:rgba(255,255,255,.50);text-decoration:none;font-size:.85rem;">
+    <i class="fas fa-arrow-left" style="font-size:.75rem;"></i>
+    All Categories
+  </a>
+</div>
