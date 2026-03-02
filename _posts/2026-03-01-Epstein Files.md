@@ -14,7 +14,7 @@ comments: false
 
 - **Name:** Epstein Files
 - **Category:** Web
-- **Difficulty:** ★★☆☆☆
+- **Difficulty:** ★★★☆☆ (312 points, solving 98 out of 887 teams)
 
 ---
 
