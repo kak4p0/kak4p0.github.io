@@ -14,7 +14,7 @@ comments: false
 
 - **Name:** Flight Risk
 - **Category:** Web
-- **Difficulty:** ★★★☆☆
+- **Difficulty:** ★★★☆☆ (411 points, solving 68 out of 887 teams)
 
 ---
 
