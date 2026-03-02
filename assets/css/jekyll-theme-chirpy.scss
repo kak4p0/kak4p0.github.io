@@ -3342,7 +3342,11 @@ header.profile-wrapper a {
 
 
 /* =========================================================
-   v27 DARK-GRAY + ALL FIXES
+   v28 DARK-GRAY — EXACT SELECTORS FROM DOM INSPECTION
+   ★ #toc-solo-trigger = "Contents >" button
+   ★ #toc-bar = title + ≡ icon bar
+   ★ dialog#toc-popup = TOC dialog
+   ★ .post-tail-wrapper .row = OLDER/NEWER nav
    ========================================================= */
 
 :root {
@@ -3352,6 +3356,7 @@ header.profile-wrapper a {
   --k-topbar-h: 3rem;
 }
 
+/* BACKGROUND */
 body {
   background:
     radial-gradient(ellipse 120% 60% at 50% 0%, rgba(50,50,56,.42), transparent 70%),
@@ -3373,6 +3378,7 @@ body::before {
 .post-meta, .post-meta span, .post-meta time, .text-muted, .small, small { color: rgba(255,255,255,.58) !important; }
 .post-content pre code { color: rgba(255,255,255,.88) !important; }
 
+/* SIDEBAR */
 #sidebar {
   background: #18181b !important;
   border-right: 1px solid rgba(255,255,255,.06) !important;
@@ -3389,8 +3395,11 @@ body::before {
   box-shadow: 0 0 10px rgba(170,170,180,.15) !important;
 }
 
-/* ── MOBILE ── */
+/* ══════════════════════════════════════════════════════════
+   MOBILE
+   ══════════════════════════════════════════════════════════ */
 @media (max-width: 991px) {
+  /* Fixed topbar */
   #topbar-wrapper {
     position: fixed !important;
     top: 0 !important; left: 0 !important; right: 0 !important;
@@ -3432,122 +3441,98 @@ body::before {
   #wrapper, body > #wrapper { overflow-x: hidden !important; }
   #sidebar { top: 0 !important; }
 
-  /* Hide TOC trigger buttons only */
-  #topbar #toc-trigger,
-  #topbar .toc-trigger,
-  #topbar button[data-bs-target="#panel-wrapper"],
-  #topbar a[data-bs-target="#panel-wrapper"],
-  #topbar [data-bs-toggle="offcanvas"][data-bs-target="#panel-wrapper"] {
+  /* ── HIDE DUPLICATE TOC (exact Chirpy selectors from DOM) ── */
+  /* "Contents >" button */
+  #toc-solo-trigger {
     display: none !important;
   }
-  #panel-wrapper > .offcanvas-header,
-  aside#panel-wrapper > .offcanvas-header,
-  #panel-wrapper .offcanvas-header,
-  .access > summary,
-  details.access > summary,
-  #panel-wrapper summary {
+  /* "[Web] tictactoe  ≡" title + icon bar */
+  #toc-bar {
     display: none !important;
   }
+}
 
-  /* ── Mobile: post-nav STACK vertically ── */
-  .post-navigation, .post-nav-wrapper, nav.post-navigation, .pagination-post,
-  .post-tail-wrapper {
-    display: flex !important;
+/* ══════════════════════════════════════════════════════════
+   POST NAVIGATION (OLDER / NEWER) — fix overlap
+   Chirpy structure:
+     .post-tail-wrapper > .row > .col > .btn
+   ══════════════════════════════════════════════════════════ */
+
+/* The wrapper itself */
+.post-tail-wrapper .row {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  gap: 0.75rem !important;
+  margin: 0 !important;
+  width: 100% !important;
+}
+
+/* Each column: exact 50% side by side */
+.post-tail-wrapper .row > [class*="col"] {
+  flex: 0 0 calc(50% - 0.375rem) !important;
+  max-width: calc(50% - 0.375rem) !important;
+  padding: 0 !important;
+  width: auto !important;
+}
+
+/* The buttons inside */
+.post-tail-wrapper .btn {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.4rem !important;
+  width: 100% !important;
+  padding: 0.7rem 1rem !important;
+  background: rgba(24,24,28,.55) !important;
+  border: 1px solid rgba(160,160,175,.12) !important;
+  border-radius: 12px !important;
+  color: rgba(255,255,255,.82) !important;
+  text-decoration: none !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+}
+
+.post-tail-wrapper .btn:hover {
+  border-color: rgba(185,185,195,.20) !important;
+  background: rgba(34,34,38,.65) !important;
+}
+
+/* Truncate the post title text inside buttons */
+.post-tail-wrapper .btn p,
+.post-tail-wrapper .btn span:not(.small) {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  margin: 0 !important;
+  min-width: 0 !important;
+  flex: 1 1 auto !important;
+}
+
+/* OLDER/NEWER label */
+.post-tail-wrapper .btn .small,
+.post-tail-wrapper .btn small {
+  flex-shrink: 0 !important;
+  font-size: 0.72rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+  color: rgba(255,255,255,.45) !important;
+}
+
+/* Mobile: stack vertically */
+@media (max-width: 991px) {
+  .post-tail-wrapper .row {
     flex-direction: column !important;
-    gap: 0.6rem !important;
-    width: 100% !important;
-    margin: 1.2rem 0 !important;
   }
-  .post-navigation a, .post-navigation > div, nav.post-navigation a, .pagination-post a,
-  .post-tail-wrapper .btn, .post-tail-wrapper .btn.btn-outline-primary {
+  .post-tail-wrapper .row > [class*="col"] {
     flex: 1 1 100% !important;
     max-width: 100% !important;
     width: 100% !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 0.5rem !important;
-    padding: 0.7rem 1rem !important;
-    background: rgba(24,24,28,.55) !important;
-    border: 1px solid rgba(160,160,175,.12) !important;
-    border-radius: 12px !important;
-    color: rgba(255,255,255,.82) !important;
-    text-decoration: none !important;
-    overflow: hidden !important;
-  }
-  .post-navigation a p, .post-navigation a span,
-  .post-tail-wrapper .btn p, .post-tail-wrapper .btn span {
-    overflow: hidden !important; text-overflow: ellipsis !important;
-    white-space: nowrap !important; margin: 0 !important;
   }
 }
 
-/* ── Inline TOC (JS) ── */
-#k-inline-toc {
-  background: rgba(22,22,26,.65);
-  border: 1px solid rgba(160,160,175,.14);
-  border-radius: 14px;
-  margin: 0.5rem 0 1.5rem 0;
-  overflow: hidden;
-}
-#k-inline-toc summary {
-  display: flex; align-items: center; gap: 0.5rem;
-  padding: 0.75rem 1rem; font-size: 0.9rem; font-weight: 600;
-  color: var(--k-lime, #d5d9e0); cursor: pointer; list-style: none;
-  user-select: none; -webkit-user-select: none;
-}
-#k-inline-toc summary::-webkit-details-marker { display: none; }
-#k-inline-toc summary::before {
-  content: '▸'; font-size: 0.8rem; transition: transform 0.2s ease; color: rgba(255,255,255,.5);
-}
-#k-inline-toc[open] summary::before { transform: rotate(90deg); }
-#k-inline-toc .k-toc-list { list-style: none; margin: 0; padding: 0 1rem 0.75rem 1rem; }
-#k-inline-toc .k-toc-list a {
-  display: block; padding: 0.3rem 0.5rem; font-size: 0.84rem;
-  color: rgba(255,255,255,.72) !important; text-decoration: none; border-radius: 8px; line-height: 1.45;
-}
-#k-inline-toc .k-toc-list a:hover { color: var(--k-lime, #d5d9e0) !important; background: rgba(160,160,175,.07); }
-#k-inline-toc .k-toc-list .k-toc-h3 { padding-left: 1.2rem; }
-#k-inline-toc .k-toc-list .k-toc-h4 { padding-left: 2rem; }
-@media (min-width: 992px) { #k-inline-toc { display: none !important; } }
-
-/* ── PC: post-nav side by side ── */
-@media (min-width: 992px) {
-  .post-navigation, .post-nav-wrapper, nav.post-navigation, .pagination-post,
-  .post-tail-wrapper {
-    display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
-    gap: 1rem !important;
-    width: 100% !important;
-    margin: 1.5rem 0 !important;
-  }
-  .post-navigation a, .post-navigation > div, nav.post-navigation a, .pagination-post a,
-  .post-tail-wrapper .btn, .post-tail-wrapper .btn.btn-outline-primary {
-    flex: 0 0 calc(50% - 0.5rem) !important;
-    max-width: calc(50% - 0.5rem) !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 0.5rem !important;
-    padding: 0.75rem 1rem !important;
-    background: rgba(24,24,28,.55) !important;
-    border: 1px solid rgba(160,160,175,.12) !important;
-    border-radius: 14px !important;
-    color: rgba(255,255,255,.82) !important;
-    text-decoration: none !important;
-    overflow: hidden !important;
-  }
-  .post-tail-wrapper .btn:hover {
-    border-color: rgba(185,185,195,.20) !important;
-    background: rgba(34,34,38,.65) !important;
-  }
-  .post-navigation a p, .post-navigation a span,
-  .post-tail-wrapper .btn p, .post-tail-wrapper .btn span {
-    overflow: hidden !important; text-overflow: ellipsis !important;
-    white-space: nowrap !important; margin: 0 !important; min-width: 0 !important;
-  }
-}
-
-/* ── Theme styles ── */
+/* ══════════════════════════════════════════════════════════
+   THEME STYLES (neutral gray)
+   ══════════════════════════════════════════════════════════ */
 .card, .card-wrapper, #core-wrapper .post, #core-wrapper .page, #core-wrapper .home {
   background: linear-gradient(160deg, rgba(36,36,40,.98), rgba(28,28,32,.95)) padding-box,
     linear-gradient(135deg, rgba(255,255,255,.07), rgba(255,255,255,.03), rgba(255,255,255,.06)) border-box !important;
@@ -3662,4 +3647,19 @@ hr { border-color: rgba(160,160,175,.12) !important; }
 }
 body.page #core-wrapper .post-content, body.layout-page #core-wrapper .post-content {
   border: 1px solid rgba(140,140,155,.14) !important;
+}
+
+/* ══════════════════════════════════════════════════════════
+   TOC POPUP STYLING (dialog#toc-popup)
+   Chirpy uses <dialog> for TOC — style it to match theme
+   ══════════════════════════════════════════════════════════ */
+dialog#toc-popup {
+  background: rgba(22,22,26,.96) !important;
+  border: 1px solid rgba(160,160,175,.16) !important;
+  border-radius: 14px !important;
+  color: rgba(255,255,255,.86) !important;
+  box-shadow: 0 16px 40px rgba(0,0,0,.40) !important;
+}
+dialog#toc-popup::backdrop {
+  background: rgba(0,0,0,.50) !important;
 }
