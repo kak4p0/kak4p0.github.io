@@ -3706,3 +3706,32 @@ hr { border-color: rgba(160,160,175,.12) !important; }
 body.page #core-wrapper .post-content, body.layout-page #core-wrapper .post-content {
   border: 1px solid rgba(140,140,155,.14) !important;
 }
+
+/* TOC POPUP SCROLL FIX */
+dialog#toc-popup {
+  max-height: 75vh !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  background: rgba(22,22,26,.97) !important;
+  border: 1px solid rgba(160,160,175,.16) !important;
+  border-radius: 14px !important;
+  color: rgba(255,255,255,.86) !important;
+  box-shadow: 0 16px 40px rgba(0,0,0,.45) !important;
+}
+dialog#toc-popup::backdrop {
+  background: rgba(0,0,0,.55) !important;
+}
+dialog#toc-popup ul,
+dialog#toc-popup ol,
+dialog#toc-popup nav {
+  overflow-y: auto !important;
+  max-height: 65vh !important;
+}
+dialog#toc-popup a {
+  color: rgba(255,255,255,.72) !important;
+  pointer-events: auto !important;
+}
+dialog#toc-popup a:hover,
+dialog#toc-popup a.active {
+  color: #d5d9e0 !important;
+}
