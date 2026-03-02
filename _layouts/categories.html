@@ -3,16 +3,6 @@ layout: page
 # Place at: _layouts/categories.html
 ---
 
-{% assign cat_pairs = "" | split: "" %}
-{% for cat in site.categories %}
-  {% assign cat_name = cat[0] %}
-  {% assign cat_posts = cat[1] | sort: "date" | reverse %}
-  {% assign latest = cat_posts | first %}
-  {% assign pair = latest.date | date: "%Y%m%d" | append: "|" | append: cat_name %}
-  {% assign cat_pairs = cat_pairs | push: pair %}
-{% endfor %}
-{% assign cat_pairs = cat_pairs | sort | reverse %}
-
 {% assign child_cats = "" | split: "" %}
 {% for cat in site.categories %}
   {% assign cat_name = cat[0] %}
@@ -74,7 +64,6 @@ layout: page
   {% endfor %}
   {% assign my_children_pairs = my_children_pairs | sort | reverse %}
 
-  <!-- Top-level category -->
   <div style="margin-bottom:2rem;">
     <div style="display:flex;align-items:center;gap:.6rem;padding:.6rem 0;border-bottom:2px solid rgba(160,160,175,.15);margin-bottom:.75rem;">
       <i class="far fa-folder-open" style="color:rgba(160,160,175,.50);font-size:1.1rem;"></i>
@@ -87,31 +76,45 @@ layout: page
         {% assign child_name = child_pair | split: "|" | last %}
         {% assign child_posts = site.categories[child_name] | sort: "date" | reverse %}
         {% assign child_latest = child_posts | first %}
+        {% assign detail_id = child_name | slugify | prepend: "detail-" %}
 
-        <details style="margin:0 0 .4rem 0;">
-          <summary style="display:flex;align-items:center;justify-content:space-between;padding:.65rem 1rem;background:rgba(24,24,28,.50);border:1px solid rgba(160,160,175,.10);border-radius:10px;cursor:pointer;list-style:none;user-select:none;-webkit-user-select:none;">
-            <span style="display:flex;align-items:center;gap:.5rem;">
-              <i class="far fa-folder" style="color:rgba(160,160,175,.40);font-size:.85rem;"></i>
-              <span style="color:rgba(255,255,255,.85);font-weight:500;">{{ child_name }}</span>
-              <span style="color:rgba(255,255,255,.30);font-size:.78rem;">{{ child_posts | size }}</span>
-            </span>
-            <span style="color:rgba(255,255,255,.25);font-size:.72rem;">
-              {{ child_latest.date | date: "%b %d, %Y" }}
-            </span>
-          </summary>
-          <ul style="list-style:none;margin:.3rem 0 .3rem 0;padding:0;">
-            {% for post in child_posts %}
-              <li style="display:flex;justify-content:space-between;align-items:center;padding:.35rem 1rem .35rem 2.2rem;border-bottom:1px solid rgba(160,160,175,.04);">
-                <a href="{{ post.url | relative_url }}" style="color:rgba(255,255,255,.72);text-decoration:none;font-size:.88rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-                  {{ post.title }}
-                </a>
-                <time style="color:rgba(255,255,255,.28);font-size:.74rem;white-space:nowrap;margin-left:.5rem;">
-                  {{ post.date | date: "%b %d" }}
-                </time>
-              </li>
-            {% endfor %}
-          </ul>
-        </details>
+        <!-- Sub-category row -->
+        <div style="margin:0 0 .4rem 0;">
+          <!-- Header: link + toggle icon -->
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:.65rem 1rem;background:rgba(24,24,28,.50);border:1px solid rgba(160,160,175,.10);border-radius:10px;">
+            <!-- Left: category link (clickable → goes to category page) -->
+            <a href="{{ site.baseurl }}/categories/{{ child_name | slugify | url_encode }}/"
+               style="display:flex;align-items:center;gap:.5rem;color:rgba(255,255,255,.85);text-decoration:none;font-weight:500;flex:1;min-width:0;">
+              <i class="far fa-folder" style="color:rgba(160,160,175,.40);font-size:.85rem;flex-shrink:0;"></i>
+              <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ child_name }}</span>
+              <span style="color:rgba(255,255,255,.30);font-size:.78rem;flex-shrink:0;">{{ child_posts | size }}</span>
+              <span style="color:rgba(255,255,255,.22);font-size:.72rem;flex-shrink:0;margin-left:.15rem;">
+                {{ child_latest.date | date: "%b %d" }}
+              </span>
+            </a>
+            <!-- Right: toggle button -->
+            <button onclick="var d=document.getElementById('{{ detail_id }}');if(d.style.display==='none'){d.style.display='block';this.textContent='▼'}else{d.style.display='none';this.textContent='▶'}"
+                    style="background:none;border:1px solid rgba(160,160,175,.12);border-radius:6px;color:rgba(255,255,255,.35);font-size:.7rem;padding:.2rem .45rem;cursor:pointer;flex-shrink:0;margin-left:.5rem;line-height:1;">
+              ▶
+            </button>
+          </div>
+
+          <!-- Post list (hidden by default) -->
+          <div id="{{ detail_id }}" style="display:none;">
+            <ul style="list-style:none;margin:.3rem 0 .3rem 0;padding:0;">
+              {% for post in child_posts %}
+                <li style="display:flex;justify-content:space-between;align-items:center;padding:.35rem 1rem .35rem 2.2rem;border-bottom:1px solid rgba(160,160,175,.04);">
+                  <a href="{{ post.url | relative_url }}" style="color:rgba(255,255,255,.72);text-decoration:none;font-size:.88rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                    {{ post.title }}
+                  </a>
+                  <time style="color:rgba(255,255,255,.28);font-size:.74rem;white-space:nowrap;margin-left:.5rem;">
+                    {{ post.date | date: "%b %d" }}
+                  </time>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
       {% endfor %}
 
     {% else %}
