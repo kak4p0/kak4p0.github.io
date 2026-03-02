@@ -15,7 +15,7 @@ comments: false
 - **Name:** Borderline Personality
 - **Category:** Web
 - **Description:** The proxy thinks it's in control. The backend thinks it's safe. Find the space between their lies and slip through.
-- **Difficulty:** ★☆☆☆☆
+- **Difficulty:** ★☆☆☆☆ (50 points, solving 510 out of 887 teams)
 
 ---
 
