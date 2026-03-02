@@ -1,15 +1,9 @@
 ---
 layout: page
-# Categories sorted by most recent post date (newest first)
-# Place this file at: _layouts/categories.html
+# Place at: _layouts/categories.html
 ---
 
-{% comment %}
-  Build [YYYYMMDD|category_name] pairs and sort descending
-{% endcomment %}
-
 {% assign cat_pairs = "" | split: "" %}
-
 {% for cat in site.categories %}
   {% assign cat_name = cat[0] %}
   {% assign cat_posts = cat[1] | sort: "date" | reverse %}
@@ -17,59 +11,120 @@ layout: page
   {% assign pair = latest.date | date: "%Y%m%d" | append: "|" | append: cat_name %}
   {% assign cat_pairs = cat_pairs | push: pair %}
 {% endfor %}
-
 {% assign cat_pairs = cat_pairs | sort | reverse %}
 
-<!-- Category chips -->
-<div id="categories" class="mb-3">
-  <div class="d-flex flex-wrap gap-2">
-    {% for pair in cat_pairs %}
-      {% assign cat_name = pair | split: "|" | last %}
-      {% assign cat_size = site.categories[cat_name] | size %}
-      <a href="{{ site.baseurl }}/categories/{{ cat_name | slugify | url_encode }}/"
-         class="badge rounded-pill text-decoration-none fs-6 px-3 py-2"
-         style="background:rgba(160,160,175,.08);border:1px solid rgba(160,160,175,.15);color:rgba(255,255,255,.82);">
-        {{ cat_name }}
-        <span class="ms-1" style="color:rgba(255,255,255,.45);">{{ cat_size }}</span>
-      </a>
+{% assign child_cats = "" | split: "" %}
+{% for cat in site.categories %}
+  {% assign cat_name = cat[0] %}
+  {% assign cat_posts = cat[1] %}
+  {% for other_cat in site.categories %}
+    {% assign other_name = other_cat[0] %}
+    {% if other_name == cat_name %}{% continue %}{% endif %}
+    {% assign other_posts = other_cat[1] %}
+    {% assign is_subset = true %}
+    {% for p in cat_posts %}
+      {% assign found = false %}
+      {% for op in other_posts %}
+        {% if op.url == p.url %}{% assign found = true %}{% break %}{% endif %}
+      {% endfor %}
+      {% unless found %}{% assign is_subset = false %}{% break %}{% endunless %}
     {% endfor %}
-  </div>
-</div>
+    {% if is_subset and cat_posts.size < other_posts.size %}
+      {% unless child_cats contains cat_name %}
+        {% assign child_cats = child_cats | push: cat_name %}
+      {% endunless %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+{% endfor %}
 
-<!-- Category sections with posts -->
-{% for pair in cat_pairs %}
+{% assign top_pairs = "" | split: "" %}
+{% for cat in site.categories %}
+  {% assign cat_name = cat[0] %}
+  {% unless child_cats contains cat_name %}
+    {% assign cat_posts = cat[1] | sort: "date" | reverse %}
+    {% assign latest = cat_posts | first %}
+    {% assign p = latest.date | date: "%Y%m%d" | append: "|" | append: cat_name %}
+    {% assign top_pairs = top_pairs | push: p %}
+  {% endunless %}
+{% endfor %}
+{% assign top_pairs = top_pairs | sort | reverse %}
+
+{% for pair in top_pairs %}
   {% assign cat_name = pair | split: "|" | last %}
   {% assign cat_posts = site.categories[cat_name] | sort: "date" | reverse %}
 
-  <div id="{{ cat_name | slugify }}" class="card mb-4"
-       style="background:rgba(24,24,28,.55);border:1px solid rgba(160,160,175,.12);border-radius:12px;">
-    <div class="card-header d-flex justify-content-between align-items-center py-3"
-         style="background:rgba(0,0,0,.15);border-bottom:1px solid rgba(160,160,175,.08);border-radius:12px 12px 0 0;">
-      <h2 class="mb-0 fs-5" style="color:rgba(255,255,255,.90);">
-        <i class="far fa-folder-open me-2" style="color:rgba(160,160,175,.60);"></i>
-        <a href="{{ site.baseurl }}/categories/{{ cat_name | slugify | url_encode }}/"
-           style="color:rgba(255,255,255,.90);text-decoration:none;">
-          {{ cat_name }}
-        </a>
-      </h2>
-      <span style="color:rgba(255,255,255,.40);font-size:.82rem;">
-        {{ cat_posts | size }} posts
-      </span>
+  {% assign my_children_pairs = "" | split: "" %}
+  {% for child_name in child_cats %}
+    {% assign child_posts = site.categories[child_name] %}
+    {% assign is_my_child = true %}
+    {% for cp in child_posts %}
+      {% assign found = false %}
+      {% for pp in cat_posts %}
+        {% if pp.url == cp.url %}{% assign found = true %}{% break %}{% endif %}
+      {% endfor %}
+      {% unless found %}{% assign is_my_child = false %}{% break %}{% endunless %}
+    {% endfor %}
+    {% if is_my_child %}
+      {% assign cs = child_posts | sort: "date" | reverse %}
+      {% assign cl = cs | first %}
+      {% assign cp2 = cl.date | date: "%Y%m%d" | append: "|" | append: child_name %}
+      {% assign my_children_pairs = my_children_pairs | push: cp2 %}
+    {% endif %}
+  {% endfor %}
+  {% assign my_children_pairs = my_children_pairs | sort | reverse %}
+
+  <!-- Top-level category -->
+  <div style="margin-bottom:2rem;">
+    <div style="display:flex;align-items:center;gap:.6rem;padding:.6rem 0;border-bottom:2px solid rgba(160,160,175,.15);margin-bottom:.75rem;">
+      <i class="far fa-folder-open" style="color:rgba(160,160,175,.50);font-size:1.1rem;"></i>
+      <span style="color:rgba(255,255,255,.92);font-size:1.2rem;font-weight:700;">{{ cat_name }}</span>
+      <span style="color:rgba(255,255,255,.30);font-size:.8rem;">{{ cat_posts | size }} posts</span>
     </div>
 
-    <ul class="list-group list-group-flush">
+    {% if my_children_pairs.size > 0 %}
+      {% for child_pair in my_children_pairs %}
+        {% assign child_name = child_pair | split: "|" | last %}
+        {% assign child_posts = site.categories[child_name] | sort: "date" | reverse %}
+        {% assign child_latest = child_posts | first %}
+
+        <details style="margin:0 0 .4rem 0;">
+          <summary style="display:flex;align-items:center;justify-content:space-between;padding:.65rem 1rem;background:rgba(24,24,28,.50);border:1px solid rgba(160,160,175,.10);border-radius:10px;cursor:pointer;list-style:none;user-select:none;-webkit-user-select:none;">
+            <span style="display:flex;align-items:center;gap:.5rem;">
+              <i class="far fa-folder" style="color:rgba(160,160,175,.40);font-size:.85rem;"></i>
+              <span style="color:rgba(255,255,255,.85);font-weight:500;">{{ child_name }}</span>
+              <span style="color:rgba(255,255,255,.30);font-size:.78rem;">{{ child_posts | size }}</span>
+            </span>
+            <span style="color:rgba(255,255,255,.25);font-size:.72rem;">
+              {{ child_latest.date | date: "%b %d, %Y" }}
+            </span>
+          </summary>
+          <ul style="list-style:none;margin:.3rem 0 .3rem 0;padding:0;">
+            {% for post in child_posts %}
+              <li style="display:flex;justify-content:space-between;align-items:center;padding:.35rem 1rem .35rem 2.2rem;border-bottom:1px solid rgba(160,160,175,.04);">
+                <a href="{{ post.url | relative_url }}" style="color:rgba(255,255,255,.72);text-decoration:none;font-size:.88rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                  {{ post.title }}
+                </a>
+                <time style="color:rgba(255,255,255,.28);font-size:.74rem;white-space:nowrap;margin-left:.5rem;">
+                  {{ post.date | date: "%b %d" }}
+                </time>
+              </li>
+            {% endfor %}
+          </ul>
+        </details>
+      {% endfor %}
+
+    {% else %}
       {% for post in cat_posts %}
-        <li class="list-group-item d-flex justify-content-between align-items-center py-2 px-3"
-            style="background:transparent;border-bottom:1px solid rgba(160,160,175,.06);">
-          <a href="{{ post.url | relative_url }}"
-             style="color:rgba(255,255,255,.80);text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:.4rem 1rem;border-bottom:1px solid rgba(160,160,175,.05);">
+          <a href="{{ post.url | relative_url }}" style="color:rgba(255,255,255,.78);text-decoration:none;font-size:.9rem;">
             {{ post.title }}
           </a>
-          <time style="color:rgba(255,255,255,.38);font-size:.78rem;white-space:nowrap;margin-left:.75rem;">
+          <time style="color:rgba(255,255,255,.30);font-size:.76rem;white-space:nowrap;margin-left:.5rem;">
             {{ post.date | date: "%b %d, %Y" }}
           </time>
-        </li>
+        </div>
       {% endfor %}
-    </ul>
+    {% endif %}
   </div>
 {% endfor %}
