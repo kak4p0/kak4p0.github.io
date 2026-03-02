@@ -1,9 +1,9 @@
 ---
-title: "[Warmup] Templates"
+title: "[Web] Templates"
 description: Writeup for "Templates" from 0xFun CTF 2026.
 date: 2026-02-15 01:00:00 +0900
 categories: [CTF, 0xFun CTF 2026]
-tags: [Warmup]
+tags: [Web]
 toc: true
 comments: false
 ---
