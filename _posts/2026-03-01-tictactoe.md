@@ -15,7 +15,7 @@ comments: false
 - **Name:** tictactoe
 - **Category:** Web
 - **Description:** The NEURAL-LINK CORE v4.4 is online, and its logic is absolute. If you want the flag, you'll have to break the protocol, not just the game.
-- **Difficulty:** ★★☆☆☆
+- **Difficulty:** ★★☆☆☆ (141 points, solving 135 out of 887 teams)
 
 ---
 
