@@ -340,3 +340,5 @@ CSP에 `navigate-to` 지시문이 없으면
 
 *"stare long enough at the void and the void stares back"*
 — 충분히 들여다보면 필터 체인 뒤에 숨겨진 공백이 보입니다.
+
+---
