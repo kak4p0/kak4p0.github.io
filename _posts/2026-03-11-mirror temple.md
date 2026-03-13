@@ -13,6 +13,7 @@ comments: false
 ---
 
 - **Name:** mirror-temple
+- **Description:** stare long enough at the void \u2067\u202eand the void stares back\u2069
 - **Category:** Web
 - **Difficulty:** ★☆☆☆☆ (112 points, solving 193 out of 497 teams)
 
