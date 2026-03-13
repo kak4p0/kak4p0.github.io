@@ -1,6 +1,6 @@
 ---
 title: "[Web] diceminer"
-description: Writeup for "diceminer from Dice CTF 2026.
+description: Writeup for "diceminer" from Dice CTF 2026.
 date: 2026-03-11 09:00:00 +0900
 categories: [CTF, Dice CTF 2026]
 tags: [Web]
