@@ -13,9 +13,11 @@ comments: false
 ---
 
 - **Name:** mirror-temple
-- **Description:** stare long enough at the void \u2067\u202eand the void stares back\u2069
+- **Description:** stare long enough at the void and the void stares back
 - **Category:** Web
-- **Difficulty:** ★☆☆☆☆ (112 points, solving 193 out of 497 teams)
+- **Difficulty:** ★★☆☆☆ (112 points, solving 193 out of 497 teams)
+
+---
 
 ---
 
@@ -338,5 +340,3 @@ CSP에 `navigate-to` 지시문이 없으면
 
 *"stare long enough at the void and the void stares back"*
 — 충분히 들여다보면 필터 체인 뒤에 숨겨진 공백이 보입니다.
-
----
